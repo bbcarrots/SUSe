@@ -1,4 +1,9 @@
-<script>
+<script lang="ts">
+    import Button from "./Button.svelte";
+
+    function handleClick(){
+        console.log("clicked");
+    }
 </script>
 
 <section>
@@ -14,88 +19,97 @@
         >  
             Name
         </label>
-        <input 
-            type="text" 
-            id="name" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="First Name" 
-            required 
-        />
-        <input 
-            type="text" 
-            id="middle-initial" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="MI"  
-        />
-        <input 
-            type="text" 
-            id="surname" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="Surname"
-            required  
-        />
+        <div class="grid grid-cols-6 gap-4">
+            <input 
+                type="text" 
+                id="name" 
+                class="col-span-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                placeholder="First Name" 
+                required 
+            />
+            <input 
+                type="text" 
+                id="middle-initial" 
+                class="col-span-1 -gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                placeholder="MI"  
+            />
+            <input 
+                type="text" 
+                id="surname" 
+                class="col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                placeholder="Surname"
+                required  
+            />
+        </div>
     </div>
 
-    <!-- student number -->
-    <div class="mb-5">
-        <label 
-        for="student-number" 
-        class="block mb-2 text-sm font-medium text-gray-900"
-        >  
-            Student Number
-        </label>
-        <input 
-            type="text" 
-            id="student-number" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="20XXXXXXX" 
-            required 
-        />
+    <!-- student number and phone number -->
+    <div class="grid grid-cols-2 gap-4">
+        <div class="mb-5 cols-span-1 ">
+            <label 
+            for="student-number" 
+            class="block mb-2 text-sm font-medium text-gray-900"
+            >  
+                Student Number
+            </label>
+            <input 
+                type="text" 
+                id="student-number" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                placeholder="20XXXXXXX" 
+                required 
+            />
+        </div>
+
+        <div class="mb-5 cols-span-1">
+            <label 
+            for="student-number" 
+            class="cols-span-1 block mb-2 text-sm font-medium text-gray-900"
+            >  
+                Phone Number
+            </label>
+            <input 
+                type="text" 
+                id="phone-number" 
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                placeholder="09XXXXXXXXX" 
+                required 
+            />
+        </div>
     </div>
 
-    <!-- phone number -->
-    <div class="mb-5">
-        <label 
-        for="student-number" 
-        class="block mb-2 text-sm font-medium text-gray-900"
-        >  
-            Phone Number
-        </label>
-        <input 
-            type="text" 
-            id="phone-number" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="09XXXXXXXXX" 
-            required 
-        />
+    <!-- college and department -->
+    <div class="grid grid-cols-2 gap-4">
+        <div class="mb-5 cols-span-1">
+            <label 
+                for="college" 
+                class="block mb-2 text-sm font-medium text-gray-900"
+            >
+                College
+            </label>
+            <select id="college" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <!-- TODO: make dynamic options from a database of colleges -->
+                <option>College of Engineering</option>
+                <option>College of Arts and Letters</option>
+                <option>College of Science</option>
+            </select>
+        </div>
+
+        <div class="mb-5 cols-span-1">
+            <label 
+                for="program" 
+                class="block mb-2 text-sm font-medium text-gray-900"
+            >
+                Degree Program
+            </label>
+            <select id="program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <!-- TODO: make dynamic options from a database of programs -->
+                <option>Computer Science</option>
+                <option>Computer Engineering</option>
+            </select>
+        </div>
+
     </div>
-
-    <!-- college -->
-    <label 
-        for="college" 
-        class="block mb-2 text-sm font-medium text-gray-900"
-    >
-        College
-    </label>
-    <select id="college" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-        <!-- TODO: make dynamic options from a database of colleges -->
-        <option>College of Engineering</option>
-        <option>College of Arts and Letters</option>
-        <option>College of Science</option>
-    </select>
-
-    <!-- department -->
-    <label 
-        for="program" 
-        class="block mb-2 text-sm font-medium text-gray-900"
-    >
-        Degree Program
-    </label>
-    <select id="program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-        <!-- TODO: make dynamic options from a database of programs -->
-        <option>Computer Science</option>
-        <option>Computer Engineering</option>
-    </select>
 
     <!-- email section -->
     <label 
@@ -135,13 +149,11 @@
         />
     </div>
   
-    <button 
-        type="submit" 
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
-    >
-        Submit
-    </button>
-
+    <div class="inline-flex gap-4">
+        <Button inverse={true} on:click={handleClick}> Cancel </Button>
+        <Button on:click={handleClick}> Register </Button>
+    </div>
+  
     </form>
 
 </section>
