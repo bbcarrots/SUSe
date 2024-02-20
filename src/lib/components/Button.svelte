@@ -3,7 +3,7 @@
     export let icon: string = "";
     export let inverse = false;
     export let small = false;
-    export let disabled = true;
+    export let disabled = false;
 
     function getIconSize() {
         return small ? "15" : "24";
