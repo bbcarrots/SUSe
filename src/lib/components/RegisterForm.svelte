@@ -25,7 +25,7 @@
             <!-- name section -->
             <div class="grid gap-y-2">
                 <label 
-                    for="name" 
+                    for="full-name" 
                 >  
                     <p>Name</p>
                 </label>
@@ -35,7 +35,7 @@
                 >
                     <input 
                         type="text" 
-                        id="name" 
+                        id="first-name" 
                         class="lg:col-span-3 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="First Name" 
                         required 
@@ -48,7 +48,7 @@
                     />
                     <input 
                         type="text" 
-                        id="surname" 
+                        id="last-name" 
                         class="lg:col-span-2 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="Surname"
                         required  
