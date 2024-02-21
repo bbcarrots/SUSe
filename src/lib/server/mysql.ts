@@ -1,30 +1,30 @@
 import mysql from 'mysql2/promise';
 
-let adminMySQLConn: Promise<mysql.Connection> | null = null;
+// let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
 
-export function connectAdminMySQL(): Promise<mysql.Connection> | null {
-	if (!adminMySQLConn) {
-		try {
-			adminMySQLConn = mysql.createConnection({
-				host: '127.0.0.1',
-				user: 'admin',
-				password: 'admin',
-				database: 'suse'
-			});
-		} catch {
-			return null;
-		}
-	}
+// function connectAdminMySQL() {
+// 	if (!adminMySQLConn) {
+// 		try {
+// 			adminMySQLConn = mysql.createConnection({
+// 				host: 'localhost',
+// 				user: 'admin',
+// 				password: 'admin',
+// 				database: 'suse'
+// 			});
+// 		} catch {
+// 			return null;
+// 		}
+// 	}
 
-	return adminMySQLConn;
-}
+// 	return adminMySQLConn;
+// }
 
-export function connectStudentMySQL(): Promise<mysql.Connection> | null {
+function connectStudentMySQL() {
 	if (!studentMySQLConn) {
 		try {
 			studentMySQLConn = mysql.createConnection({
-				host: '127.0.0.1',
+				host: 'localhost',
 				user: 'student',
 				password: 'student',
 				database: 'suse'
@@ -37,30 +37,36 @@ export function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-type studentInfo = {
+type Student = {
 	sn: number,
 	rfid: string,
 	username: string,
-	password: string,
+	pass: string,
 	firstName: string,
-	middleName: string,
+	middleInitial: string,
 	lastName: string,
 	college: string,
 	program: string,
 	phoneNum: string,
 }
 
-export async function insertStudentInfo(data: studentInfo): Promise<'success' | 'fail'> {
+export async function insertStudentInfo(student: Student): Promise<string> {
 	const studentConn = await connectStudentMySQL();
 
-	if (!studentConn) {
-		return 'fail';
-	}
-    const isEnrolled: boolean = false;
-	const results = await studentConn.query(`INSERT INTO students
-            VALUES ('${data.sn}', '${data.rfid}', '${data.username}', '${data.password}', '${data.firstName}', '${data.middleName}', '${data.lastName}', '${data.college}', '${data.program}', '${data.phoneNum}', '${isEnrolled}')`);
-
-    console.log(`results: ${results}`);
-
-	return 'success';
+	try {
+        if (!studentConn) {
+            return 'fail';
+        }
+        
+        const isEnrolled: number = 0;
+        await studentConn
+                .query(`INSERT INTO students
+                VALUES ('${student.sn}', '${student.rfid}', '${student.username}', '${student.pass}', '${student.firstName}', 
+                '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${isEnrolled}');`)
+        
+        return 'success';
+    } 
+    catch {
+        return 'fail';
+    }
 }
