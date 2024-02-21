@@ -20,7 +20,9 @@ let studentMySQLConn: Promise<mysql.Connection> | null = null;
 // 	return adminMySQLConn;
 // }
 
-function connectStudentMySQL() {
+function connectStudentMySQL(): Promise<mysql.Connection> | null {
+    // Creates the connection for the student user
+
 	if (!studentMySQLConn) {
 		try {
 			studentMySQLConn = mysql.createConnection({
@@ -51,7 +53,9 @@ type Student = {
 }
 
 export async function insertStudentInfo(student: Student): Promise<string> {
-	const studentConn = await connectStudentMySQL();
+    // Inserts the student information after registering
+
+	const studentConn: mysql.Connection | null = await connectStudentMySQL();
 
 	try {
         if (!studentConn) {
@@ -65,8 +69,7 @@ export async function insertStudentInfo(student: Student): Promise<string> {
                 '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${isEnrolled}');`)
         
         return 'success';
-    } 
-    catch {
+    } catch {
         return 'fail';
     }
 }
