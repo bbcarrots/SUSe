@@ -6,158 +6,210 @@
     }
 </script>
 
-<section>
-
 <!-- TODO: Add form pattern validation -->
 <!-- TODO: Custom styles -->
-<form class="max-w-sm mx-auto">
-    <!-- name section -->
-    <div class="mb-5">
-        <label 
-            for="name" 
-            class="block mb-2 text-sm font-medium text-gray-900"
-        >  
-            Name
-        </label>
-        <div class="grid grid-cols-6 gap-4">
-            <input 
-                type="text" 
-                id="name" 
-                class="col-span-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                placeholder="First Name" 
-                required 
-            />
-            <input 
-                type="text" 
-                id="middle-initial" 
-                class="col-span-1 -gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                placeholder="MI"  
-            />
-            <input 
-                type="text" 
-                id="surname" 
-                class="col-span-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                placeholder="Surname"
-                required  
-            />
-        </div>
+
+<section class="grid gap-y-8">
+
+    <!-- HEADER -->
+    <div class="grid">
+        <h1>Register</h1>
+        <p>Tap your UP ID to register it to your account.</p>    
     </div>
 
-    <!-- student number and phone number -->
-    <div class="grid grid-cols-2 gap-4">
-        <div class="mb-5 cols-span-1 ">
-            <label 
-            for="student-number" 
-            class="block mb-2 text-sm font-medium text-gray-900"
-            >  
-                Student Number
-            </label>
-            <input 
-                type="text" 
-                id="student-number" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                placeholder="20XXXXXXX" 
-                required 
-            />
-        </div>
+    <!-- FORM -->
+    <form class="grid gap-y-4">
 
-        <div class="mb-5 cols-span-1">
-            <label 
-            for="student-number" 
-            class="cols-span-1 block mb-2 text-sm font-medium text-gray-900"
-            >  
-                Phone Number
-            </label>
-            <input 
-                type="text" 
-                id="phone-number" 
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                placeholder="09XXXXXXXXX" 
-                required 
-            />
-        </div>
-    </div>
+        <!-- ITEMS -->
+        <div class="grid gap-y-2">
+            <!-- name section -->
+            <div class="grid gap-y-2">
+                <label 
+                    for="name" 
+                >  
+                    <p>Name</p>
+                </label>
+                <div 
+                    class="grid lg:grid-cols-6 gap-4
+                        sm:grid-cols-1"
+                >
+                    <input 
+                        type="text" 
+                        id="name" 
+                        class="lg:col-span-3 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="First Name" 
+                        required 
+                    />
+                    <input 
+                        type="text" 
+                        id="middle-initial" 
+                        class="lg:col-span-1 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="MI"  
+                    />
+                    <input 
+                        type="text" 
+                        id="surname" 
+                        class="lg:col-span-2 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="Surname"
+                        required  
+                    />
+                </div>
+            </div>
 
-    <!-- college and department -->
-    <div class="grid grid-cols-2 gap-4">
-        <div class="mb-5 cols-span-1">
-            <label 
-                for="college" 
-                class="block mb-2 text-sm font-medium text-gray-900"
+            <!-- student number and phone number -->
+            <div 
+                class="grid lg:grid-cols-2 gap-4
+                sm:grid-cols-1"
             >
-                College
-            </label>
-            <select id="college" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                <!-- TODO: make dynamic options from a database of colleges -->
-                <option>College of Engineering</option>
-                <option>College of Arts and Letters</option>
-                <option>College of Science</option>
-            </select>
-        </div>
+                <div class="grid gap-y-2 cols-span-1">
+                    <label 
+                    for="student-number" 
+                    >  
+                        <p>Student Number</p>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="student-number" 
+                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="20XXXXXXX" 
+                        required 
+                    />
+                </div>
 
-        <div class="mb-5 cols-span-1">
-            <label 
-                for="program" 
-                class="block mb-2 text-sm font-medium text-gray-900"
+                <div class="grid gap-y-2 cols-span-1">
+                    <label 
+                    for="student-number" 
+                    >  
+                        <p>Phone Number</p>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="phone-number" 
+                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        placeholder="09XXXXXXXXX" 
+                        required 
+                    />
+                </div>
+            </div>
+
+            <!-- college and department -->
+            <div 
+                class="grid lg:grid-cols-2 gap-4
+                        sm:grid-cols-1"
             >
-                Degree Program
-            </label>
-            <select id="program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                <!-- TODO: make dynamic options from a database of programs -->
-                <option>Computer Science</option>
-                <option>Computer Engineering</option>
-            </select>
+                <div class="grid gap-y-2 cols-span-1">
+                    <label 
+                        for="college" 
+                    >
+                        <p>College</p>
+                    </label>
+                    <select id="college" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <!-- TODO: make dynamic options from a database of colleges -->
+                        <option>College of Engineering</option>
+                        <option>College of Arts and Letters</option>
+                        <option>College of Science</option>
+                    </select>
+                </div>
+
+                <div class="grid gap-y-2 cols-span-1">
+                    <label 
+                        for="program" 
+                    >
+                        <p>Degree Program</p>
+                    </label>
+                    <select id="program" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <!-- TODO: make dynamic options from a database of programs -->
+                        <option>Computer Science</option>
+                        <option>Computer Engineering</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- email section -->
+            <div class="grid gap-y-2">
+                <label 
+                for="email" 
+            >
+                <p>Email</p>
+                </label>
+                <div class="flex">
+                    <input 
+                        type="text" 
+                        id="email" 
+                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full p-2.5" 
+                        placeholder="jdelacruz"
+                        required
+                    />
+                    <span id="email-suffix" class="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-s-0 border-gray-300">
+                        <p>@up.edu.ph</p>
+                    </span>
+                </div>
+            </div>
+            
+
+
+            <!-- password section-->
+            <div class="grid gap-y-2">
+                <label 
+                    for="password" 
+                >
+                <p>Password</p>
+                </label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                    placeholder="••••••••" 
+                    required 
+                />
+            </div>
         </div>
 
-    </div>
-
-    <!-- email section -->
-    <label 
-        for="website-admin" 
-        class="block mb-2 text-sm font-medium text-gray-900"
-    >
-        Email
-    </label>
-    <div class="flex">
-        <input 
-            type="text" 
-            id="website-admin" 
-            class="rounded-s-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-            placeholder="jdelacruz"
-            required
-        />
-        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-e-lg ">
-            @up.edu.ph
-        </span>
-    </div>
-
-
-    <!-- password section-->
-    <div class="mb-5">
-        <label 
-            for="password" 
-            class="block mb-2 text-sm font-medium text-gray-900"
-        >
-            Password
-        </label>
-        <input 
-            type="password" 
-            id="password" 
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-            placeholder="••••••••" 
-            required 
-        />
-    </div>
-  
-    <div class="inline-flex gap-4">
-        <Button inverse={true} on:click={handleClick}> Cancel </Button>
-        <Button on:click={handleClick}> Register </Button>
-    </div>
+        <!-- ACTION BUTTONS -->
+        <div class="inline-flex gap-4">
+            <Button inverse={true} on:click={handleClick}> Cancel </Button>
+            <Button on:click={handleClick}> Register </Button>
+        </div>
   
     </form>
 
 </section>
 
 <style>
+
+input{
+    background-color: transparent;
+    border-radius: 5px;
+    border-color: #EAEAEA;
+}
+
+::placeholder{
+    padding: 12px, 16px;
+    color: var(--suse-black);
+    opacity: 50%;
+}
+
+#email{
+    border-radius: 5px 0px 0px 5px;
+}
+
+#email-suffix{
+    border-radius: 0px 5px 5px 0px;
+    padding: 12px, 16px;
+    background-color: #EAEAEA;
+    border-color: #EAEAEA;
+}
+
+#email-suffix p{
+    color: var(--suse-black);
+    opacity: 50%;
+}
+
+select{
+    padding: 12px, 16px;
+    border-radius: 5px;
+}
+
 
 </style>
