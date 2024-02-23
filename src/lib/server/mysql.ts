@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
-import { Student } from '$lib/classes/student'
+// import { PUBLIC_STUDENT_USER } from '$env/dynamic/public'
+// import { Student } from '$lib/classes/student'
 
 // let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
@@ -40,7 +41,7 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-export async function insertStudentDB(student: Student): Promise<object> {
+export async function insertStudentDB(student): Promise<object> {
     // Inserts the student information after registering
 
 	const studentConn: mysql.Connection | null = await connectStudentMySQL();
