@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { Student } from '$lib/classes/student'
 
 // let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
@@ -39,37 +40,22 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-type Student = {
-	sn: number,
-	rfid: string,
-	username: string,
-	pass: string,
-	firstName: string,
-	middleInitial: string,
-	lastName: string,
-	college: string,
-	program: string,
-	phoneNum: string,
-}
-
-export async function insertStudentInfo(student: Student): Promise<string> {
+export async function insertStudentDB(student: Student): Promise<object> {
     // Inserts the student information after registering
 
 	const studentConn: mysql.Connection | null = await connectStudentMySQL();
 
 	try {
         if (!studentConn) {
-            return 'fail';
+            return { success: false };
         }
-        
-        const isEnrolled: number = 0;
         await studentConn
                 .query(`INSERT INTO students
-                VALUES ('${student.sn}', '${student.rfid}', '${student.username}', '${student.pass}', '${student.firstName}', 
-                '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${isEnrolled}');`)
+                VALUES ('${student.sn}', '${student.rfid}', '${student.username}', '${student.password}', '${student.firstName}', 
+                '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${student.isEnrolled}');`)
         
-        return 'success';
+        return { success: true };
     } catch {
-        return 'fail';
+        return { success: false };
     }
 }
