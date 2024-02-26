@@ -168,8 +168,8 @@
 
         <!-- ACTION BUTTONS -->
         <div class="inline-flex gap-4">
-            <Button inverse={true} on:click={handleClick}> Cancel </Button>
-            <Button on:click={handleClick}> Register </Button>
+            <Button inverse={true}> Cancel </Button>
+            <Button submit={true}> Register </Button>
         </div>
   
     </form>
