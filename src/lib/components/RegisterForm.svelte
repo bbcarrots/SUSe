@@ -18,7 +18,7 @@
     </div>
 
     <!-- FORM -->
-    <form class="grid gap-y-4">
+    <form class="grid gap-y-4" method="post">
 
         <!-- ITEMS -->
         <div class="grid gap-y-2">
