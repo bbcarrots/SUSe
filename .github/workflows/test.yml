@@ -26,5 +26,5 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-    - run: npm ci
+    - run: npm install 
     - run: npm test
