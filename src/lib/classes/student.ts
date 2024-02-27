@@ -1,9 +1,9 @@
-import { insertStudentInfo } from "$lib/server/mysql";
+import { insertStudentDB } from "$lib/server/mysql";
 
 
 export class Student {
 
-    private isEnrolled: boolean = false;
+    private _isEnrolled: number = 0;
     // private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
 
     constructor(
@@ -59,9 +59,13 @@ export class Student {
         return this._phoneNum;
     }
 
+    get isEnrolled(): number {
+        return this._isEnrolled;
+    }
+
     insertStudent() {
         // TO BE IMPLEMENTED: UNIQUE ENTRY CHECKER FUNCTION
-        return insertStudentInfo(this);
+        return insertStudentDB(this);
     }
 
     // TO BE IMPLEMENTED:
