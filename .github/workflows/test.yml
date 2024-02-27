@@ -30,4 +30,5 @@ jobs:
     - run: npm cache clean --force
     - run: npm install 
     - run: npx playwright install
+    - run: npm install --save-dev jest
     - run: npm test
