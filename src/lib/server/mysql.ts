@@ -1,10 +1,11 @@
 import mysql from 'mysql2/promise';
 import { env } from '$env/dynamic/public'
+import { json } from "@sveltejs/kit";
 import { Student } from '$lib/classes/student'
 
 type State = {
     success: boolean,
-    value: object[] | null
+    value: Response | null
 }
 
 let adminMySQLConn: Promise<mysql.Connection> | null = null;
@@ -67,6 +68,42 @@ export async function insertStudentDB(student: Student): Promise<State> {
         return { 
             success: true,
             value: null
+        };
+    } catch (err) {
+        console.log(err)
+        return { 
+            success: false,
+            value: null
+        };
+    }
+}
+
+
+
+export async function selectStudentDB(sn: number): Promise<State> {
+    // Given a student number, this returns the corresponding student information
+
+	const adminConn: mysql.Connection | null = await connectAdminMySQL();
+
+	try {
+        if (!adminConn) {
+            return { 
+                success: false,
+                value: null
+            };
+        }
+        console.log(sn);
+        const results: object[] = await adminConn
+                .query(
+                    `SELECT *
+                    FROM students
+                    WHERE sn=${sn};`
+                )
+                .then(([rows] : object[]) => {return rows;});
+        
+        return { 
+            success: true,
+            value: json(results)
         };
     } catch (err) {
         console.log(err)
