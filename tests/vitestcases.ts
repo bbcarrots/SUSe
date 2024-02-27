@@ -20,3 +20,38 @@ describe('Student', () => {
 
 })
 
+describe('connectStudentMySQL', () => {
+  it('should return a Promise<mysql.Connection> or null', () => {
+    // Mock environment variables
+    const env = {
+      PUBLIC_HOST: 'testhost',
+      PUBLIC_STUDENT_USER: 'testuser',
+      PUBLIC_STUDENT_PASS: 'testpass',
+      PUBLIC_DATABASE: 'testdb'
+    };
+
+    // mock mysql module
+    const mysql = {
+      createConnection: jest.fn().mockReturnValue({
+        // mock mysql connection object
+      })
+    };
+
+    // place mock environment variables and mysql module
+    jest.isolateModules(() => {
+      global.env = env;
+      global.mysql = mysql;
+
+      const result = connectStudentMySQL();
+
+      // Assert the result
+      expect(result).toBeInstanceOf(Promise); // Ensure it returns a Promise
+      expect(mysql.createConnection).toHaveBeenCalledWith({
+        host: 'testhost',
+        user: 'testuser',
+        password: 'testpass',
+        database: 'testdb'
+      });
+    });
+  });
+});
