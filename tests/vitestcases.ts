@@ -44,8 +44,7 @@ describe('connectStudentMySQL', () => {
 
       const result = connectStudentMySQL();
 
-      // Assert the result
-      expect(result).toBeInstanceOf(Promise); // Ensure it returns a Promise
+      expect(result).toBeInstanceOf(Promise); 
       expect(mysql.createConnection).toHaveBeenCalledWith({
         host: 'testhost',
         user: 'testuser',
