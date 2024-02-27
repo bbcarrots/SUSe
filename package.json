@@ -44,6 +44,7 @@
 	"dependencies": {
 		"mysql2": "^3.9.1",
 		"@popperjs/core": "^2.11.8",
+		"dotenv": "^16.4.5",
 		"flowbite": "^2.3.0",
 		"flowbite-svelte": "^0.44.23",
 		"mysql2": "^3.9.1",
