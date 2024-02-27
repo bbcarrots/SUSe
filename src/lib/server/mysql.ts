@@ -61,9 +61,13 @@ export async function insertStudentDB(student: Student): Promise<State> {
         }
         console.log(student.firstName);
         await studentConn
-                .query(`INSERT INTO students
-                VALUES ('${student.sn}', '${student.rfid}', '${student.username}', '${student.password}', '${student.firstName}', 
-                '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${student.isEnrolled}');`)
+                .query(
+                    `INSERT INTO students
+                    VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
+                    '${student.password}', '${student.firstName}', '${student.middleInitial}', 
+                    '${student.lastName}', '${student.college}', '${student.program}', 
+                    '${student.phoneNum}', '${student.isEnrolled}');`
+                )
         
         return { 
             success: true,
