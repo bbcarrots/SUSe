@@ -2,6 +2,11 @@ import mysql from 'mysql2/promise';
 import { env } from '$env/dynamic/public'
 import { Student } from '$lib/classes/student'
 
+type State = {
+    success: boolean,
+    value: object[] | null
+}
+
 // let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
 
@@ -41,14 +46,17 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-export async function insertStudentDB(student: Student): Promise<object> {
+export async function insertStudentDB(student: Student): Promise<State> {
     // Inserts the student information after registering
 
 	const studentConn: mysql.Connection | null = await connectStudentMySQL();
 
 	try {
         if (!studentConn) {
-            return { success: false };
+            return { 
+                success: false,
+                value: null
+            };
         }
         console.log(student.firstName);
         await studentConn
@@ -56,9 +64,15 @@ export async function insertStudentDB(student: Student): Promise<object> {
                 VALUES ('${student.sn}', '${student.rfid}', '${student.username}', '${student.password}', '${student.firstName}', 
                 '${student.middleInitial}', '${student.lastName}', '${student.college}', '${student.program}', '${student.phoneNum}', '${student.isEnrolled}');`)
         
-        return { success: true };
+        return { 
+            success: true,
+            value: null
+        };
     } catch (err) {
         console.log(err)
-        return { success: false };
+        return { 
+            success: false,
+            value: null
+        };
     }
 }
