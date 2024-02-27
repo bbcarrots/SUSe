@@ -7,25 +7,25 @@ type State = {
     value: object[] | null
 }
 
-// let adminMySQLConn: Promise<mysql.Connection> | null = null;
+let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
 
-// function connectAdminMySQL(): Promise<mysql.Connection> | null {
-// 	if (!adminMySQLConn) {
-// 		try {
-// 			adminMySQLConn = mysql.createConnection({
-// 				host: env.PUBLIC_HOST,
-// 				user: env.PUBLIC_ADMIN_USER,
-// 				password: env.PUBLIC_ADMIN_PASS,
-// 				database: env.PUBLIC_DATABASE
-// 			});
-// 		} catch {
-// 			return null;
-// 		}
-// 	}
+function connectAdminMySQL(): Promise<mysql.Connection> | null {
+	if (!adminMySQLConn) {
+		try {
+			adminMySQLConn = mysql.createConnection({
+				host: env.PUBLIC_HOST,
+				user: env.PUBLIC_ADMIN_USER,
+				password: env.PUBLIC_ADMIN_PASS,
+				database: env.PUBLIC_DATABASE
+			});
+		} catch {
+			return null;
+		}
+	}
 
-// 	return adminMySQLConn;
-// }
+	return adminMySQLConn;
+}
 
 function connectStudentMySQL(): Promise<mysql.Connection> | null {
     // Creates the connection for the student user
