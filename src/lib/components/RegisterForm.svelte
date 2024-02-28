@@ -20,7 +20,7 @@
     </div>
 
     <!-- FORM -->
-    <form class="grid gap-y-4">
+    <form class="grid gap-y-4" method="POST">
 
         <!-- ITEMS -->
         <div class="grid gap-y-2">
@@ -36,23 +36,29 @@
                         sm:grid-cols-1"
                 >
                     <input 
+                        name="firstName"
                         type="text" 
                         id="first-name" 
                         class="lg:col-span-3 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
-                        placeholder="First Name" 
+                        placeholder="First Name"
+                        pattern="[A-Za-z\s]+" 
                         required 
                     />
                     <input 
+                        name="middleInitial"
                         type="text" 
                         id="middle-initial" 
                         class="lg:col-span-1 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        pattern="[A-Za-z\s]+" 
                         placeholder="MI"  
                     />
                     <input 
+                        name="lastName"
                         type="text" 
                         id="last-name" 
                         class="lg:col-span-2 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="Surname"
+                        pattern="[A-Za-z\s]+" 
                         required  
                     />
                 </div>
@@ -70,12 +76,15 @@
                         <p>Student Number</p>
                     </label>
                     <input 
+                        name="sn"
                         type="text" 
                         id="student-number" 
                         class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="20XXXXXXX" 
+                        pattern="^\d{'{'}9{'}'}$"
                         required 
                     />
+                    
                 </div>
 
                 <div class="grid gap-y-2 cols-span-1">
@@ -85,10 +94,12 @@
                         <p>Phone Number</p>
                     </label>
                     <input 
+                        name="phoneNum"
                         type="text" 
                         id="phone-number" 
                         class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="09XXXXXXXXX" 
+                        pattern="^\d{'{'}11{'}'}$"
                         required 
                     />
                 </div>
@@ -105,7 +116,7 @@
                     >
                         <p>College</p>
                     </label>
-                    <select id="college" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select name="college" id="college" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <!-- TODO: make dynamic options from a database of colleges -->
                         <option>College of Engineering</option>
                         <option>College of Arts and Letters</option>
@@ -119,7 +130,7 @@
                     >
                         <p>Degree Program</p>
                     </label>
-                    <select id="program" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select name="program" id="program" class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <!-- TODO: make dynamic options from a database of programs -->
                         <option>Computer Science</option>
                         <option>Computer Engineering</option>
@@ -137,10 +148,12 @@
                 </label>
                 <div class="flex">
                     <input 
+                        name="username"
                         type="text" 
                         id="email" 
                         class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full p-2.5" 
                         placeholder="jdelacruz"
+                        pattern="[A-Za-z]+" 
                         required
                     />
                     <span id="email-suffix" class="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-s-0 border-gray-300">
@@ -159,9 +172,11 @@
                 <p>Password</p>
                 </label>
                 <input 
+                    name="password"
                     type="password" 
                     id="password" 
                     class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{'{'}8,{'}'}"
                     placeholder="••••••••" 
                     required 
                 />
@@ -170,8 +185,8 @@
 
         <!-- ACTION BUTTONS -->
         <div class="inline-flex gap-4">
-            <Button inverse={true} on:click={handleClick}> Cancel </Button>
-            <Button on:click={handleClick}> Register </Button>
+            <Button inverse={true}> Cancel </Button>
+            <Button submit={true}> Register </Button>
         </div>
   
     </form>

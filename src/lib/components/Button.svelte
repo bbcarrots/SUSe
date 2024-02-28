@@ -4,6 +4,7 @@
     export let inverse = false;
     export let small = false;
     export let disabled = false;
+    export let submit = false;
 
     function getIconSize() {
         return small ? "15" : "24";
@@ -12,7 +13,7 @@
 </script>
 
 <button 
-    type="button" 
+    type={submit ? 'submit' : 'button'}
     class="hover:bg-[#24292F]/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
     class:inverse={inverse}
     class:small={small}
