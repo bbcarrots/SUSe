@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Button from "$lib/components/Button.svelte";
     import RegisterForm from "$lib/components/RegisterForm.svelte";
     import Hero from "$lib/components/Hero.svelte";
 
@@ -16,13 +17,19 @@
             class="lg:col-span-5 lg:col-start-2 lg:col-end-7 lg:row-start-1
                     sm:col-span-2 sm:col-start-2 sm:row-start-1"
         >
-            <RegisterForm/>
-            {#if form != null && form.error == 'Error: No database connection'}
-                <p class="text-red-600">No database connection.</p>
-            {:else if form != null && form.error == 'Error: Student sn/username already exists in database'}
-                <p class="text-red-600">Student record already exists.</p>
-            {:else}
-                <p></p>
+            {#if form == null || form.success == false}
+                <RegisterForm/>
+                {#if form != null && form.error == 'Error: No database connection'}
+                    <p class="text-red-600">No database connection.</p>
+                {:else if form != null && form.error == 'Error: Student sn/username already exists in database'}
+                    <p class="text-red-600">Student record already exists.</p>
+                {:else}
+                    <p></p>
+                {/if}
+            {:else if form.success == true}
+                <h1>Present your Form 5 to the admin for approval.</h1>
+                <h4>Please prepare your Form 5 and present it to the admin to get your UP ID registered in SUSe!</h4>
+                <Button>Return to Login</Button>
             {/if}
         </div>
         <div class="lg:col-span-5 lg:col-start-7 lg:col-end-12 lg:row-start-1
