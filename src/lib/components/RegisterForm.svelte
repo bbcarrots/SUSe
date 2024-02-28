@@ -181,7 +181,7 @@
                         type="text" 
                         id="email" 
                         placeholder="jdelacruz"
-                        pattern="[A-Za-z]+" 
+                        pattern="[A-Za-z0-9]+" 
                         title="Please only enter alphabets"
                         required
                     />
