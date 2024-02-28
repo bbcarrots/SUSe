@@ -129,7 +129,7 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
                                     WHERE sn=${sn}`;
 
         if (username) {
-            selectQuery += `, username=${username}`;
+            selectQuery += ` AND username='${username}';`;
         }
          else {
             selectQuery += ';'
