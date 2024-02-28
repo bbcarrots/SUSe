@@ -7,7 +7,13 @@ export type State = {
     success: boolean,
     value: Response | null,
     error: string | null
-}
+};
+
+const errorNoDBConn: State = { 
+    success: false,
+    value: null,
+    error: "Error: No database connection"
+};
 
 let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
@@ -55,24 +61,16 @@ export async function insertStudentDB(student: Student): Promise<State> {
 
 	try {
         studentConn = await connectStudentMySQL();
+        
+        if (!studentConn) {
+            return errorNoDBConn;
+        }
     } catch (err) {
         console.log(err)
-        return { 
-            success: false,
-            value: null,
-            error: "Error: No database connection"
-        };
+        return errorNoDBConn;
     }
 
 	try {
-        if (!studentConn) {
-            return { 
-                success: false,
-                value: null,
-                error: "Error: No database connection"
-            };
-        }
-
         await studentConn
                 .query(
                     `INSERT INTO students
@@ -104,31 +102,23 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
 
     try {
         adminConn = await connectAdminMySQL();
+
+        if (!adminConn) {
+            return errorNoDBConn;
+        }
     } catch (err) {
         console.log(err)
-        return { 
-            success: false,
-            value: null,
-            error: "Error: No database connection"
-        };
+        return errorNoDBConn;
     }
 
 	try {
-        if (!adminConn) {
-            return { 
-                success: false,
-                value: null,
-                error: "Error: No database connection"
-            };
-        }
-    
         console.log(sn, username);
         let selectQuery: string = `SELECT *
                                     FROM students
                                     WHERE sn=${sn}`;
 
         if (username) {
-            selectQuery += ` AND username='${username}';`;
+            selectQuery += ` OR username='${username}';`;
         }
          else {
             selectQuery += ';'
