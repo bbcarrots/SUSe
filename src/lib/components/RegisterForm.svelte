@@ -2,7 +2,7 @@
     import Button from "./Button.svelte";
     import { onMount } from 'svelte';
     
-
+    export let form;
     let inputs: NodeListOf<HTMLInputElement | HTMLSelectElement>;
 
     onMount(() => {
