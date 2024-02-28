@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/public'
 import { json } from "@sveltejs/kit";
 import { Student } from '$lib/classes/student'
 
-type State = {
+export type State = {
     success: boolean,
     value: Response | null,
     error: string | null
@@ -97,9 +97,7 @@ export async function insertStudentDB(student: Student): Promise<State> {
     }
 }
 
-
-
-export async function selectStudentDB(sn: number): Promise<State> {
+export async function selectStudentDB(sn: number, username: string = ""): Promise<State> {
     // Given a student number, this returns the corresponding student information
 
 	let adminConn: mysql.Connection | null;
@@ -123,13 +121,21 @@ export async function selectStudentDB(sn: number): Promise<State> {
                 error: "Error: No database connection"
             };
         }
-        console.log(sn);
+    
+        console.log(sn, username);
+        let selectQuery: string = `SELECT *
+                                    FROM students
+                                    WHERE sn=${sn}`;
+
+        if (username) {
+            selectQuery += ` AND username='${username}';`;
+        }
+         else {
+            selectQuery += ';'
+        }
+
         const results: object[] = await adminConn
-                .query(
-                    `SELECT *
-                    FROM students
-                    WHERE sn=${sn};`
-                )
+                .query(selectQuery)
                 .then(([rows] : object[]) => {return rows;});
         
         return { 

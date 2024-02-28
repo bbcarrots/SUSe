@@ -1,9 +1,10 @@
-import { insertStudentDB } from "$lib/server/mysql";
+import { insertStudentDB, selectStudentDB } from "$lib/server/mysql";
+import type { State } from "$lib/server/mysql"
 
 
 export class Student {
 
-    private _isEnrolled: number = 0;
+    private _isEnrolled: 0 | 1 = 0;
     // private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
 
     constructor(
@@ -59,14 +60,48 @@ export class Student {
         return this._phoneNum;
     }
 
-    get isEnrolled(): number {
+    get isEnrolled(): 0 | 1 {
         return this._isEnrolled;
     }
 
-    insertStudent() {
-        // TO BE IMPLEMENTED: UNIQUE ENTRY CHECKER FUNCTION
+    async insertStudent(): Promise<State> {
+        const state: State = await selectStudentDB(this._sn, this._username);
+        const value: [] = await state.value?.json()
+
+        if (!state.success) {
+            return state;
+        } else if (value.length > 0) {
+            return {
+                success: false,
+                value: null,
+                error: "Error: Student sn/username already exists in database"
+            }
+        }
+
         return insertStudentDB(this);
     }
+
+    // editStudent(
+    //     sn: number,
+    //     username: string, 
+    //     firstName: string, 
+    //     middleInitial: string,
+    //     lastName: string,
+    //     college: string,
+    //     program: string,
+    //     phoneNum: string,
+    //     isEnrolled: 0 | 1
+    // ) {
+    //     this._sn = sn;
+    //     this._username = username;
+    //     this._firstName = firstName;
+    //     this._middleInitial = middleInitial;
+    //     this._lastName = lastName;
+    //     this._college = college;
+    //     this._program = program;
+    //     this._phoneNum = phoneNum;
+    //     this._isEnrolled = isEnrolled;
+    // }
 
     // TO BE IMPLEMENTED:
     // updateStudent()
