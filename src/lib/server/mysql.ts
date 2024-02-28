@@ -97,8 +97,6 @@ export async function insertStudentDB(student: Student): Promise<State> {
     }
 }
 
-
-
 export async function selectStudentDB(sn: number, username: string = ""): Promise<State> {
     // Given a student number, this returns the corresponding student information
 
@@ -123,6 +121,7 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
                 error: "Error: No database connection"
             };
         }
+    
         console.log(sn, username);
         let selectQuery: string = `SELECT *
                                     FROM students

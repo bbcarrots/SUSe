@@ -4,6 +4,8 @@
     function handleClick(){
         console.log("clicked");
     }
+
+    export let form;
 </script>
 
 <!-- TODO: Add form pattern validation -->
