@@ -5,7 +5,8 @@ import { Student } from '$lib/classes/student'
 
 type State = {
     success: boolean,
-    value: Response | null
+    value: Response | null,
+    error: string | null
 }
 
 let adminMySQLConn: Promise<mysql.Connection> | null = null;
@@ -50,16 +51,28 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 export async function insertStudentDB(student: Student): Promise<State> {
     // Inserts the student information after registering
 
-	const studentConn: mysql.Connection | null = await connectStudentMySQL();
+    let studentConn: mysql.Connection | null;
+
+	try {
+        studentConn = await connectStudentMySQL();
+    } catch (err) {
+        console.log(err)
+        return { 
+            success: false,
+            value: null,
+            error: "Error: No database connection"
+        };
+    }
 
 	try {
         if (!studentConn) {
             return { 
                 success: false,
-                value: null
+                value: null,
+                error: "Error: No database connection"
             };
         }
-        console.log(student.firstName);
+
         await studentConn
                 .query(
                     `INSERT INTO students
@@ -71,13 +84,15 @@ export async function insertStudentDB(student: Student): Promise<State> {
         
         return { 
             success: true,
-            value: null
+            value: null,
+            error: null
         };
     } catch (err) {
         console.log(err)
         return { 
             success: false,
-            value: null
+            value: null,
+            error: "Error: Insert student failed"
         };
     }
 }
@@ -87,13 +102,25 @@ export async function insertStudentDB(student: Student): Promise<State> {
 export async function selectStudentDB(sn: number): Promise<State> {
     // Given a student number, this returns the corresponding student information
 
-	const adminConn: mysql.Connection | null = await connectAdminMySQL();
+	let adminConn: mysql.Connection | null;
+
+    try {
+        adminConn = await connectAdminMySQL();
+    } catch (err) {
+        console.log(err)
+        return { 
+            success: false,
+            value: null,
+            error: "Error: No database connection"
+        };
+    }
 
 	try {
         if (!adminConn) {
             return { 
                 success: false,
-                value: null
+                value: null,
+                error: "Error: No database connection"
             };
         }
         console.log(sn);
@@ -107,13 +134,15 @@ export async function selectStudentDB(sn: number): Promise<State> {
         
         return { 
             success: true,
-            value: json(results)
+            value: json(results),
+            error: null
         };
     } catch (err) {
         console.log(err)
         return { 
             success: false,
-            value: null
+            value: null,
+            error: "Error: Select student failed"
         };
     }
 }
