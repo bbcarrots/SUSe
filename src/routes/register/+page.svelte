@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
     import RegisterForm from "$lib/components/RegisterForm.svelte";
     import Hero from "$lib/components/Hero.svelte";
+
+    export let form;
 </script>
 
 <section class="flex justify-center items-center lg:h-screen">
@@ -13,7 +15,7 @@
             class="lg:col-span-5 lg:col-start-2 lg:col-end-7 lg:row-start-1
                     sm:col-span-2 sm:col-start-2 sm:row-start-1"
         >
-            <RegisterForm/>
+            <RegisterForm {form}/>
         </div>
         <div class="lg:col-span-5 lg:col-start-7 lg:col-end-12 lg:row-start-1
                     sm:col-span-2 sm:col-start-2 sm:row-start-2"
