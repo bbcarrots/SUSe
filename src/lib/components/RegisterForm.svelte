@@ -18,7 +18,7 @@
     </div>
 
     <!-- FORM -->
-    <form class="grid gap-y-4" method="post">
+    <form class="grid gap-y-4" method="POST">
 
         <!-- ITEMS -->
         <div class="grid gap-y-2">
@@ -170,7 +170,7 @@
                 <p>Password</p>
                 </label>
                 <input 
-                    name="pass"
+                    name="password"
                     type="password" 
                     id="password" 
                     class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
