@@ -203,7 +203,7 @@
                     type="password" 
                     id="password" 
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{'{'}8,{'}'}"
-                    title="Please enter at least one lowercase letter, uppercase letter, symbol, and number."
+                    title="Please enter at least one lowercase letter, uppercase letter, and number."
                     placeholder="••••••••" 
                     required 
                 />
