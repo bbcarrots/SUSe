@@ -63,10 +63,12 @@ export async function insertStudentDB(student: Student): Promise<State> {
         studentConn = await connectStudentMySQL();
         
         if (!studentConn) {
+            studentMySQLConn = null;
             return errorNoDBConn;
         }
     } catch (err) {
-        console.log(err)
+        console.error(err)
+        studentMySQLConn = null;
         return errorNoDBConn;
     }
 
@@ -86,7 +88,7 @@ export async function insertStudentDB(student: Student): Promise<State> {
             error: null
         };
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return { 
             success: false,
             value: null,
@@ -104,15 +106,16 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
         adminConn = await connectAdminMySQL();
 
         if (!adminConn) {
+            adminMySQLConn = null;
             return errorNoDBConn;
         }
     } catch (err) {
-        console.log(err)
+        console.error(err)
+        adminMySQLConn = null;
         return errorNoDBConn;
     }
 
 	try {
-        console.log(sn, username);
         let selectQuery: string = `SELECT *
                                     FROM students
                                     WHERE sn=${sn}`;
@@ -134,7 +137,7 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
             error: null
         };
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return { 
             success: false,
             value: null,
