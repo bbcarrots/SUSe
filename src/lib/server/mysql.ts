@@ -19,6 +19,8 @@ let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
 
 function connectAdminMySQL(): Promise<mysql.Connection> | null {
+    /* Creates the connection for the admin user */
+
 	if (!adminMySQLConn) {
 		try {
 			adminMySQLConn = mysql.createConnection({
@@ -36,7 +38,7 @@ function connectAdminMySQL(): Promise<mysql.Connection> | null {
 }
 
 function connectStudentMySQL(): Promise<mysql.Connection> | null {
-    // Creates the connection for the student user
+    /* Creates the connection for the student user */
 
 	if (!studentMySQLConn) {
 		try {
@@ -55,11 +57,11 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 }
 
 export async function insertStudentDB(student: Student): Promise<State> {
-    // Inserts the student information after registering
+    /* Inserts the student information into database */
 
     let studentConn: mysql.Connection | null;
 
-	try {
+	try { // try connecting to db as a student, catch no db connection error
         studentConn = await connectStudentMySQL();
         
         if (!studentConn) {
@@ -72,7 +74,7 @@ export async function insertStudentDB(student: Student): Promise<State> {
         return errorNoDBConn;
     }
 
-	try {
+	try { // try an insert query and return success, catch insert student fail error
         await studentConn
                 .query(
                     `INSERT INTO students
@@ -102,7 +104,7 @@ export async function selectStudentDB(sn: number = 0, username: string = ""): Pr
 
 	let adminConn: mysql.Connection | null;
 
-    try {
+    try { // try connecting to db as a admin, catch no db connection error
         adminConn = await connectAdminMySQL();
 
         if (!adminConn) {
@@ -115,15 +117,15 @@ export async function selectStudentDB(sn: number = 0, username: string = ""): Pr
         return errorNoDBConn;
     }
 
-	try {
+	try { // try a select query and return success with value, catch select student fail error
         let selectQuery: string = `SELECT * 
                                     FROM students`;
         
-        if (sn) {
+        if (sn) { // if sn != 0, add sn predicate
             selectQuery += ` WHERE sn=${sn}`
         }
 
-        if (username) {
+        if (username) { // if username != "", add username predicate
             selectQuery += ` OR username='${username}';`;
         }
          else {
