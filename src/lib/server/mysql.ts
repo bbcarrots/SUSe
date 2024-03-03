@@ -97,7 +97,7 @@ export async function insertStudentDB(student: Student): Promise<State> {
     }
 }
 
-export async function selectStudentDB(sn: number, username: string = ""): Promise<State> {
+export async function selectStudentDB(sn: number = 0, username: string = ""): Promise<State> {
     // Given a student number, this returns the corresponding student information
 
 	let adminConn: mysql.Connection | null;
@@ -116,9 +116,12 @@ export async function selectStudentDB(sn: number, username: string = ""): Promis
     }
 
 	try {
-        let selectQuery: string = `SELECT *
-                                    FROM students
-                                    WHERE sn=${sn}`;
+        let selectQuery: string = `SELECT * 
+                                    FROM students`;
+        
+        if (sn) {
+            selectQuery += ` WHERE sn=${sn}`
+        }
 
         if (username) {
             selectQuery += ` OR username='${username}';`;
