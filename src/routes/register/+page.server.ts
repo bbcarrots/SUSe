@@ -1,4 +1,4 @@
-import { Student } from '$lib/classes/student.js';
+import { Student } from '$lib/classes/Student.js';
 
 export const actions = {
     default: async ({ request }) => {

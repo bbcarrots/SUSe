@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 import { env } from '$env/dynamic/public';
 import { json } from '@sveltejs/kit';
-import { Student } from '$lib/classes/student';
+import { Student } from '$lib/classes/Student';
 
 export type State = {
 	success: boolean;
