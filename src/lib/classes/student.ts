@@ -81,7 +81,11 @@ export class Student {
         return insertStudentDB(this);
     }
 
-    // editStudent(
+    static async selectStudents(): Promise<State> {
+        return selectStudentDB();
+    }
+
+    // updateStudent(
     //     sn: number,
     //     username: string, 
     //     firstName: string, 
