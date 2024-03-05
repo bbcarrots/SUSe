@@ -63,10 +63,12 @@ export class Student {
 	}
 
 	static async selectStudents(): Promise<State> {
+        /* Selects all student records in database. */
 		return selectStudentDB();
 	}
 
 	async insertStudent(): Promise<State> {
+        /* Inserts unique student information in database. */
 		const state: State = await selectStudentDB(this._sn, this._username);
 		const value: [] = await state.value?.json();
 
@@ -84,6 +86,7 @@ export class Student {
 	}
 
 	// async updateStudent() {
+    //     /* Updates student information in database. */
 	//     const state: State = await selectStudentDB(this._sn, this._username);
 	//     const value: [] = await state.value?.json()
 
