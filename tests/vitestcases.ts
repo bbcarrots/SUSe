@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { Student } from "$lib/classes/student";
+import { Student } from "$lib/classes/Student";
 import { connectStudentMySQL } from '$lib/server/mysql';
 
 
