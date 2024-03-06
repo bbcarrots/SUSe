@@ -1,5 +1,25 @@
 import { insertStudentDB, selectStudentDB } from '$lib/server/mysql';
-import type { State } from '$lib/server/mysql';
+import type { DBState } from '$lib/server/mysql';
+
+type StudentRaw = {
+    sn: number,
+    rfid: string,
+    username: string,
+    pass: string,
+    firstName: string,
+    middleInitial: string,
+    lastName: string,
+    college: string,
+    program: string,
+    phoneNumber: string,
+    isEnrolled: 0 | 1
+}
+
+type StudentState = {
+    success: boolean,
+    studentRaws: StudentRaw[],
+    error: string
+}
 
 export class Student {
 	// private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
@@ -62,32 +82,48 @@ export class Student {
 		return this._isEnrolled;
 	}
 
-	static async selectStudents(): Promise<State> {
+	static async selectStudents(): Promise<StudentState> {
 		/* Selects all student records in database. */
-		return selectStudentDB();
+        const state: DBState = await selectStudentDB();
+        const value: object[] = await state.value?.json();
+		return {
+            success: state.success,
+            studentRaws: value,
+            error: state.error
+        }
 	}
 
-	async insertStudent(): Promise<State> {
+	async insertStudent(): Promise<StudentState> {
 		/* Inserts unique student information in database. */
-		const state: State = await selectStudentDB(this._sn, this._username);
-		const value: [] = await state.value?.json();
+		const selectState: DBState = await selectStudentDB(this._sn, this._username);
+		const selectValue: [] = await state.value?.json();
 
-		if (!state.success) {
-			return state;
-		} else if (value.length > 0) {
+		if (!selectState.success) {
+			return {
+                success: selectState.success,
+                studentRaws: [],
+                error: selectState.error
+            };
+		} else if (selectValue.length > 0) {
 			return {
 				success: false,
-				value: null,
+				studentRaws: [],
 				error: 'Error: Student sn/username already exists in database'
 			};
 		}
 
-		return insertStudentDB(this);
+        const insertState: DBState = await insertStudentDB(this);
+
+		return {
+            success: insertState.success,
+            studentRaws: [],
+            error: insertState.error
+        };
 	}
 
 	// async updateStudent() {
 	//     /* Updates student information in database. */
-	//     const state: State = await selectStudentDB(this._sn, this._username);
+	//     const state: DBState = await selectStudentDB(this._sn, this._username);
 	//     const value: [] = await state.value?.json()
 
 	//     if (!state.success) {
