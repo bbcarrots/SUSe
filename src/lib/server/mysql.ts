@@ -3,13 +3,13 @@ import { env } from '$env/dynamic/public';
 import { json } from '@sveltejs/kit';
 import { Student } from '$lib/classes/Student';
 
-export type State = {
+export type DBState = {
 	success: boolean;
 	value: Response | null;
 	error: string | null;
 };
 
-const errorNoDBConn: State = {
+const errorNoDBConn: DBState = {
 	success: false,
 	value: null,
 	error: 'Error: No database connection'
@@ -56,51 +56,7 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-export async function insertStudentDB(student: Student): Promise<State> {
-	/* Inserts the student information into database */
-
-	let studentConn: mysql.Connection | null;
-
-	try {
-		// try connecting to db as a student, catch no db connection error
-		studentConn = await connectStudentMySQL();
-
-		if (!studentConn) {
-			studentMySQLConn = null;
-			return errorNoDBConn;
-		}
-	} catch (err) {
-		console.error(err);
-		studentMySQLConn = null;
-		return errorNoDBConn;
-	}
-
-	try {
-		// try an insert query and return success, catch insert student fail error
-		await studentConn.query(
-			`INSERT INTO students
-                    VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
-                    '${student.password}', '${student.firstName}', '${student.middleInitial}', 
-                    '${student.lastName}', '${student.college}', '${student.program}', 
-                    '${student.phoneNum}', '${student.isEnrolled}');`
-		);
-
-		return {
-			success: true,
-			value: null,
-			error: null
-		};
-	} catch (err) {
-		console.error(err);
-		return {
-			success: false,
-			value: null,
-			error: 'Error: Insert student failed'
-		};
-	}
-}
-
-export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<State> {
+export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<DBState> {
 	// Given a student number, this returns the corresponding student information
 
 	let adminConn: mysql.Connection | null;
@@ -153,6 +109,50 @@ export async function selectStudentDB(sn: number = 0, username: string = ''): Pr
 			success: false,
 			value: null,
 			error: 'Error: Select student failed'
+		};
+	}
+}
+
+export async function insertStudentDB(student: Student): Promise<DBState> {
+	/* Inserts the student information into database */
+
+	let studentConn: mysql.Connection | null;
+
+	try {
+		// try connecting to db as a student, catch no db connection error
+		studentConn = await connectStudentMySQL();
+
+		if (!studentConn) {
+			studentMySQLConn = null;
+			return errorNoDBConn;
+		}
+	} catch (err) {
+		console.error(err);
+		studentMySQLConn = null;
+		return errorNoDBConn;
+	}
+
+	try {
+		// try an insert query and return success, catch insert student fail error
+		await studentConn.query(
+			`INSERT INTO students
+                    VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
+                    '${student.password}', '${student.firstName}', '${student.middleInitial}', 
+                    '${student.lastName}', '${student.college}', '${student.program}', 
+                    '${student.phoneNum}', '${student.isEnrolled}');`
+		);
+
+		return {
+			success: true,
+			value: null,
+			error: null
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			success: false,
+			value: null,
+			error: 'Error: Insert student failed'
 		};
 	}
 }
