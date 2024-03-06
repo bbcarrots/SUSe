@@ -3,13 +3,13 @@ import { env } from '$env/dynamic/public';
 import { json } from '@sveltejs/kit';
 import { Student } from '$lib/classes/Student';
 
-export type State = {
+export type DBState = {
 	success: boolean;
 	value: Response | null;
 	error: string | null;
 };
 
-const errorNoDBConn: State = {
+const errorNoDBConn: DBState = {
 	success: false,
 	value: null,
 	error: 'Error: No database connection'
@@ -56,7 +56,7 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<State> {
+export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<DBState> {
 	/* Selects all student records. Returns matching student record/s if sn or username is provided. */
 
 	let adminConn: mysql.Connection | null;
@@ -113,7 +113,7 @@ export async function selectStudentDB(sn: number = 0, username: string = ''): Pr
 	}
 }
 
-export async function insertStudentDB(student: Student): Promise<State> {
+export async function insertStudentDB(student: Student): Promise<DBState> {
 	/* Inserts the student information into database. */
 
 	let studentConn: mysql.Connection | null;
@@ -157,7 +157,7 @@ export async function insertStudentDB(student: Student): Promise<State> {
 	}
 }
 
-// export async function updateStudentDB(student: Student): Promise<State> {
+// export async function updateStudentDB(student: Student): Promise<DBState> {
 // 	/* Updates an existing student record. */
 
 // 	let adminConn: mysql.Connection | null;
