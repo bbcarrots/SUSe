@@ -1,5 +1,5 @@
 <script>
-	import { Student } from "$lib/classes/Student.js";
+	// import { Student } from "$lib/classes/Student";
 	import Table from "$lib/components/Table.svelte";
 	
 	// dummy data for now, assume already filtered and processed and in order in the table
