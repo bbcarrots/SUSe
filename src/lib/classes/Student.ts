@@ -18,7 +18,7 @@ type StudentRaw = {
 type StudentState = {
     success: boolean,
     studentRaws: StudentRaw[],
-    error: string
+    error: string | null
 }
 
 export class Student {
@@ -81,11 +81,27 @@ export class Student {
 	get isEnrolled(): 0 | 1 {
 		return this._isEnrolled;
 	}
+    
+    static convertToStudent(obj: StudentRaw): Student {
+        return new Student(
+            obj.sn,
+            obj.rfid,
+            obj.username,
+            obj.pass,
+            obj.firstName,
+            obj.middleInitial,
+            obj.lastName,
+            obj.college,
+            obj.program,
+            obj.phoneNumber,
+            obj.isEnrolled
+        );
+    }
 
 	static async selectStudents(): Promise<StudentState> {
 		/* Selects all student records in database. */
         const state: DBState = await selectStudentDB();
-        const value: object[] = await state.value?.json();
+        const value: StudentRaw[] = await state.value?.json();
 		return {
             success: state.success,
             studentRaws: value,
@@ -96,7 +112,7 @@ export class Student {
 	async insertStudent(): Promise<StudentState> {
 		/* Inserts unique student information in database. */
 		const selectState: DBState = await selectStudentDB(this._sn, this._username);
-		const selectValue: [] = await state.value?.json();
+		const selectValue: [] = await selectState.value?.json();
 
 		if (!selectState.success) {
 			return {
