@@ -1,5 +1,4 @@
 <script lang="ts">
-	// import { Student } from "$lib/classes/Student";
 	import Table from "$lib/components/Table.svelte";
 
 	export let data;
