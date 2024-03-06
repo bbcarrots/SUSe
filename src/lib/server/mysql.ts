@@ -56,52 +56,8 @@ function connectStudentMySQL(): Promise<mysql.Connection> | null {
 	return studentMySQLConn;
 }
 
-export async function insertStudentDB(student: Student): Promise<State> {
-	/* Inserts the student information into database */
-
-	let studentConn: mysql.Connection | null;
-
-	try {
-		// try connecting to db as a student, catch no db connection error
-		studentConn = await connectStudentMySQL();
-
-		if (!studentConn) {
-			studentMySQLConn = null;
-			return errorNoDBConn;
-		}
-	} catch (err) {
-		console.error(err);
-		studentMySQLConn = null;
-		return errorNoDBConn;
-	}
-
-	try {
-		// try an insert query and return success, catch insert student fail error
-		await studentConn.query(
-			`INSERT INTO students
-                    VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
-                    '${student.password}', '${student.firstName}', '${student.middleInitial}', 
-                    '${student.lastName}', '${student.college}', '${student.program}', 
-                    '${student.phoneNum}', '${student.isEnrolled}');`
-		);
-
-		return {
-			success: true,
-			value: null,
-			error: null
-		};
-	} catch (err) {
-		console.error(err);
-		return {
-			success: false,
-			value: null,
-			error: 'Error: Insert student failed'
-		};
-	}
-}
-
 export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<State> {
-	// Given a student number, this returns the corresponding student information
+	/* Selects all student records. Returns matching student record/s if sn or username is provided. */
 
 	let adminConn: mysql.Connection | null;
 
@@ -156,3 +112,92 @@ export async function selectStudentDB(sn: number = 0, username: string = ''): Pr
 		};
 	}
 }
+
+export async function insertStudentDB(student: Student): Promise<State> {
+	/* Inserts the student information into database. */
+
+	let studentConn: mysql.Connection | null;
+
+	try {
+		// try connecting to db as a student, catch no db connection error
+		studentConn = await connectStudentMySQL();
+
+		if (!studentConn) {
+			studentMySQLConn = null;
+			return errorNoDBConn;
+		}
+	} catch (err) {
+		console.error(err);
+		studentMySQLConn = null;
+		return errorNoDBConn;
+	}
+
+	try {
+		// try an insert query and return success, catch insert student fail error
+		await studentConn.query(
+			`INSERT INTO students
+                    VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
+                    '${student.password}', '${student.firstName}', '${student.middleInitial}', 
+                    '${student.lastName}', '${student.college}', '${student.program}', 
+                    '${student.phoneNum}', '${student.isEnrolled}');`
+		);
+
+		return {
+			success: true,
+			value: null,
+			error: null
+		};
+	} catch (err) {
+		console.error(err);
+		return {
+			success: false,
+			value: null,
+			error: 'Error: Insert student failed'
+		};
+	}
+}
+
+// export async function updateStudentDB(student: Student): Promise<State> {
+// 	/* Updates an existing student record. */
+
+// 	let adminConn: mysql.Connection | null;
+
+// 	try {
+// 		// try connecting to db as a admin, catch no db connection error
+// 		adminConn = await connectAdminMySQL();
+
+// 		if (!adminConn) {
+// 			adminMySQLConn = null;
+// 			return errorNoDBConn;
+// 		}
+// 	} catch (err) {
+// 		console.error(err);
+// 		adminMySQLConn = null;
+// 		return errorNoDBConn;
+// 	}
+
+//     try {
+//         // try an insert query and return success, catch insert student fail error
+// 		await adminConn.query(
+// 			// `INSERT INTO students
+//             //         VALUES ('${student.sn}', '${student.rfid}', '${student.username}', 
+//             //         '${student.password}', '${student.firstName}', '${student.middleInitial}', 
+//             //         '${student.lastName}', '${student.college}', '${student.program}', 
+//             //         '${student.phoneNum}', '${student.isEnrolled}');`
+// 		);
+
+// 		return {
+// 			success: true,
+// 			value: null,
+// 			error: null
+// 		};
+//     } catch (err) {
+// 		console.error(err);
+// 		return {
+// 			success: false,
+// 			value: null,
+// 			error: 'Error: Update student failed'
+// 		};
+// 	}
+
+// }
