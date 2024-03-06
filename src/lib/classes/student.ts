@@ -7,8 +7,21 @@ type StudentState = {
 	error: string | null;
 };
 
+type StudentRaw = {
+	sn: number;
+	rfid: string;
+	username: string;
+	pass: string;
+	firstName: string;
+	middleInitial: string;
+	lastName: string;
+	college: string;
+	program: string;
+	phoneNumber: string;
+	isEnrolled: 0 | 1;
+};
+
 export class Student {
-	private _isEnrolled: 0 | 1 = 0;
 	// private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
 
 	constructor(
@@ -21,7 +34,8 @@ export class Student {
 		private _lastName: string,
 		private _college: string,
 		private _program: string,
-		private _phoneNum: string
+		private _phoneNum: string,
+		private _isEnrolled: 0 | 1 = 0
 	) {}
 
 	get sn(): number {
@@ -68,18 +82,37 @@ export class Student {
 		return this._isEnrolled;
 	}
 
-	// static async selectStudents(): Promise<DBState> {
-    //     /* Selects all student records in database. */
-    //     const state: DBState = await selectStudentDB();
-    //     const value: object[] = await state.value?.json();
-        
-	// 	return value.map((obj) => {
-    //         new Student(obj)
-    //     });
-	// }
+	static async selectStudents(): Promise<StudentState> {
+		/* Selects all student records in database. */
+		const selectState: DBState = await selectStudentDB();
+		const selectValue: StudentRaw[] = await selectState.value?.json();
+		// maps raw student information from db into Student objects
+		const students: Student[] = selectValue.map(
+			(obj) =>
+				new Student(
+					obj.sn,
+					obj.rfid,
+					obj.username,
+					obj.pass,
+					obj.firstName,
+					obj.middleInitial,
+					obj.lastName,
+					obj.college,
+					obj.program,
+					obj.phoneNumber,
+					obj.isEnrolled
+				)
+		);
+
+		return {
+			success: selectState.success,
+			students: students,
+			error: selectState.error
+		};
+	}
 
 	async insertStudent(): Promise<StudentState> {
-        /* Inserts unique student information in database. */
+		/* Inserts unique student information in database. */
 		const selectState: DBState = await selectStudentDB(this._sn, this._username);
 		const selectValue: [] = await selectState.value?.json();
 
@@ -97,17 +130,17 @@ export class Student {
 			};
 		}
 
-        const insertState: DBState = await insertStudentDB(this);
+		const insertState: DBState = await insertStudentDB(this);
 
 		return {
-            success: insertState.success,
-            students: [],
-            error: insertState.error
-        };
+			success: insertState.success,
+			students: [],
+			error: insertState.error
+		};
 	}
 
 	// async updateStudent() {
-    //     /* Updates student information in database. */
+	//     /* Updates student information in database. */
 	//     const state: DBState = await selectStudentDB(this._sn, this._username);
 	//     const value: [] = await state.value?.json()
 
