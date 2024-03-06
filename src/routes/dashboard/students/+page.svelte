@@ -1,4 +1,5 @@
 <script>
+	import { Student } from "$lib/classes/Student.js";
 	import Table from "$lib/components/Table.svelte";
 	
 	// dummy data for now, assume already filtered and processed and in order in the table
@@ -27,6 +28,9 @@
 
     export let data;
     console.log(data)
+
+    // students = data.studentRaws.map((obj) => Student.convertToStudent(obj));
+    // students = data.studentRaws;
 </script>
 
 <Table headers={headers} information = {students}/>
