@@ -24,6 +24,9 @@
 			isEnrolled: 0
 		}
 	]
+
+    export let data;
+    console.log(data)
 </script>
 
 <Table headers={headers} information = {students}/>

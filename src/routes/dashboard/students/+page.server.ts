@@ -1,11 +1,5 @@
-import { selectStudentDB } from '$lib/server/mysql';
+import { Student } from '$lib/classes/student';
 
 export async function load() {
-    const response = await selectStudentDB();
-
-    return {
-        status: true,
-        value: "placeholder",
-        error: null
-    };
+    return Student.selectStudents();
 }
