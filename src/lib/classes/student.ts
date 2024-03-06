@@ -2,7 +2,6 @@ import { insertStudentDB, selectStudentDB } from '$lib/server/mysql';
 import type { State } from '$lib/server/mysql';
 
 export class Student {
-	private _isEnrolled: 0 | 1 = 0;
 	// private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
 
 	constructor(
@@ -15,7 +14,8 @@ export class Student {
 		private _lastName: string,
 		private _college: string,
 		private _program: string,
-		private _phoneNum: string
+		private _phoneNum: string,
+		private _isEnrolled: 0 | 1 = 0
 	) {}
 
 	get sn(): number {
@@ -63,12 +63,12 @@ export class Student {
 	}
 
 	static async selectStudents(): Promise<State> {
-        /* Selects all student records in database. */
+		/* Selects all student records in database. */
 		return selectStudentDB();
 	}
 
 	async insertStudent(): Promise<State> {
-        /* Inserts unique student information in database. */
+		/* Inserts unique student information in database. */
 		const state: State = await selectStudentDB(this._sn, this._username);
 		const value: [] = await state.value?.json();
 
@@ -86,7 +86,7 @@ export class Student {
 	}
 
 	// async updateStudent() {
-    //     /* Updates student information in database. */
+	//     /* Updates student information in database. */
 	//     const state: State = await selectStudentDB(this._sn, this._username);
 	//     const value: [] = await state.value?.json()
 
