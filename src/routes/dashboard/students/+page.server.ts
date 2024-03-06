@@ -1,4 +1,4 @@
-import { Student } from '$lib/classes/student';
+import { Student } from '$lib/classes/Student';
 
 export async function load() {
     return Student.selectStudents();
