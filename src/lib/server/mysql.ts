@@ -18,7 +18,7 @@ const errorNoDBConn: DBState = {
 let adminMySQLConn: Promise<mysql.Connection> | null = null;
 let studentMySQLConn: Promise<mysql.Connection> | null = null;
 
-function connectAdminMySQL(): Promise<mysql.Connection> | null {
+export function connectAdminMySQL(): Promise<mysql.Connection> | null {
 	/* Creates the connection for the admin user */
 
 	if (!adminMySQLConn) {

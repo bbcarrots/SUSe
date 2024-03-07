@@ -15,7 +15,7 @@ type StudentRaw = {
     isEnrolled: 0 | 1 // MySQL only accepts 0 or 1 as a representation of booleans
 }
 
-type StudentState = {
+export type StudentState = {
     success: boolean,
     studentRaws: StudentRaw[], // workaround on not being able to send class objects in POST requests—send raw student information instead
     error: string | null
