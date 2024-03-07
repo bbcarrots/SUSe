@@ -1,7 +1,7 @@
 import { insertStudentDB, selectStudentDB } from '$lib/server/mysql';
 import type { DBState } from '$lib/server/mysql';
 
-type StudentRaw = {
+export type StudentRaw = {
     sn: number,
     rfid: string,
     username: string,
