@@ -6,7 +6,7 @@
   export let headers: Array<String>;
 
   let searchTerm = '';
-  const sortKey = writable<string>('sn'); // default sort key
+  const sortKey = writable<string>('name'); // default sort key
   const sortDirection = writable<number>(1); // default sort direction (ascending)
   const sortedItems = writable<Array<any>>([]); // Sorted items store
 
