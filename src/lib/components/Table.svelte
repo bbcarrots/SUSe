@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
   import { writable } from 'svelte/store';
+  import { Icon, ChevronUpDown, ChevronUp, ChevronDown } from 'svelte-hero-icons';
   
   export let information: Array<Object>;
   export let headers: Array<String>;
@@ -49,8 +50,22 @@
       <Checkbox />
     </TableHeadCell>
     {#each headers as header}
-      <TableHeadCell on:click={() => sortTable(header.replace(/\s+/g, '').toLowerCase())}>
-        <p class="font-bold">{header}</p>
+      <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(header.replace(/\s+/g, '').toLowerCase())}>
+        <div class="flex gap-2">
+          <p class="font-bold">{header}</p>
+          <div class="flex flex-col gap-">
+            <button type="button" class="p-0 -mb-1 sort-button"
+              class:darkened={$sortKey === header.replace(/\s+/g, '').toLowerCase() && $sortDirection === 1}
+            > 
+                <Icon src="{ChevronUp}" micro size="15"/> 
+            </button>
+            <button type="button" class="p-0 -mt-1 sort-button"
+              class:darkened={$sortKey === header.replace(/\s+/g, '').toLowerCase() && $sortDirection === -1}
+            > 
+              <Icon src="{ChevronDown}" micro size="15"/> 
+            </button>
+          </div>
+        </div>
       </TableHeadCell>
     {/each}
   </TableHead>
@@ -73,3 +88,15 @@
     {/each}
   </TableBody>
 </Table>
+
+<style>
+  .sort-button.darkened{
+    color:  var(--suse-black);
+  }
+
+  .sort-button{
+    color: #B8B9B9;
+  }
+  
+
+</style>
