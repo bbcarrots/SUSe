@@ -1,19 +1,20 @@
 <script lang="ts">
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
-    export let information: Array<Object>;
-    export let headers: Array<String>;
+  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
+  export let information: Array<Object>;
+  export let headers: Array<String>;
 
-    let searchTerm = '';
+  let searchTerm = '';
 
-    // filters the information based on the search term in the searh bar
-    $: filteredInformation = information.filter((item: any) => {
-        const term = searchTerm.toLowerCase();
-        
-        return Object.values(item).some((value: any) => {
-            const lowercasedValue = String(value).toLowerCase();
-            return lowercasedValue.includes(term);
-        });
-    });</script>
+  // filters the information based on the search term in the searh bar
+  $: filteredInformation = information.filter((item: any) => {
+      const term = searchTerm.toLowerCase();
+      
+      return Object.values(item).some((value: any) => {
+          const lowercasedValue = String(value).toLowerCase();
+          return lowercasedValue.includes(term);
+      });
+  });
+</script>
 
 <TableSearch placeholder="Search student by information" hoverable={true} bind:inputValue={searchTerm}/>
 <Table hoverable={true}>
