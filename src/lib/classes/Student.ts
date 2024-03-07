@@ -1,25 +1,25 @@
-import { insertStudentDB, selectStudentDB } from '$lib/server/mysql';
+import { selectStudentDB, insertStudentDB, updateStudentDB } from '$lib/server/mysql';
 import type { DBState } from '$lib/server/mysql';
 
 type StudentRaw = {
-    sn: number,
-    rfid: string,
-    username: string,
-    pass: string,
-    firstName: string,
-    middleInitial: string,
-    lastName: string,
-    college: string,
-    program: string,
-    phoneNumber: string,
-    isEnrolled: 0 | 1
-}
+	sn: number;
+	rfid: string;
+	username: string;
+	pass: string;
+	firstName: string;
+	middleInitial: string;
+	lastName: string;
+	college: string;
+	program: string;
+	phoneNumber: string;
+	isEnrolled: 0 | 1;
+};
 
 type StudentState = {
-    success: boolean,
-    studentRaws: StudentRaw[],
-    error: string | null
-}
+	success: boolean;
+	studentRaws: StudentRaw[];
+	error: string | null;
+};
 
 export class Student {
 	// private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
@@ -81,32 +81,32 @@ export class Student {
 	get isEnrolled(): 0 | 1 {
 		return this._isEnrolled;
 	}
-    
-    static convertToStudent(obj: StudentRaw): Student {
-        return new Student(
-            obj.sn,
-            obj.rfid,
-            obj.username,
-            obj.pass,
-            obj.firstName,
-            obj.middleInitial,
-            obj.lastName,
-            obj.college,
-            obj.program,
-            obj.phoneNumber,
-            obj.isEnrolled
-        );
-    }
+
+	static convertToStudent(obj: StudentRaw): Student {
+		return new Student(
+			obj.sn,
+			obj.rfid,
+			obj.username,
+			obj.pass,
+			obj.firstName,
+			obj.middleInitial,
+			obj.lastName,
+			obj.college,
+			obj.program,
+			obj.phoneNumber,
+			obj.isEnrolled
+		);
+	}
 
 	static async selectStudents(): Promise<StudentState> {
 		/* Selects all student records in database. */
-        const state: DBState = await selectStudentDB();
-        const value: StudentRaw[] = await state.value?.json();
+		const state: DBState = await selectStudentDB();
+		const value: StudentRaw[] = await state.value?.json();
 		return {
-            success: state.success,
-            studentRaws: value,
-            error: state.error
-        }
+			success: state.success,
+			studentRaws: value,
+			error: state.error
+		};
 	}
 
 	async insertStudent(): Promise<StudentState> {
@@ -116,10 +116,10 @@ export class Student {
 
 		if (!selectState.success) {
 			return {
-                success: selectState.success,
-                studentRaws: [],
-                error: selectState.error
-            };
+				success: selectState.success,
+				studentRaws: [],
+				error: selectState.error
+			};
 		} else if (selectValue.length > 0) {
 			return {
 				success: false,
@@ -128,35 +128,35 @@ export class Student {
 			};
 		}
 
-        const insertState: DBState = await insertStudentDB(this);
+		const insertState: DBState = await insertStudentDB(this);
 
 		return {
-            success: insertState.success,
-            studentRaws: [],
-            error: insertState.error
-        };
+			success: insertState.success,
+			studentRaws: [],
+			error: insertState.error
+		};
 	}
 
-	// async updateStudent() {
-	//     /* Updates student information in database. */
-	//     const state: DBState = await selectStudentDB(this._sn, this._username);
-	//     const value: [] = await state.value?.json()
+	async updateStudent(oldSN: number, oldUsername: string) {
+		/* Updates student information in database provided with the oldSN and oldUsername
+            to find the to-be-updated student record. */
+		const selectState: DBState = await selectStudentDB(oldSN, oldUsername);
+		const selectValue: [] = await selectState.value?.json();
 
-	//     if (!state.success) {
-	//         return state;
-	//     } else if (value.length > 1) {
-	//         return {
-	//             success: false,
-	//             value: null,
-	//             error: "Error: Too many students with similar sn/username"
-	//         }
-	//     }
-
-	//     return updateStudentDB(this);
-	// }
+		if (!selectState.success) {
+			return selectState;
+		} else if (selectValue.length > 1) {
+			return {
+				success: false,
+				value: null,
+				error: 'Error: Too many students with similar sn/username'
+			};
+		}
+        
+		return updateStudentDB(this, oldSN, oldUsername);
+	}
 
 	// TO BE IMPLEMENTED:
-	// updateStudent()
 	// deleteStudent()
 	// approveStudent()
 }
