@@ -6,12 +6,12 @@
 
 <!-- <TableSearch /> -->
 <Table hoverable={true}>
-  <TableHead theadClass="sentencecase">
+  <TableHead theadClass="sentencecase drop-shadow-[0_35px_35px_rgba(17,51,17,0.03)]">
     <TableHeadCell class="!p-4">
       <Checkbox />
     </TableHeadCell>
     {#each headers as header}
-      <TableHeadCell> <p>{header}</p> </TableHeadCell>
+      <TableHeadCell> <p class="font-bold">{header}</p> </TableHeadCell>
     {/each}
   </TableHead>
   <TableBody>
