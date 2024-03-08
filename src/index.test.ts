@@ -14,7 +14,7 @@ describe('Student.insertStudent', () => {
   let studentInstance: Student;
 
   beforeEach(async () => {
-    studentInstance = new Student(198712345, "rfid12345", "Eheads", "Password1234", "Ely", "B", "Buendia", "College of Mass Communications", "BA Film", "09123456789", 1);
+    studentInstance = new Student(198712345, "rfid12345", "ebbuendia", "Password1234", "Ely", "B", "Buendia", "College of Mass Communications", "BA Film", "09123456789", 1);
     // need to reset database first before each test
     const adminConn: mysql.Connection | null = await connectAdminMySQL();
     const deleteQuery = "DELETE FROM students";
@@ -33,17 +33,32 @@ describe('Student.insertStudent', () => {
     await expect(studentInstance.insertStudent()).resolves.toStrictEqual(expectedState)
   });
 
-  it('error: inserting already existing record', async () => {
+  it('error: inserting with student number already in use', async () => {
     const expectedState: StudentState = { // returned state upon unsuccessful insert into database
       success: false,
       studentRaws: [],
       error: "Error: Student sn/username already exists in database"
     } 
-
+    let studentSameSN = new Student(198712345, "rfid12346", "ebbuendia2", "Password1234", "Ely", "B", "Buendia Jr.", "College of Mass Communications", "BA Film", "09123456789", 1);
+    
     await studentInstance.insertStudent(); // insert it first
 
     //then insert for a second time
-    await expect(studentInstance.insertStudent()).resolves.toStrictEqual(expectedState)
+    await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
+  });
+
+  it('error: inserting with username already in use', async () => {
+    const expectedState: StudentState = { // returned state upon unsuccessful insert into database
+      success: false,
+      studentRaws: [],
+      error: "Error: Student sn/username already exists in database"
+    } 
+    let studentSameSN = new Student(198712346, "rfid12346", "ebbuendia", "Password1234", "Ely", "B", "Buendia Jr.", "College of Mass Communications", "BA Film", "09123456789", 1);
+    
+    await studentInstance.insertStudent(); // insert it first
+
+    //then insert for a second time
+    await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
   });
 
 
