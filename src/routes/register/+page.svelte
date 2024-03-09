@@ -4,7 +4,6 @@
     import Hero from "$lib/components/Hero.svelte";
 
     export let form;
-    console.log(form)
 </script>
 
 <section class="flex justify-center items-center lg:h-screen">

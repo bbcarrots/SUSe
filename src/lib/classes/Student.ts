@@ -1,23 +1,22 @@
-import { selectStudentDB, insertStudentDB, updateStudentDB } from '$lib/server/mysql';
-import type { DBState } from '$lib/server/mysql';
+import { selectStudentDB } from "$lib/server/supabase";
 
-type StudentRaw = {
-	sn: number;
-	rfid: string;
-	username: string;
-	pass: string;
-	firstName: string;
-	middleInitial: string;
-	lastName: string;
-	college: string;
-	program: string;
-	phoneNumber: string;
-	isEnrolled: 0 | 1;
-};
+export type StudentDBObj = {
+    sn_id: number,
+    rfid: string,
+    username: string,
+    pw: string,
+    first_name: string,
+    middle_initial: string,
+    last_name: string,
+    college: string,
+    program: string,
+    phone_number: string,
+    is_enrolled: number
+}
 
-type StudentState = {
+export type StudentResponse = {
 	success: boolean;
-	studentRaws: StudentRaw[];
+	studentRaws: StudentDBObj[] | null;
 	error: string | null;
 };
 
@@ -34,127 +33,93 @@ export class Student {
 		private _lastName: string,
 		private _college: string,
 		private _program: string,
-		private _phoneNum: string,
-		private _isEnrolled: 0 | 1 = 0
+		private _phoneNumber: string,
+		private _isEnrolled: boolean = false
 	) {}
+    
+    toStudentDBObj(): StudentDBObj {
+        return {
+            sn_id:          this._sn,
+            rfid:           this._rfid,
+            username:       this._username,
+            pw:             this._password,
+            first_name:     this._firstName,
+            middle_initial: this._middleInitial,
+            last_name:      this._lastName,
+            college:        this._college,
+            program:        this._program,
+            phone_number:   this._phoneNumber,
+            is_enrolled:    Number(this._isEnrolled)
+        }
+    }
 
-	get sn(): number {
-		return this._sn;
-	}
-
-	get rfid(): string {
-		return this._rfid;
-	}
-
-	get username(): string {
-		return this._username;
-	}
-
-	get password(): string {
-		return this._password;
-	}
-
-	get firstName(): string {
-		return this._firstName;
-	}
-
-	get middleInitial(): string {
-		return this._middleInitial;
-	}
-
-	get lastName(): string {
-		return this._lastName;
-	}
-
-	get college(): string {
-		return this._college;
-	}
-
-	get program(): string {
-		return this._program;
-	}
-
-	get phoneNum(): string {
-		return this._phoneNum;
-	}
-
-	get isEnrolled(): 0 | 1 {
-		return this._isEnrolled;
-	}
-
-	static convertToStudent(obj: StudentRaw): Student {
+	static toStudent(obj: StudentDBObj): Student {
 		return new Student(
-			obj.sn,
+			obj.sn_id,
 			obj.rfid,
 			obj.username,
-			obj.pass,
-			obj.firstName,
-			obj.middleInitial,
-			obj.lastName,
+			obj.pw,
+			obj.first_name,
+			obj.middle_initial,
+			obj.last_name,
 			obj.college,
 			obj.program,
-			obj.phoneNumber,
-			obj.isEnrolled
+			obj.phone_number,
+			Boolean(obj.is_enrolled)
 		);
 	}
 
-	static async selectStudents(): Promise<StudentState> {
+	static async selectStudents(): Promise<StudentResponse> {
 		/* Selects all student records in database. */
-		const state: DBState = await selectStudentDB();
-		const value: StudentRaw[] = await state.value?.json();
-		return {
-			success: state.success,
-			studentRaws: value,
-			error: state.error
-		};
+        return selectStudentDB();
 	}
 
-	async insertStudent(): Promise<StudentState> {
-		/* Inserts unique student information in database. */
-		const selectState: DBState = await selectStudentDB(this._sn, this._username);
-		const selectValue: [] = await selectState.value?.json();
+	// async insertStudent(): Promise<StudentState> {
+	// 	/* Inserts unique student information in database. */
+	// 	const selectState: DBState = await selectStudentDB(this._sn, this._username);
+	// 	const selectValue: [] = await selectState.value?.json();
 
-		if (!selectState.success) {
-			return {
-				success: selectState.success,
-				studentRaws: [],
-				error: selectState.error
-			};
-		} else if (selectValue.length > 0) {
-			return {
-				success: false,
-				studentRaws: [],
-				error: 'Error: Student sn/username already exists in database'
-			};
-		}
+	// 	if (!selectState.success) {
+	// 		return {
+	// 			success: selectState.success,
+	// 			studentRaws: [],
+	// 			error: selectState.error
+	// 		};
+	// 	} else if (selectValue.length > 0) {
+	// 		return {
+	// 			success: false,
+	// 			studentRaws: [],
+	// 			error: 'Error: Student sn/username already exists in database'
+	// 		};
+	// 	}
 
-		const insertState: DBState = await insertStudentDB(this);
+	// 	const insertState: DBState = await insertStudentDB(this);
 
-		return {
-			success: insertState.success,
-			studentRaws: [],
-			error: insertState.error
-		};
-	}
+	// 	return {
+	// 		success: insertState.success,
+	// 		studentRaws: [],
+	// 		error: insertState.error
+	// 	};
+	// }
 
-	async updateStudent(oldSN: number, oldUsername: string) {
-		/* Updates student information in database provided with the oldSN and oldUsername
-            to find the to-be-updated student record. */
-		const selectState: DBState = await selectStudentDB(oldSN, oldUsername);
-		const selectValue: [] = await selectState.value?.json();
+	// async updateStudent(oldSN: number, oldUsername: string) {
+	// 	/* Updates student information in database provided with the oldSN and oldUsername
+    //         to find the to-be-updated student record. */
+	// 	const selectState: DBState = await selectStudentDB(oldSN, oldUsername);
+	// 	const selectValue: [] = await selectState.value?.json();
 
-		if (!selectState.success) {
-			return selectState;
-		} else if (selectValue.length > 1) {
-			return {
-				success: false,
-				value: null,
-				error: 'Error: Too many students with similar sn/username'
-			};
-		}
+	// 	if (!selectState.success) {
+	// 		return selectState;
+	// 	} else if (selectValue.length > 1) {
+	// 		return {
+	// 			success: false,
+	// 			value: null,
+	// 			error: 'Error: Too many students with similar sn/username'
+	// 		};
+	// 	}
         
-		return updateStudentDB(this, oldSN, oldUsername);
-	}
+	// 	return updateStudentDB(this, oldSN, oldUsername);
+	// }
 
 	// TO BE IMPLEMENTED:
 	// deleteStudent()
