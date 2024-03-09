@@ -1,45 +1,68 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 import { env } from '$env/dynamic/public';
-import { type StudentResponse } from '$lib/classes/Student'
+import { Student, type StudentResponse } from '$lib/classes/Student';
 
 export const supabase = createClient(env.PUBLIC_SUPABASE_URL, env.PUBLIC_ANON_KEY);
 
-export async function selectStudentDB(sn: number = 0, username: string = ''): Promise<StudentResponse> {
+export async function selectStudentDB(
+	studentNumber: number = 0,
+	username: string = ''
+): Promise<StudentResponse> {
+	/* Selects the student record/s from the database given their student number and username. */
+	let orFilter: string = ``;
 
-    let orFilter: string = ``;
+	const selectQuery = supabase.from('student').select('*');
 
-    const selectQuery = supabase
-        .from('student')
-        .select('*')
+	if (studentNumber) {
+		orFilter += `sn_id.eq.${studentNumber}`;
+	}
+	if (username) {
+		if (orFilter.length) {
+			orFilter += `, `;
+		}
 
-    if (sn)         { orFilter += `sn_id.eq.${sn}`}
-    if (username)   { orFilter += `username.eq.${username}`}
+		orFilter += `username.eq.${username}`;
+	}
 
-    if (orFilter)   { selectQuery.or(orFilter)}
+	if (orFilter) {
+		selectQuery.or(orFilter);
+	}
 
-    const { data, error } = await selectQuery;
+	const { data, error } = await selectQuery;
 
-    if (error) {
-        return {
-            success: false,
-            studentRaws: null,
-            error: error.message
-        }
-    }
+	if (error) {
+		return {
+			success: false,
+			studentRaws: null,
+			error: error.message
+		};
+	}
 
-    return {
-        success: true,
-        studentRaws: data,
-        error: null
-    };
+	return {
+		success: true,
+		studentRaws: data,
+		error: null
+	};
 }
 
-// export async function insertStudentDB(student: Student): Promise<DBResponse> {
+export async function insertStudentDB(student: Student): Promise<StudentResponse> {
+	/* Inserts a student record into the database. */
+	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
 
-//     const { data, error } = await query
-//         .from('student')
-//         .insert()
-// }
+	if (error) {
+		return {
+			success: false,
+			studentRaws: null,
+			error: error.message
+		};
+	}
+
+	return {
+		success: true,
+		studentRaws: null,
+		error: null
+	};
+}
 
 // export async function updateStudentDB(
 // 	student: Student,
