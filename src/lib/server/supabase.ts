@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { env } from '$env/dynamic/public';
 import { Student, type StudentResponse } from '$lib/classes/Student';
 
+// creates the connection to SUSe supabase
 export const supabase = createClient(env.PUBLIC_SUPABASE_URL, env.PUBLIC_ANON_KEY);
 
 export async function selectStudentDB(
@@ -14,17 +15,19 @@ export async function selectStudentDB(
 	const selectQuery = supabase.from('student').select('*');
 
 	if (studentNumber) {
+		// if there is a given studentNumber, add this predicate to orFilter
 		orFilter += `sn_id.eq.${studentNumber}`;
 	}
 	if (username) {
 		if (orFilter.length) {
 			orFilter += `, `;
 		}
-
+		// if there is a given username, add this predicate to orFilter
 		orFilter += `username.eq.${username}`;
 	}
 
 	if (orFilter) {
+		// filters the student table for records that pass at least one of the conditions
 		selectQuery.or(orFilter);
 	}
 
