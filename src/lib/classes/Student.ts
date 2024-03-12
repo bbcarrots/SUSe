@@ -1,4 +1,4 @@
-import { insertStudentDB, selectStudentDB } from '$lib/server/supabase';
+import { insertStudentDB, selectStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase';
 
 export type StudentDBObj = {
 	sn_id: number;
@@ -118,26 +118,16 @@ export class Student {
 		return insertStudentDB(this);
 	}
 
-	// async updateStudent(oldSN: number, oldUsername: string) {
-	// 	/* Updates student information in database provided with the oldSN and oldUsername
-	//         to find the to-be-updated student record. */
-	// 	const selectState: DBState = await selectStudentDB(oldSN, oldUsername);
-	// 	const selectValue: [] = await selectState.value?.json();
+    public async updateStudent(): Promise<StudentResponse> {
+        /* Updates the student record matching this Student's student number and username. */
+        return updateStudentDB(this);
+    }
 
-	// 	if (!selectState.success) {
-	// 		return selectState;
-	// 	} else if (selectValue.length > 1) {
-	// 		return {
-	// 			success: false,
-	// 			value: null,
-	// 			error: 'Error: Too many students with similar sn/username'
-	// 		};
-	// 	}
-
-	// 	return updateStudentDB(this, oldSN, oldUsername);
-	// }
+    public async deleteStudent(): Promise<StudentResponse> {
+        /* Updates the student record matching this Student's student number and username. */
+        return deleteStudentDB(this);
+    }
 
 	// TO BE IMPLEMENTED:
-	// deleteStudent()
 	// approveStudent()
 }
