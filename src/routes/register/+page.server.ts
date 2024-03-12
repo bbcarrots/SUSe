@@ -11,7 +11,7 @@ export const actions = {
 			studentData[pair[0]] = pair[1].toString();
 		}
 
-		studentData['rfid'] = '123456811'; // TO BE IMPLEMENTED WHEN RFID CAN BE SCANNED
+		studentData['rfid'] = String(Math.floor(Math.random() * 202599999) + 100000000); // TO BE IMPLEMENTED WHEN RFID CAN BE SCANNED
 
 		// Inserts student information using parsed info from the form
 		return new Student(
