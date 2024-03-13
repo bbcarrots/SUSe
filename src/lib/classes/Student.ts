@@ -1,27 +1,27 @@
-import { insertStudentDB, selectStudentDB } from '$lib/server/mysql';
-import type { DBState } from '$lib/server/mysql';
+import { insertStudentDB, selectStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase';
 
-type StudentRaw = {
-    sn: number,
-    rfid: string,
-    username: string,
-    pass: string,
-    firstName: string,
-    middleInitial: string,
-    lastName: string,
-    college: string,
-    program: string,
-    phoneNumber: string,
-    isEnrolled: 0 | 1
-}
+export type StudentDBObj = {
+	sn_id: number;
+	rfid: string;
+	username: string;
+	pw: string;
+	first_name: string;
+	middle_initial: string;
+	last_name: string;
+	college: string;
+	program: string;
+	phone_number: string;
+	is_enrolled: boolean;
+};
 
-type StudentState = {
-    success: boolean,
-    studentRaws: StudentRaw[],
-    error: string | null
-}
+export type StudentResponse = {
+	success: boolean;
+	studentRaws: StudentDBObj[] | null;
+	error: string | null;
+};
 
 export class Student {
+	/* Contains all student properties and methods. */
 	// private usageLogs: [UsageLog] = []; TO BE IMPLEMENTED
 
 	constructor(
@@ -34,24 +34,16 @@ export class Student {
 		private _lastName: string,
 		private _college: string,
 		private _program: string,
-		private _phoneNum: string,
-		private _isEnrolled: 0 | 1 = 0
+		private _phoneNumber: string,
+		private _isEnrolled: boolean = false
 	) {}
 
-	get sn(): number {
+	get studentNumber(): number {
 		return this._sn;
-	}
-
-	get rfid(): string {
-		return this._rfid;
 	}
 
 	get username(): string {
 		return this._username;
-	}
-
-	get password(): string {
-		return this._password;
 	}
 
 	get firstName(): string {
@@ -74,89 +66,68 @@ export class Student {
 		return this._program;
 	}
 
-	get phoneNum(): string {
-		return this._phoneNum;
+	get phoneNumber(): string {
+		return this._phoneNumber;
 	}
 
-	get isEnrolled(): 0 | 1 {
+	get isEnrolled(): boolean {
 		return this._isEnrolled;
 	}
-    
-    static convertToStudent(obj: StudentRaw): Student {
-        return new Student(
-            obj.sn,
-            obj.rfid,
-            obj.username,
-            obj.pass,
-            obj.firstName,
-            obj.middleInitial,
-            obj.lastName,
-            obj.college,
-            obj.program,
-            obj.phoneNumber,
-            obj.isEnrolled
-        );
+
+	public toStudentDBObj(): StudentDBObj {
+		/* Converts this Student object into a raw student record for database use. */
+		return {
+			sn_id: this._sn,
+			rfid: this._rfid,
+			username: this._username,
+			pw: this._password,
+			first_name: this._firstName,
+			middle_initial: this._middleInitial,
+			last_name: this._lastName,
+			college: this._college,
+			program: this._program,
+			phone_number: this._phoneNumber,
+			is_enrolled: this.isEnrolled
+		};
+	}
+
+	public static toStudent(obj: StudentDBObj): Student {
+		/* Converts a raw student record from the database into a Student object. */
+		return new Student(
+			obj.sn_id,
+			obj.rfid,
+			obj.username,
+			obj.pw,
+			obj.first_name,
+			obj.middle_initial,
+			obj.last_name,
+			obj.college,
+			obj.program,
+			obj.phone_number,
+			Boolean(obj.is_enrolled)
+		);
+	}
+
+	public static async selectStudents(): Promise<StudentResponse> {
+		/* Selects all student records in database. */
+		return selectStudentDB();
+	}
+
+	public async insertStudent(): Promise<StudentResponse> {
+		/* Inserts unique student information in database. */
+		return insertStudentDB(this);
+	}
+
+    public async updateStudent(): Promise<StudentResponse> {
+        /* Updates the student record matching this Student's student number and username. */
+        return updateStudentDB(this);
     }
 
-	static async selectStudents(): Promise<StudentState> {
-		/* Selects all student records in database. */
-        const state: DBState = await selectStudentDB();
-        const value: StudentRaw[] = await state.value?.json();
-		return {
-            success: state.success,
-            studentRaws: value,
-            error: state.error
-        }
-	}
-
-	async insertStudent(): Promise<StudentState> {
-		/* Inserts unique student information in database. */
-		const selectState: DBState = await selectStudentDB(this._sn, this._username);
-		const selectValue: [] = await selectState.value?.json();
-
-		if (!selectState.success) {
-			return {
-                success: selectState.success,
-                studentRaws: [],
-                error: selectState.error
-            };
-		} else if (selectValue.length > 0) {
-			return {
-				success: false,
-				studentRaws: [],
-				error: 'Error: Student sn/username already exists in database'
-			};
-		}
-
-        const insertState: DBState = await insertStudentDB(this);
-
-		return {
-            success: insertState.success,
-            studentRaws: [],
-            error: insertState.error
-        };
-	}
-
-	// async updateStudent() {
-	//     /* Updates student information in database. */
-	//     const state: DBState = await selectStudentDB(this._sn, this._username);
-	//     const value: [] = await state.value?.json()
-
-	//     if (!state.success) {
-	//         return state;
-	//     } else if (value.length > 1) {
-	//         return {
-	//             success: false,
-	//             value: null,
-	//             error: "Error: Too many students with similar sn/username"
-	//         }
-	//     }
-
-	//     return updateStudentDB(this);
-	// }
+    public async deleteStudent(): Promise<StudentResponse> {
+        /* Updates the student record matching this Student's student number and username. */
+        return deleteStudentDB(this);
+    }
 
 	// TO BE IMPLEMENTED:
-	// updateStudent()
-	// deleteStudent()
 	// approveStudent()
 }
