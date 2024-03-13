@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
   import { writable } from 'svelte/store';
-  import { Icon, ChevronUpDown, ChevronUp, ChevronDown } from 'svelte-hero-icons';
+  import { Icon, ExclamationCircle, Eye, Pencil, Trash, ChevronUp, ChevronDown } from 'svelte-hero-icons';
   
   export let information: Array<Object>;
   export let headers: Array<String>;
@@ -53,7 +53,7 @@
       <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(header.replace(/\s+/g, '').toLowerCase())}>
         <div class="flex gap-2">
           <p class="font-bold">{header}</p>
-          <div class="flex flex-col gap-">
+          <div class="flex flex-col">
             <button type="button" class="p-0 -mb-1 sort-button"
               class:darkened={$sortKey === header.replace(/\s+/g, '').toLowerCase() && $sortDirection === 1}
             > 
@@ -77,7 +77,24 @@
         </TableBodyCell>
         {#each Object.entries(info) as [field, value]}
           {#if field !== "isenrolled"}
-            <TableBodyCell><p>{value}</p></TableBodyCell>
+            <TableBodyCell>
+              <span class="flex gap-3 items-center">
+                
+                <!-- to add the icon beside the name if applicable -->
+                <span>
+                  {#if field == "name" && Object.hasOwn(info, 'isenrolled')}
+                    {#if info.isenrolled == 1}
+                      <span class="dot"></span>
+                    {:else if info.isenrolled == 0}
+                      <span class="warning-icon"><Icon src="{ExclamationCircle}" micro size="12"/></span>
+                    {/if}
+                  {/if}
+                </span>
+
+                <!-- the actual name goes here -->
+                <p>{value}</p>
+              </span>
+            </TableBodyCell>
           {/if}
         {/each}
         <TableBodyCell>
@@ -98,5 +115,15 @@
     color: #B8B9B9;
   }
   
+  .warning-icon{
+    color: #FFA800;
+  }
 
+  .dot {
+    height: 12px;
+    width: 12px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
 </style>
