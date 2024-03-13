@@ -11,6 +11,12 @@
   const sortDirection = writable<number>(1); // default sort direction (ascending)
   const sortedItems = writable<Array<any>>([]); // Sorted items store
 
+  function camelize(str:String) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
+  
   $: {
     const key: string = $sortKey;
     const direction: number = $sortDirection;
@@ -50,17 +56,17 @@
       <Checkbox />
     </TableHeadCell>
     {#each headers as header}
-      <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(header.replace(/\s+/g, '').toLowerCase())}>
+      <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(camelize(header))}>
         <div class="flex gap-2">
           <p class="font-bold">{header}</p>
           <div class="flex flex-col">
             <button type="button" class="p-0 -mb-1 sort-button"
-              class:darkened={$sortKey === header.replace(/\s+/g, '').toLowerCase() && $sortDirection === 1}
+              class:darkened={$sortKey === camelize(header) && $sortDirection === 1}
             > 
                 <Icon src="{ChevronUp}" micro size="15"/> 
             </button>
             <button type="button" class="p-0 -mt-1 sort-button"
-              class:darkened={$sortKey === header.replace(/\s+/g, '').toLowerCase() && $sortDirection === -1}
+              class:darkened={$sortKey === camelize(header) && $sortDirection === -1}
             > 
               <Icon src="{ChevronDown}" micro size="15"/> 
             </button>
@@ -76,13 +82,13 @@
           <Checkbox />
         </TableBodyCell>
         {#each Object.entries(info) as [field, value]}
-          {#if field !== "isenrolled"}
+          {#if field !== "isEnrolled"}
             <TableBodyCell>
               <span class="flex gap-3 items-center">
                 
                 <!-- to add the icon beside the name if applicable -->
                 <span>
-                  {#if field == "name" && Object.hasOwn(info, 'isenrolled')}
+                  {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
                     {#if info.isenrolled == 1}
                       <span class="dot"></span>
                     {:else if info.isenrolled == 0}
