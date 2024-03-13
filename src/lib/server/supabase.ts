@@ -53,6 +53,7 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
 
 	if (error) {
+        console.log(error)
 		return {
 			success: false,
 			studentRaws: null,
@@ -103,6 +104,29 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase
 		.from('student')
         .delete()
+		.match({ student_number: student.studentNumber, username: student.username });
+
+	if (error) {
+		return {
+			success: false,
+			studentRaws: null,
+			error: error.message
+		};
+	}
+
+	return {
+		success: true,
+		studentRaws: null,
+		error: null
+	};
+}
+
+export async function approveStudentDB(student: Student): Promise<StudentResponse> {
+	/* Updates a student record based using their student number and username.
+    NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+	const { error } = await supabase
+		.from('student')
+        .update({ is_enrolled: true})
 		.match({ student_number: student.studentNumber, username: student.username });
 
 	if (error) {
