@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
   import { writable } from 'svelte/store';
-  import { Icon, ExclamationCircle, Eye, Pencil, Trash, ChevronUp, ChevronDown } from 'svelte-hero-icons';
+  import { Icon, ExclamationCircle, Check, Pencil, Trash, ChevronUp, ChevronDown } from 'svelte-hero-icons';
+	import { hasProperty } from '@vitest/expect';
   
   export let information: Array<Object>;
   export let headers: Array<String>;
@@ -57,6 +58,7 @@
     </TableHeadCell>
     {#each headers as header}
       <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(camelize(header))}>
+
         <div class="flex gap-2">
           <p class="font-bold">{header}</p>
           <div class="flex flex-col">
@@ -74,6 +76,9 @@
         </div>
       </TableHeadCell>
     {/each}
+    <TableHeadCell>
+      <p class="font-bold">Actions</p>
+    </TableHeadCell>
   </TableHead>
   <TableBody>
     {#each $sortedItems as info}
@@ -103,9 +108,12 @@
             </TableBodyCell>
           {/if}
         {/each}
-        <TableBodyCell>
-          <a href="/tables" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
-          <a href="/tables" class="font-medium text-red-600 hover:underline dark:text-red-500">Remove</a>
+        <TableBodyCell class="flex gap-4">
+          <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+          {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
+            <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
+          {/if}
+          <a href="/tables" class="font-medium text-green-800"><Icon src="{Pencil}" micro size="20"/></a>
         </TableBodyCell>
       </TableBodyRow>
     {/each}
