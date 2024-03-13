@@ -106,7 +106,7 @@
         {#each Object.entries(info) as [field, value]}
           {#if field !== "isEnrolled"}
             <TableBodyCell>
-              <span class="flex gap-3 items-center">
+              <span class="flex">
                 
                 <!-- to add the icon beside the name if applicable. specific for student table-->
                 <span>
