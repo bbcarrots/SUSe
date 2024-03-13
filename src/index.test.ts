@@ -1,7 +1,7 @@
-import mysql from 'mysql2/promise';
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Student, StudentState, StudentRaw, convertToStudent } from '$lib/classes/Student'; 
-import { DBState, connectAdminMySQL } from '$lib/server/mysql'; 
+// import mysql from 'mysql2/promise';
+import { describe, it, expect, /*beforeEach*/ } from 'vitest';
+// import { Student, StudentState, StudentRaw, convertToStudent } from '$lib/classes/Student'; 
+// import { DBState, connectAdminMySQL } from '$lib/server/mysql'; 
 
 describe('it should add 2 and 3 properly', () => {
 	it('adds 1 + 2 to equal 3', () => {
