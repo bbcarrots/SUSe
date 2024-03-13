@@ -6,24 +6,25 @@
 
     type StudentProcessed = {
 		name: string,
-		studentnumber: number,
+		studentNumber: number,
 		email: string,
-		phonenumber: string,
+		phoneNumber: string,
 		college: string,
 		program: string,
-		isenrolled: 0 | 1
+		isEnrolled: 0 | 1
 	}
 	
 	let studentObjects = data.studentRaws;
+	console.log(studentObjects)
     let students: StudentProcessed[] = studentObjects.map(student => {
 		return {
-			name: student.firstName + " " + student.middleInitial + " " + student.lastName,
-			studentnumber: student.sn,
+			name: student.first_name + " " + student.middle_initial + " " + student.last_name,
+			studentNumber: student.sn_id,
 			email: student.username,
-			phonenumber: student.phoneNumber,
+			phoneNumber: student.phone_number,
 			college: student.college,
 			program: student.program,
-			isenrolled: student.isEnrolled
+			isEnrolled: student.is_enrolled
 		};
 	});
 
