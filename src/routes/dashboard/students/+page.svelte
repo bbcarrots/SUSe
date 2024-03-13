@@ -1,36 +1,33 @@
-<script>
-	// import { Student } from "$lib/classes/Student";
+<script lang="ts">
 	import Table from "$lib/components/Table.svelte";
-	
-	// dummy data for now, assume already filtered and processed and in order in the table
+
+	export let data;
 	let headers = ["Name", "Student Number", "Email", "Phone Number", "College", "Program", "Actions"]
 
-	let students = [
-		{
-			name: 'Juan A Dela Cruz',
-			sn: 202012345,
-			email: 'jadelacruz',
-			phoneNumber: '09999999999',
-			college: 'COE',
-			program: 'CS',
-			isEnrolled: 0
-		},
-		{
-			name: 'Juan A Dela Cruz',
-			sn: 202012345,
-			email: 'jadelacruz',
-			phoneNumber: '09999999999',
-			college: 'COE',
-			program: 'CS',
-			isEnrolled: 0
-		}
-	]
+    type StudentProcessed = {
+		name: string,
+		studentNumber: number,
+		email: string,
+		phoneNumber: string,
+		college: string,
+		program: string,
+		isEnrolled: 0 | 1
+	}
+	
+	let studentObjects = data.studentRaws;
+	console.log(studentObjects)
+    let students: StudentProcessed[] = studentObjects.map(student => {
+		return {
+			name: student.first_name + " " + student.middle_initial + " " + student.last_name,
+			studentNumber: student.sn_id,
+			email: student.username,
+			phoneNumber: student.phone_number,
+			college: student.college,
+			program: student.program,
+			isEnrolled: student.is_enrolled
+		};
+	});
 
-    export let data;
-    console.log(data)
-
-    // students = data.studentRaws.map((obj) => Student.convertToStudent(obj));
-    // students = data.studentRaws;
 </script>
 
 <Table headers={headers} information = {students}/>
