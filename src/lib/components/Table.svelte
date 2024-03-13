@@ -53,7 +53,7 @@
 <Table hoverable={true}>
 
   <!-- TABLE HEADER -->
-  <TableHead theadClass="sentencecase drop-shadow-[0_35px_35px_rgba(17,51,17,0.03)]">
+  <TableHead theadClass="sentencecase" class="bg-white drop-shadow-[0_4px_4px_rgba(17,51,17,0.03)]">
     <!-- checkbox for the header -->
     <TableHeadCell class="!p-4">
       <Checkbox />
@@ -61,7 +61,7 @@
 
     <!-- generating each of the headers -->
     {#each headers as header}
-      <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(camelize(header))}>
+      <TableHeadCell class="hover:cursor-pointer py-4" on:click={() => sortTable(camelize(header))}>
 
         <div class="flex gap-2">
           <!-- header name -->
@@ -91,14 +91,14 @@
   </TableHead>
 
   <!-- TABLE CONTENT -->
-  <TableBody>
+  <TableBody >
 
     <!-- generate all sorted items -->
     {#each $sortedItems as info}
-      <TableBodyRow>
+      <TableBodyRow color="custom" class="bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
 
         <!-- checkbox for each table row -->
-        <TableBodyCell class="!p-4">
+        <TableBodyCell class="!px-4 py-5">
           <Checkbox />
         </TableBodyCell>
 
