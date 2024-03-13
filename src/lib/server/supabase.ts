@@ -3,7 +3,7 @@ import { env } from '$env/dynamic/public';
 import { Student, type StudentResponse } from '$lib/classes/Student';
 
 // creates the connection to SUSe supabase
-export const supabase = createClient("https://yfhwfzwacdlqmyunladz.supabase.co", env.PUBLIC_ANON_KEY);
+export const supabase = createClient("https://yfhwfzwacdlqmyunladz.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A");
 
 export async function selectStudentDB(
 	studentNumber: number = 0,
