@@ -2,7 +2,6 @@
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
   import { writable } from 'svelte/store';
   import { Icon, ExclamationCircle, Check, Pencil, Trash, ChevronUp, ChevronDown } from 'svelte-hero-icons';
-	import { hasProperty } from '@vitest/expect';
   
   export let information: Array<Object>;
   export let headers: Array<String>;
@@ -52,15 +51,23 @@
 <TableSearch placeholder="Search student by information" hoverable={true} bind:value={searchTerm}/>
 
 <Table hoverable={true}>
+
+  <!-- TABLE HEADER -->
   <TableHead theadClass="sentencecase drop-shadow-[0_35px_35px_rgba(17,51,17,0.03)]">
+    <!-- checkbox for the header -->
     <TableHeadCell class="!p-4">
       <Checkbox />
     </TableHeadCell>
+
+    <!-- generating each of the headers -->
     {#each headers as header}
       <TableHeadCell class="hover:cursor-pointer" on:click={() => sortTable(camelize(header))}>
 
         <div class="flex gap-2">
+          <!-- header name -->
           <p class="font-bold">{header}</p>
+
+          <!-- sort buttons div -->
           <div class="flex flex-col">
             <button type="button" class="p-0 -mb-1 sort-button"
               class:darkened={$sortKey === camelize(header) && $sortDirection === 1}
@@ -76,22 +83,32 @@
         </div>
       </TableHeadCell>
     {/each}
+
+    <!-- Add separate actions column -->
     <TableHeadCell>
       <p class="font-bold">Actions</p>
     </TableHeadCell>
   </TableHead>
+
+  <!-- TABLE CONTENT -->
   <TableBody>
+
+    <!-- generate all sorted items -->
     {#each $sortedItems as info}
       <TableBodyRow>
+
+        <!-- checkbox for each table row -->
         <TableBodyCell class="!p-4">
           <Checkbox />
         </TableBodyCell>
+
+        <!-- generate information for each column -->
         {#each Object.entries(info) as [field, value]}
           {#if field !== "isEnrolled"}
             <TableBodyCell>
               <span class="flex gap-3 items-center">
                 
-                <!-- to add the icon beside the name if applicable -->
+                <!-- to add the icon beside the name if applicable. specific for student table-->
                 <span>
                   {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
                     {#if info.isenrolled == 1}
@@ -102,17 +119,22 @@
                   {/if}
                 </span>
 
-                <!-- the actual name goes here -->
+                <!-- the actual value goes here -->
                 <p>{value}</p>
               </span>
             </TableBodyCell>
           {/if}
         {/each}
+
+        <!-- generate the action buttons -->
         <TableBodyCell class="flex gap-4">
+          <!-- delete -->
           <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+          <!-- approve for students who are not enrolled -->
           {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
             <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
           {/if}
+          <!-- edit -->
           <a href="/tables" class="font-medium text-green-800"><Icon src="{Pencil}" micro size="20"/></a>
         </TableBodyCell>
       </TableBodyRow>
