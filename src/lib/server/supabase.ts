@@ -81,7 +81,7 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 			program: student.program,
 			phone_number: student.phoneNumber
 		})
-		.match({ student_number: student.studentNumber, username: student.username });
+		.match({ sn_id: student.studentNumber, username: student.username });
 
 	if (error) {
 		return {
