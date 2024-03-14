@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Student, StudentState, StudentResponse, StudentDBObj } from '$lib/classes/Student'; 
 import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
 
@@ -10,19 +10,26 @@ describe('it should add 2 and 3 properly', () => {
 });
 
 
-describe('Student.insertStudent', () => {
-  let studentInstance: Student;
+describe('success: Student.insertStudent', () => {
+  const newStudentNumber = 202101012;
+  const newUsername = "dummy11"; 
+  const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  
 
-  beforeEach(async () => {
+  //beforeEach(async () => {
     // generate random student number for new records
-    const min = 100000000;
-    const max = 999999999;
-    const newStudentNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    // const min = 100000000;
+    // const max = 999999999;
+    // const newStudentNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    //const newStudentNumber = 202101012;
 
     // generate random username
 
-    const newUsername = "dummy" + `${Math.floor(Math.random() * (1000 - 100 + 1)) + 100}` 
-    studentInstance = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Ely", "B", "Buendia", "College of Mass Communications", "BA Film", "09123456789", 1);
+    //const newUsername = "dummy" + `${Math.floor(Math.random() * (1000 - 100 + 1)) + 100}` 
+    //const newUsername = "dummy11"; 
+    //studentInstance = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+
+
     // need to reset database first before each test
     // const adminConn: mysql.Connection | null = await connectAdminMySQL();
 
@@ -31,7 +38,7 @@ describe('Student.insertStudent', () => {
     //   adminConn.query(deleteQuery); // delete all entries in database
     // }
 
-  });
+  //});
 
   	// gab notes post-supabase change:
 	//   might use const supabase instead
@@ -46,8 +53,19 @@ describe('Student.insertStudent', () => {
 			studentRaws: null,
 			error: null
     } 
-    await expect(studentInstance.insertStudent()).resolves.toStrictEqual(expectedState)
+    await expect(studentInstance.insertStudent()).resolves.toStrictEqual(expectedState);
+    await studentInstance.deleteStudent(); // clean up dummy entry
   });
+
+  // it('success: deleted student in database', async () => {
+  //   const expectedState: StudentResponse = { // returned state upon successful insert into database
+  //     success: true,
+	// 		studentRaws: null,
+	// 		error: null
+  //   } 
+  //   await expect(studentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
+  // });
+
 
 //   it('error: inserting with student number already in use', async () => {
 //     const expectedState: StudentState = { // returned state upon unsuccessful insert into database

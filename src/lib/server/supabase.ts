@@ -104,7 +104,7 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase
 		.from('student')
         .delete()
-		.match({ student_number: student.studentNumber, username: student.username });
+		.match({ sn_id: student.studentNumber, username: student.username });
 
 	if (error) {
 		return {
