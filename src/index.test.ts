@@ -16,7 +16,8 @@ describe('success: Student.insertStudent', () => {
   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
   it('success: inserted student in database', async () => {
-    const expectedState: StudentResponse = { // returned state upon successful insert into database
+    // returned StudentResponse upon successful insert into database
+    const expectedState: StudentResponse = { 
       success: true,
 			studentRaws: null,
 			error: null
@@ -37,54 +38,46 @@ describe('success: Student.insertStudent', () => {
 });
 
 describe('fail: Student.insertStudent with same SN or same username', () => {
+  // create dummy studentInstance for insertion
   const newStudentNumber = 202101012;
   const newUsername = "dummy11"; 
   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
   beforeEach( async () => {
-    await studentInstance.insertStudent(); // insert it first
+    await studentInstance.insertStudent(); // insert studentInstance first
   });
 
   it('error: inserting with student number already in use', async () => {
-    const expectedState: StudentResponse = { // returned state upon unsuccessful insert into database
+    // returned StudentResponse upon failed insert with existing sn_id
+    const expectedState: StudentResponse = { 
       success: false,
       studentRaws: null,
-      error: 'duplicate key value violates unique constraint "student_sn_id_key"' // error message from supabase
+      error: 'duplicate key value violates unique constraint "student_sn_id_key"' // error message from supabase with existing SN
     } 
-    const studentSameSN: Student = new Student(newStudentNumber, "rfid12345", "dummy12", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
-    //then insert for a second time
+    // create 2nd dummy studentSameSN with same SN
+    const studentSameSN: Student = new Student(newStudentNumber, "rfid12345", "dummy12", "1234Password", "DummyJr", "D", "Dumdum", "College of Not Dumm", "BS Not Dummy", "09123456789", false);
+
+    // insert studentSameSN, should error
     await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
-    await studentInstance.deleteStudent(); // clean up dummy entry
+    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
   });
 
   it('error: inserting with username already in use', async () => {
-    const expectedState: StudentResponse = { // returned state upon unsuccessful insert into database
+    // returned StudentResponse upon failed insert with existing username
+    const expectedState: StudentResponse = { 
       success: false,
       studentRaws: null,
-      error: 'duplicate key value violates unique constraint "student_username_key"'
+      error: 'duplicate key value violates unique constraint "student_username_key"' // error message from supabase with existing username
     } 
-    const studentSameSN: Student = new Student(202101013, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
-    //then insert for a second time
-    await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
-    await studentInstance.deleteStudent(); // clean up dummy entry
+    // create 2nd dummy studentSameUsername with same username
+    const studentSameUsername: Student = new Student(202101013, "rfid12345", newUsername, "1234Password", "DummyJr", "D", "Dumdum", "College of Not Dummy", "BS Not Dummy", "09123456789", false);
+
+    // insert studentSameUsername, should error
+    await expect(studentSameUsername.insertStudent()).resolves.toStrictEqual(expectedState)
+    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
   });
-
-//   it('error: inserting with username already in use', async () => {
-//     const expectedState: StudentState = { // returned state upon unsuccessful insert into database
-//       success: false,
-//       studentRaws: [],
-//       error: "Error: Student sn/username already exists in database"
-//     } 
-//     let studentSameSN = new Student(198712346, "rfid12346", "ebbuendia", "Password1234", "Ely", "B", "Buendia Jr.", "College of Mass Communications", "BA Film", "09123456789", 1);
-    
-//     await studentInstance.insertStudent(); // insert it first
-
-//     //then insert for a second time
-//     await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
-//   });
-
 
 //   it('error: inserting when no database connection', async() => {
 //     const expectedState: DBState = {
