@@ -71,11 +71,37 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 
 });
 
+
+// selectStudents() test not yet working, next sprint
+
+// describe('success: Student.selectStudentDB', () => {
+//   const newStudentNumber = 202100003;
+//   const newUsername = "dummyselect"; 
+//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+
+//   beforeEach( async () => {
+//     await studentInstance.insertStudent(); // insert studentInstance first
+//   });
+
+//   it('success: selected student in database', async () => {
+//     // returned StudentResponse upon successful insert into database
+//     const expectedState: StudentResponse = { 
+//       success: true,
+// 			studentRaws: [],
+// 			error: null
+//     } 
+//     await expect(studentInstance.selectStudents()).resolves.toStrictEqual(expectedState);
+//     await studentInstance.deleteStudent(); // clean up dummy entry
+//   });
+// });
+
+
+
 // fail tests not yet working, i.e., success state returned when expected to fail
 // to be implemented at Sprint 3
 
 // describe('success: Student.updateStudent', () => {
-//   const newStudentNumber = 202100003;
+//   const newStudentNumber = 202100004;
 //   const newUsername = "dummyupdate"; 
 //   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
