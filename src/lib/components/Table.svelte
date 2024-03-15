@@ -106,14 +106,14 @@
         {#each Object.entries(info) as [field, value]}
           {#if field !== "isEnrolled"}
             <TableBodyCell>
-              <span class="flex">
+              <span class="flex items-center">
                 
                 <!-- to add the icon beside the name if applicable. specific for student table-->
-                <span>
+                <span class="pr-2">
                   {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
-                    {#if info.isenrolled == 1}
+                    {#if info.isEnrolled == 1}
                       <span class="dot"></span>
-                    {:else if info.isenrolled == 0}
+                    {:else if info.isEnrolled == 0}
                       <span class="warning-icon"><Icon src="{ExclamationCircle}" micro size="12"/></span>
                     {/if}
                   {/if}
