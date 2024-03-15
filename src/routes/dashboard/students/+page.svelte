@@ -2,7 +2,7 @@
 	import Table from "$lib/components/Table.svelte";
 
 	export let data;
-	let headers = ["Name", "Student Number", "Email", "Phone Number", "College", "Program", "Actions"]
+	let headers = ["Name", "Student Number", "Email", "Phone Number", "College", "Program"]
 
     type StudentProcessed = {
 		name: string,
