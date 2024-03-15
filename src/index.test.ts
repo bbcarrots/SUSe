@@ -1,7 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Student, StudentState, StudentResponse, StudentDBObj } from '$lib/classes/Student'; 
-import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
+// import { createClient } from '@supabase/supabase-js';
+import { describe, it, expect, beforeEach, /*afterEach*/} from 'vitest';
+import { Student, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student'; 
+// import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
 
 describe('it should add 2 and 3 properly', () => {
 	it('adds 1 + 2 to equal 3', () => {

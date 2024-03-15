@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { env } from '$env/dynamic/public';
+// import { env } from '$env/dynamic/public';
 import { Student, type StudentResponse } from '$lib/classes/Student';
 
 // creates the connection to SUSe supabase
@@ -53,7 +53,6 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
 
 	if (error) {
-        console.log(error)
 		return {
 			success: false,
 			studentRaws: null,
