@@ -109,15 +109,16 @@
               <span class="flex items-center">
                 
                 <!-- to add the icon beside the name if applicable. specific for student table-->
-                <span class="pr-2">
-                  {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
+                {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
+                  <span class="pr-2">
                     {#if info.isEnrolled == 1}
-                      <span class="dot"></span>
+                      <span class="dot" ></span>
                     {:else if info.isEnrolled == 0}
                       <span class="warning-icon"><Icon src="{ExclamationCircle}" micro size="12"/></span>
                     {/if}
-                  {/if}
-                </span>
+                  </span>
+                {/if}
+
 
                 <!-- the actual value goes here -->
                 <p>{value}</p>
