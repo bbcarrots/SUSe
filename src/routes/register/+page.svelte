@@ -4,7 +4,6 @@
     import Hero from "$lib/components/Hero.svelte";
 
     export let form;
-    console.log(form)
 </script>
 
 <section class="flex justify-center items-center lg:h-screen">
@@ -19,12 +18,8 @@
         >
             {#if form == null || form.success == false}
                 <RegisterForm/>
-                {#if form != null && form.error == 'Error: No database connection'}
-                    <p class="text-red-600">No database connection.</p>
-                {:else if form != null && form.error == 'Error: Student sn/username already exists in database'}
-                    <p class="text-red-600">Student record already exists.</p>
-                {:else}
-                    <p></p>
+                {#if form != null && form.error != null}
+                    <p class="text-red-600">{form.error}</p>
                 {/if}
             {:else if form.success == true}
                 <h1>Present your Form 5 to the admin for approval.</h1>

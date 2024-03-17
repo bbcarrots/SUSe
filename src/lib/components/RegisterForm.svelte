@@ -105,7 +105,7 @@
                         <p>Student Number</p>
                     </label>
                     <input 
-                        name="sn"
+                        name="studentNumber"
                         type="text" 
                         id="student-number" 
                         placeholder="20XXXXXXX" 
@@ -123,7 +123,7 @@
                         <p>Phone Number</p>
                     </label>
                     <input 
-                        name="phoneNum"
+                        name="phoneNumber"
                         type="text" 
                         id="phone-number" 
                         placeholder="09XXXXXXXXX" 
