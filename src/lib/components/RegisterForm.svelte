@@ -1,13 +1,39 @@
 <script lang="ts">
     import Button from "./Button.svelte";
+    import { onMount } from 'svelte';
+    
+    let inputs: NodeListOf<HTMLInputElement | HTMLSelectElement>;
 
-    function handleClick(){
-        console.log("clicked");
-    }
+    onMount(() => {
+        inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
+
+        inputs.forEach(input => {
+            input.addEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.addEventListener('input', () => {
+            if (input.validity.valid) {
+                input.classList.remove('error');
+            }
+            });
+        });
+
+        return () => {
+            inputs.forEach(input => {
+            input.removeEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.removeEventListener('input', () => {
+                if (input.validity.valid) {
+                input.classList.remove('error');
+                }
+            });
+            });
+        };
+    });
 </script>
-
-<!-- TODO: Add form pattern validation -->
-<!-- TODO: Custom styles -->
 
 <section class="grid gap-y-8">
 
@@ -18,7 +44,7 @@
     </div>
 
     <!-- FORM -->
-    <form class="grid gap-y-4" method="post">
+    <form class="grid gap-y-4" method="POST">
 
         <!-- ITEMS -->
         <div class="grid gap-y-2">
@@ -31,32 +57,37 @@
                 </label>
                 <div 
                     class="grid lg:grid-cols-6 gap-4
-                        sm:grid-cols-1"
+                            sm:grid-cols-1"
                 >
-                    <input 
+                    <input
                         name="firstName"
                         type="text" 
-                        id="first-name" 
-                        class="lg:col-span-3 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        id="first-name"  
+                        class="col-span-3"
+                        class:error={false}
                         placeholder="First Name"
-                        pattern="[A-Za-z\s]+" 
+                        pattern="(?:[A-Za-z\s]+)?" 
+                        title="Please only enter alphabets"
                         required 
                     />
+                
                     <input 
                         name="middleInitial"
                         type="text" 
                         id="middle-initial" 
-                        class="lg:col-span-1 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        class="col-span-1"
                         pattern="[A-Za-z\s]+" 
+                        title="Please only enter alphabets"
                         placeholder="MI"  
                     />
                     <input 
                         name="lastName"
                         type="text" 
                         id="last-name" 
-                        class="lg:col-span-2 sm:col-span-1 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+                        class="col-span-2"
                         placeholder="Surname"
                         pattern="[A-Za-z\s]+" 
+                        title="Please only enter alphabets"
                         required  
                     />
                 </div>
@@ -74,12 +105,12 @@
                         <p>Student Number</p>
                     </label>
                     <input 
-                        name="sn"
+                        name="studentNumber"
                         type="text" 
                         id="student-number" 
-                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="20XXXXXXX" 
                         pattern="^\d{'{'}9{'}'}$"
+                        title="Please enter a 9 digit number."
                         required 
                     />
                     
@@ -92,12 +123,12 @@
                         <p>Phone Number</p>
                     </label>
                     <input 
-                        name="phoneNum"
+                        name="phoneNumber"
                         type="text" 
                         id="phone-number" 
-                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                         placeholder="09XXXXXXXXX" 
                         pattern="^\d{'{'}11{'}'}$"
+                        title="Please enter an 11 digit number."
                         required 
                     />
                 </div>
@@ -149,9 +180,9 @@
                         name="username"
                         type="text" 
                         id="email" 
-                        class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full p-2.5" 
                         placeholder="jdelacruz"
-                        pattern="[A-Za-z]+" 
+                        pattern="[A-Za-z0-9]+" 
+                        title="Please only enter alphabets"
                         required
                     />
                     <span id="email-suffix" class="inline-flex items-center px-3 text-gray-900 bg-gray-200 border border-s-0 border-gray-300">
@@ -159,8 +190,6 @@
                     </span>
                 </div>
             </div>
-            
-
 
             <!-- password section-->
             <div class="grid gap-y-2">
@@ -170,14 +199,15 @@
                 <p>Password</p>
                 </label>
                 <input 
-                    name="pass"
+                    name="password"
                     type="password" 
                     id="password" 
-                    class="border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{'{'}8,{'}'}"
+                    title="Please enter at least one lowercase letter, uppercase letter, and number."
                     placeholder="••••••••" 
                     required 
                 />
+                <span>
             </div>
         </div>
 
@@ -191,13 +221,28 @@
 
 </section>
 
-<style>
+<style lang="postcss">
 
-input{
-    background-color: transparent;
-    border-radius: 5px;
-    border-color: #EAEAEA;
+@tailwind components;
+
+@layer components{
+    input {
+        @apply border border-gray-300 text-gray-900 block w-full p-2.5 rounded;
+    }
+
+    input:focus{
+        @apply ring-blue-500 border-blue-500; 
+    }
+    
+    input.error {
+        @apply border-pink-600 text-pink-600; 
+    }
+
+    input.error:focus{
+        @apply ring-pink-500 border-pink-500; 
+    }
 }
+
 
 ::placeholder{
     padding: 12px, 16px;
@@ -225,6 +270,5 @@ select{
     padding: 12px, 16px;
     border-radius: 5px;
 }
-
 
 </style>
