@@ -48,7 +48,7 @@
   };
 </script>
 
-<TableSearch placeholder="Search student by information" hoverable={true} bind:value={searchTerm}/>
+<TableSearch placeholder="Search" hoverable={true} bind:value={searchTerm}/>
 
 <Table hoverable={true}>
 
