@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { env } from '$env/dynamic/public';
+// import { env } from '$env/dynamic/public';
 import { Student, type StudentResponse } from '$lib/classes/Student';
 
 // creates the connection to SUSe supabase
@@ -53,7 +53,6 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
 
 	if (error) {
-        console.log(error)
 		return {
 			success: false,
 			studentRaws: null,
@@ -81,7 +80,7 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 			program: student.program,
 			phone_number: student.phoneNumber
 		})
-		.match({ student_number: student.studentNumber, username: student.username });
+		.match({ sn_id: student.studentNumber, username: student.username });
 
 	if (error) {
 		return {
@@ -104,7 +103,7 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase
 		.from('student')
         .delete()
-		.match({ student_number: student.studentNumber, username: student.username });
+		.match({ sn_id: student.studentNumber, username: student.username });
 
 	if (error) {
 		return {
