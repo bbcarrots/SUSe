@@ -10,7 +10,6 @@
 
     function setActive(label:string){
         active = label;
-        console.log(active)
     }
 
 </script>
