@@ -38,7 +38,7 @@
 <section class="grid gap-y-8">
 
     <!-- HEADER -->
-    <div class="grid">
+    <div class="grid gap-4">
         <h1>Register</h1>
         <p>Tap your UP ID to register it to your account.</p>    
     </div>
