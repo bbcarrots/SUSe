@@ -71,116 +71,65 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 
 });
 
-
-// selectStudents() test not yet working, next sprint
-
-// describe('success: Student.selectStudentDB', () => {
-//   const newStudentNumber = 202100003;
-//   const newUsername = "dummyselect"; 
-//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-
-//   beforeEach( async () => {
-//     await studentInstance.insertStudent(); // insert studentInstance first
-//   });
-
-//   it('success: selected student in database', async () => {
-//     // returned StudentResponse upon successful insert into database
-//     const expectedState: StudentResponse = { 
-//       success: true,
-// 			studentRaws: [],
-// 			error: null
-//     } 
-//     await expect(studentInstance.selectStudents()).resolves.toStrictEqual(expectedState);
-//     await studentInstance.deleteStudent(); // clean up dummy entry
-//   });
-// });
-
-
-
 // fail tests not yet working, i.e., success state returned when expected to fail
 // to be implemented at Sprint 3
 
-// describe('success: Student.updateStudent', () => {
-//   const newStudentNumber = 202100004;
-//   const newUsername = "dummyupdate"; 
-//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+describe('success: Student.updateStudent', () => {
+  const newStudentNumber = 202100004;
+  const newUsername = "dummyupdate"; 
+  const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
-//   beforeEach( async () => {
-//     await studentInstance.insertStudent(); // insert studentInstance first
-//   });
+  beforeEach( async () => {
+    await studentInstance.insertStudent(); // insert studentInstance first
+  });
 
-//   it('success: inserted student correctly updated in database', async () => {
-//     // returned StudentResponse upon successful insert into database
-//     const expectedState: StudentResponse = { 
-//       success: true,
-// 			studentRaws: null,
-// 			error: null
-//     } 
-//     // instance that updates password, first name, MI, last name, college, program, and phone number
-//     const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+  it('success: inserted student correctly updated in database', async () => {
+    // returned StudentResponse upon successful insert into database
+    const expectedState: StudentResponse = { 
+      success: true,
+			studentRaws: null,
+			error: null
+    } 
+    // instance that updates password, first name, MI, last name, college, program, and phone number
+    const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
 
-//     await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-//     await studentInstance.deleteStudent(); // clean up dummy entry
-//   });
+    await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
+    await studentInstance.deleteStudent(); // clean up dummy entry
+  });
 
-//   it('fail: updating with wrong SN', async () => {
-//     // returned StudentResponse upon successful insert into database
-//     const expectedState: StudentResponse = { 
-//       success: false,
-// 			studentRaws: null,
-// 			error: null // change to appropriate supabase error message
-//     } 
-//     const wrongSN: number = 202133333;
+  // it('fail: updating with wrong SN', async () => {
+  //   // returned StudentResponse upon successful insert into database
+  //   const expectedState: StudentResponse = { 
+  //     success: false,
+	// 		studentRaws: null,
+	// 		error: null // change to appropriate supabase error message
+  //   } 
+  //   const wrongSN: number = 202133333;
 
-//     // instance that updates password, first name, MI, last name, college, program, and phone number
-//     const updatedStudentInstance: Student = new Student(wrongSN, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+  //   // instance that updates password, first name, MI, last name, college, program, and phone number
+  //   const updatedStudentInstance: Student = new Student(wrongSN, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
 
-//     await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-//     await studentInstance.deleteStudent(); // clean up dummy entry
-//   });
+  //   await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
+  //   await studentInstance.deleteStudent(); // clean up dummy entry
+  // });
 
-//   it('fail: updating with wrong username', async () => {
-//     // returned StudentResponse upon successful insert into database
-//     const expectedState: StudentResponse = { 
-//       success: false,
-// 			studentRaws: null,
-// 			error: null // change to appropriate supabase error message
-//     } 
-//     const wrongUsername: string = "wrongusername";
+  // it('fail: updating with wrong username', async () => {
+  //   // returned StudentResponse upon successful insert into database
+  //   const expectedState: StudentResponse = { 
+  //     success: false,
+	// 		studentRaws: null,
+	// 		error: null // change to appropriate supabase error message
+  //   } 
+  //   const wrongUsername: string = "wrongusername";
 
-//     // instance that updates password, first name, MI, last name, college, program, and phone number
-//     const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", wrongUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+  //   // instance that updates password, first name, MI, last name, college, program, and phone number
+  //   const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", wrongUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
 
-//     await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-//     await studentInstance.deleteStudent(); // clean up dummy entry
-//   });
+  //   await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
+  //   await studentInstance.deleteStudent(); // clean up dummy entry
+  // });
 
-// });
-
-
-
-// not yet working. to be implemented at Sprint 3
-
-// describe('fail: Student.insertStudent() with no DB connection', () => {
-//   const newStudentNumber = 202101012;
-//   const newUsername = "dummy11"; 
-//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-
-//   beforeEach( async () => {
-//     const wrongSupabase = createClient("https://wrongurl.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A");
-//   });
-
-//   it('error: inserting when no database connection', async() => {
-//     const expectedState: DBState = {
-//       success: false,
-//       studentRaws: [],
-//       error: 'Error: No database connection'
-//     }
-//   });
-
-// });
-
-
+});
 
 // delete tests not working yet. deletion of non existent record does not error as expected.
    
@@ -220,3 +169,46 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
   
   // });
 
+// selectStudents() test not yet working, next sprint
+
+// describe('success: Student.selectStudentDB', () => {
+//   const newStudentNumber = 202100003;
+//   const newUsername = "dummyselect"; 
+//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+
+//   beforeEach( async () => {
+//     await studentInstance.insertStudent(); // insert studentInstance first
+//   });
+
+//   it('success: selected student in database', async () => {
+//     // returned StudentResponse upon successful insert into database
+//     const expectedState: StudentResponse = { 
+//       success: true,
+// 			studentRaws: [],
+// 			error: null
+//     } 
+//     await expect(studentInstance.selectStudents()).resolves.toStrictEqual(expectedState);
+//     await studentInstance.deleteStudent(); // clean up dummy entry
+//   });
+// });
+
+// not yet working. to be implemented at Sprint
+
+// describe('fail: Student.insertStudent() with no DB connection', () => {
+//   const newStudentNumber = 202101012;
+//   const newUsername = "dummy11"; 
+//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+
+//   beforeEach( async () => {
+//     const wrongSupabase = createClient("https://wrongurl.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A");
+//   });
+
+//   it('error: inserting when no database connection', async() => {
+//     const expectedState: DBState = {
+//       success: false,
+//       studentRaws: [],
+//       error: 'Error: No database connection'
+//     }
+//   });
+
+// });

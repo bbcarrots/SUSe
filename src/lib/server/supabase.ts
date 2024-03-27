@@ -70,6 +70,7 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 export async function updateStudentDB(student: Student): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+
 	const { error } = await supabase
 		.from('student')
 		.update({
