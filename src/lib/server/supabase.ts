@@ -80,7 +80,8 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 			program: student.program,
 			phone_number: student.phoneNumber
 		})
-		.match({ sn_id: student.studentNumber, username: student.username });
+        .eq('sn_id', student.studentNumber)
+        .eq('username', student.username);
 
 	if (error) {
 		return {
@@ -103,7 +104,8 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 	const { error } = await supabase
 		.from('student')
         .delete()
-		.match({ sn_id: student.studentNumber, username: student.username });
+        .eq('sn_id', student.studentNumber)
+        .eq('username', student.username);
 
 	if (error) {
 		return {
@@ -126,7 +128,8 @@ export async function approveStudentDB(student: Student): Promise<StudentRespons
 	const { error } = await supabase
 		.from('student')
         .update({ is_enrolled: true})
-		.match({ student_number: student.studentNumber, username: student.username });
+        .eq('sn_id', student.studentNumber)
+        .eq('username', student.username)
 
 	if (error) {
 		return {
