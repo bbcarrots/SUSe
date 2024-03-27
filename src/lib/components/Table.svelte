@@ -5,6 +5,7 @@
   
   export let information: Array<Object>;
   export let headers: Array<String>;
+  export let primaryKey: string;
 
   let searchTerm = '';
   const sortKey = writable<string>('name'); // default sort key
@@ -34,7 +35,6 @@
         return 0;
       }
     });
-    console.log(key);
     sortedItems.set(items);
   }
 
@@ -46,6 +46,21 @@
       sortDirection.set(1);
     }
   };
+
+  // for edit
+  let isEdit:boolean;
+  let primaryKeyEdit:string | number;
+
+  function triggerEdit(primaryKey:number) {
+    isEdit = true;
+    primaryKeyEdit = primaryKey;
+    console.log(primaryKeyEdit)
+  }
+
+  function getKey(info: any, primaryKey: string) {
+    return info[primaryKey];
+  }
+
 </script>
 
 <TableSearch divClass="drop-shadow-none" placeholder="Search" hoverable={true} bind:value={searchTerm}/>
@@ -62,8 +77,8 @@
     <!-- generating each of the headers -->
     {#each headers as header}
       <TableHeadCell class="hover:cursor-pointer py-4" on:click={() => sortTable(camelize(header))}>
-
-        <div class="flex gap-2">
+        
+        <div class="flex gap-2" style="width: 150px;">
           <!-- header name -->
           <p class="font-bold">{header}</p>
 
@@ -102,30 +117,41 @@
           <Checkbox />
         </TableBodyCell>
 
-        <!-- generate information for each column -->
-        {#each Object.entries(info) as [field, value]}
-          {#if field !== "isEnrolled"}
-            <TableBodyCell>
-              <span class="flex items-center">
-                
-                <!-- to add the icon beside the name if applicable. specific for student table-->
-                {#if field == "name" && Object.hasOwn(info, 'isEnrolled')}
-                  <span class="pr-2">
-                    {#if info.isEnrolled == 1}
-                      <span class="dot" ></span>
-                    {:else if info.isEnrolled == 0}
-                      <span class="warning-icon"><Icon src="{ExclamationCircle}" micro size="12"/></span>
-                    {/if}
-                  </span>
-                {/if}
+        <!-- If it's for editing, display a form -->
+        {#if isEdit && getKey(info, primaryKey) === primaryKeyEdit}
+            {#each Object.entries(info) as [field, value]}
+              {#if field !== "isEnrolled"}
+                <TableBodyCell class="pt-0 pb-0 pl-[12px]">
+                  <input type="text" id={field} name={field} value={value}>
+                </TableBodyCell>
+              {/if}
+            {/each}
+        <!-- If not for editing, display the information -->
+        {:else}
+          <!-- generate information for each column -->
+          {#each Object.entries(info) as [field, value]}
+            {#if field !== "isEnrolled"}
+              <TableBodyCell>
+                <span class="flex items-center">
+                  <!-- add the icon beside the name if applicable (specific for the student table) -->
+                  {#if field === "name" && Object.hasOwn(info, 'isEnrolled')}
+                    <span class="pr-2">
+                      {#if info.isEnrolled === true}
+                        <span class="dot"></span>
+                      {:else if info.isEnrolled === false}
+                        <span class="warning-icon"><Icon src="{ExclamationCircle}" micro size="12"/></span>
+                      {/if}
+                    </span>
+                  {/if}
+                  <!-- display the actual value -->
+                  <p>{value}</p>
+                </span>
+              </TableBodyCell>
+            {/if}
+          {/each}
+        {/if}
 
 
-                <!-- the actual value goes here -->
-                <p>{value}</p>
-              </span>
-            </TableBodyCell>
-          {/if}
-        {/each}
 
         <!-- generate the action buttons -->
         <TableBodyCell class="flex gap-4">
@@ -136,14 +162,37 @@
             <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
           {/if}
           <!-- edit -->
-          <a href="/tables" class="font-medium text-green-800"><Icon src="{Pencil}" micro size="20"/></a>
+          <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+            <Icon src="{Pencil}" micro size="20"/>
+          </button>
         </TableBodyCell>
       </TableBodyRow>
     {/each}
   </TableBody>
 </Table>
 
-<style>
+<style lang="postcss">
+  
+  @tailwind components;
+
+  @layer components{
+      input {
+          @apply border border-gray-300 text-gray-900 block w-full text-[14px] p-2.5 h-1/2 rounded;
+      }
+
+      input:focus{
+          @apply ring-blue-500 border-blue-500; 
+      }
+      
+      input.error {
+          @apply border-pink-600 text-pink-600; 
+      }
+
+      input.error:focus{
+          @apply ring-pink-500 border-pink-500; 
+      }
+  }
+
   .sort-button.darkened{
     color:  var(--suse-black);
   }
