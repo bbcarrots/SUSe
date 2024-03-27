@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Table from "$lib/components/Table.svelte";
+	import NewTable from "$lib/components/NewTable.svelte";
 
 	export let data;
 	let headers = ["Name", "Student Number", "Email", "Phone Number", "College", "Program"]
@@ -34,4 +34,4 @@
 
 </script>
 
-<Table headers={headers} information = {students} primaryKey="studentNumber"/>
+<NewTable headers={headers} information = {students} primaryKey="studentNumber"/>
