@@ -13,7 +13,7 @@ describe('it should add 2 and 3 properly', () => {
 describe('success: Student.insertStudent', () => {
   const newStudentNumber = 202100001;
   const newUsername = "dummyinsert"; 
-  const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const studentInstance: Student = new Student(newStudentNumber, "rfid123456", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
   it('success: inserted student in database', async () => {
     // returned StudentResponse upon successful insert into database
