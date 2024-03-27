@@ -15,7 +15,6 @@
 	}
 	
 	let studentObjects = data.studentRaws;
-	console.log(studentObjects)
 
 	let students: StudentProcessed[] = [];
 
