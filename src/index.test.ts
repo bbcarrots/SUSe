@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, /*afterEach*/} from 'vitest';
 import { Student, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student'; 
 // import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
 
-describe('it should add 2 and 3 properly', () => {
+describe('sanity/integrity test: it should add 2 and 3 properly', () => {
 	it('adds 1 + 2 to equal 3', () => {
 		expect(1 + 2).toBe(3);
 	});
