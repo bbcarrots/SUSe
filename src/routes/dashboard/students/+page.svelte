@@ -34,4 +34,4 @@
 
 </script>
 
-<Table headers={headers} information = {students}/>
+<Table headers={headers} information = {students} primaryKey="studentNumber"/>
