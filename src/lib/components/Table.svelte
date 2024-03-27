@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, Checkbox, TableSearch } from 'flowbite-svelte';
   import { writable } from 'svelte/store';
-  import { Icon, ExclamationCircle, Check, Pencil, Trash, ChevronUp, ChevronDown } from 'svelte-hero-icons';
+  import { Icon, ExclamationCircle, Check, Pencil, Trash, ChevronUp, ChevronDown, XMark } from 'svelte-hero-icons';
   
   export let information: Array<Object>;
   export let headers: Array<String>;
@@ -126,6 +126,19 @@
                 </TableBodyCell>
               {/if}
             {/each}
+
+            <!-- generate the action buttons -->
+            <TableBodyCell class="flex gap-4">
+              <!-- save -->
+              <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+                <Icon src="{Check}" micro size="20"/>
+              </button>
+              <!-- save -->
+              <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
+                <Icon src="{XMark}" micro size="20"/>
+              </button>
+            </TableBodyCell>
+
         <!-- If not for editing, display the information -->
         {:else}
           <!-- generate information for each column -->
@@ -147,25 +160,28 @@
                   <p>{value}</p>
                 </span>
               </TableBodyCell>
+
             {/if}
           {/each}
+
+            <!-- generate the action buttons -->
+            <TableBodyCell class="flex gap-4">
+              <!-- delete -->
+              <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+              <!-- approve for students who are not enrolled -->
+              {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
+                <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
+              {/if}
+              <!-- edit -->
+              <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+                <Icon src="{Pencil}" micro size="20"/>
+              </button>
+            </TableBodyCell>
         {/if}
 
 
 
-        <!-- generate the action buttons -->
-        <TableBodyCell class="flex gap-4">
-          <!-- delete -->
-          <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
-          <!-- approve for students who are not enrolled -->
-          {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
-            <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
-          {/if}
-          <!-- edit -->
-          <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
-            <Icon src="{Pencil}" micro size="20"/>
-          </button>
-        </TableBodyCell>
+
       </TableBodyRow>
     {/each}
   </TableBody>
