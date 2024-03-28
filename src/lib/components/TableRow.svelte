@@ -26,10 +26,15 @@
       <Checkbox />
     </TableBodyCell>
 
+
     <!-- If it's for editing, display a form -->
     {#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
         {#each Object.entries(info) as [field, value]}
-          {#if field !== "isEnrolled"}
+
+          <!-- generate the primary key col (uneditable) -->
+          {#if field == primaryKey}
+            <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
+          {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
               <input type="text" id={field} name={field} value={value}>
             </TableBodyCell>
