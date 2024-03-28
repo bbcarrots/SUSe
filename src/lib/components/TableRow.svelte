@@ -42,16 +42,19 @@
         {/each}
 
         <!-- generate the action buttons -->
-        <TableBodyCell class="flex gap-4">
-          <!-- save -->
-          <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
-            <Icon src="{Check}" micro size="20"/>
-          </button>
-          <!-- save -->
-          <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
-            <Icon src="{XMark}" micro size="20"/>
-          </button>
-        </TableBodyCell>
+        <div class="group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
+
+          <TableBodyCell class="flex gap-4">
+            <!-- save -->
+            <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+              <Icon src="{Check}" micro size="20"/>
+            </button>
+            <!-- save -->
+            <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
+              <Icon src="{XMark}" micro size="20"/>
+            </button>
+          </TableBodyCell>
+        </div>
 
     <!-- If not for editing, display the information -->
     {:else}
