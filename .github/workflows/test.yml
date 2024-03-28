@@ -32,5 +32,5 @@ jobs:
     # - run: npx playwright install
     - run: npm install --save-dev jest
     # - run: npm run test:unit
-    - run: npx vitest SUSe\tests\index.test.ts
+    - run: npx vitest index.test.ts
     
