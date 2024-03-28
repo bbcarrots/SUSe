@@ -7,8 +7,6 @@
         <Sidebar ></Sidebar>
     </div>
     <div class="w-full">
-        <div class="">
-            <slot />
-        </div>
+        <slot />
     </div>
 </div>

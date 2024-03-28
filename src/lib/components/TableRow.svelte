@@ -42,7 +42,7 @@
         {/each}
 
         <!-- generate the action buttons -->
-        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
+        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
 
             <!-- save -->
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
@@ -56,28 +56,26 @@
 
     <!-- If not for editing, display the information -->
     {:else}
-      <!-- generate information for each column -->
-      {#each Object.entries(info) as [field, value]}
-        {#if field !== "isEnrolled"}
-            <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
-        {/if}
-      {/each}
+        <!-- generate information for each column -->
+        {#each Object.entries(info) as [field, value]}
+            {#if field !== "isEnrolled"}
+                <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
+            {/if}
+        {/each}
 
-      <!-- action buttons -->
-      <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
-        <!-- generate the action buttons -->
-        <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
-        {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
-            <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
-        {/if}
-        <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
-            <Icon src="{Pencil}" micro size="20"/>
-        </button>
-    </div>
-
+        <!-- action buttons -->
+        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
+            <!-- generate the action buttons -->
+            <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+            {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
+                <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
+            {/if}
+            <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+                <Icon src="{Pencil}" micro size="20"/>
+            </button>
+        </div>
     {/if}
-
-  </TableBodyRow>
+</TableBodyRow>
 
 <style lang="postcss">
     @tailwind components;
