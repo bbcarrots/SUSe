@@ -6,7 +6,7 @@
     <div class="h-screen">
         <Sidebar ></Sidebar>
     </div>
-    <div>
+    <div class="flex-grow">
         <slot/>
     </div>
 </div>
