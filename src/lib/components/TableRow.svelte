@@ -42,9 +42,8 @@
         {/each}
 
         <!-- generate the action buttons -->
-        <div class="group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
+        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
 
-          <TableBodyCell class="flex gap-4">
             <!-- save -->
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
               <Icon src="{Check}" micro size="20"/>
@@ -53,7 +52,6 @@
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
               <Icon src="{XMark}" micro size="20"/>
             </button>
-          </TableBodyCell>
         </div>
 
     <!-- If not for editing, display the information -->
@@ -66,18 +64,16 @@
       {/each}
 
       <!-- action buttons -->
-      <div class="group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
+      <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
         <!-- generate the action buttons -->
-        <TableBodyCell class="flex gap-4">
-          <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
-          {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
+        <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+        {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
             <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
-          {/if}
-          <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+        {/if}
+        <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
             <Icon src="{Pencil}" micro size="20"/>
-          </button>
-        </TableBodyCell>     
-      </div>
+        </button>
+    </div>
 
     {/if}
 

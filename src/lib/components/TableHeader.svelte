@@ -52,10 +52,7 @@
         </TableHeadCell>
     {/each}
 
-    <!-- Add separate actions column -->
-    <TableHeadCell class="bg-white">
-        <p class="font-bold">Actions</p>
-    </TableHeadCell>
+
 </TableHead>
   
 <style>
