@@ -153,5 +153,5 @@ export class Student {
 
 	// TO BE IMPLEMENTED:
 	// filterStudents()
-	
 }
+
