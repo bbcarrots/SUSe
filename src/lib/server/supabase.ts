@@ -9,14 +9,31 @@ export const supabase = createClient(
 );
 
 export async function selectStudentDB(filter: StudentFilter): Promise<StudentResponse> {
-	/* Selects the student record/s from the database using a filter
+	/* Selects the student record/s from the database using a filter.
     Filter only contains option for student number and username for now. */
+	let minSN: number = filter.minStudentNumber;
+	let maxSN: number = filter.maxStudentNumber;
+
+	if (Math.floor(minSN / 2000) == 1 && Math.floor(maxSN / 2000) == 1) {
+		// inputs are years and not specific student numbers
+		minSN = filter.minStudentNumber * 100000;
+		maxSN = (filter.maxStudentNumber + 1) * 100000;
+	}
+
+	if ((Math.floor(minSN / 200000000) != 1 && Math.floor(maxSN / 200000000) != 1) || minSN > maxSN) {
+		// student numbers range have to be valid
+		return {
+			success: false,
+			studentRaws: null,
+			error: 'Error: Student number range invalid'
+		};
+	}
 
 	const { data, error } = await supabase
 		.from('student')
 		.select('*')
-		.gte('sn_id', filter.minStudentNumber * 100000) // student number should be between an inclusive range
-		.lte('sn_id', (filter.maxStudentNumber + 1) * 100000)
+		.gte('sn_id', minSN) // student number should be between an inclusive range
+		.lte('sn_id', maxSN)
 		.like('username', '%' + filter.username + '%'); // username can be found in any position
 
 	if (error) {
@@ -53,9 +70,37 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 	};
 }
 
+async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
+	const studentDB = await selectStudentDB(filter);
+
+	if (studentDB.success && studentDB.studentRaws?.length == 1) {
+		return {
+			success: true,
+			studentRaws: null,
+			error: null
+		};
+	}
+
+	return {
+        success: false,
+        studentRaws: null,
+        error: 'Error: Student does not exist'
+    };
+}
+
 export async function updateStudentDB(student: Student): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+	const studentCheck = await checkStudentExistsDB({
+		minStudentNumber: student.studentNumber,
+		maxStudentNumber: student.studentNumber,
+		username: student.username
+	});
+
+	if (!studentCheck.success) {
+		return studentCheck;
+	}
+
 	const { error } = await supabase
 		.from('student')
 		.update({
@@ -87,6 +132,16 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+    const studentCheck = await checkStudentExistsDB({
+		minStudentNumber: student.studentNumber,
+		maxStudentNumber: student.studentNumber,
+		username: student.username
+	});
+
+	if (!studentCheck.success) {
+		return studentCheck;
+	}
+
 	const { error } = await supabase
 		.from('student')
 		.delete()
@@ -111,6 +166,16 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 export async function approveStudentDB(student: Student): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+    const studentCheck = await checkStudentExistsDB({
+		minStudentNumber: student.studentNumber,
+		maxStudentNumber: student.studentNumber,
+		username: student.username
+	});
+
+	if (!studentCheck.success) {
+		return studentCheck;
+	}
+    
 	const { error } = await supabase
 		.from('student')
 		.update({ is_enrolled: true })

@@ -34,7 +34,7 @@
         return 0;
       }
     });
-    console.log(key);
+    // console.log(key);
     sortedItems.set(items);
   }
 

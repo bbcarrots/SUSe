@@ -126,7 +126,7 @@ export class Student {
 			username: ''
 		}
 	): Promise<StudentResponse> {
-		/* Selects all student records in database using the default filter. */
+		/* Selects all student records in database using the default or given filter. */
 		return selectStudentDB(filter);
 	}
 
