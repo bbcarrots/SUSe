@@ -1,6 +1,7 @@
 // import { createClient } from '@supabase/supabase-js';
 import { describe, it, expect, beforeEach, /*afterEach*/} from 'vitest';
-import { Student, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student'; 
+import { Student, type StudentFilter, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student'; 
+import { selectStudentDB } from '$lib/server/supabase';
 // import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
@@ -171,26 +172,36 @@ describe('success: Student.deleteStudent', () => {
 
 // selectStudents() test not yet working, next sprint
 
-// describe('success: Student.selectStudentDB', () => {
-//   const newStudentNumber = 202100003;
-//   const newUsername = "dummyselect"; 
-//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+describe('success: Student.selectStudentDB', () => {
+  const newStudentNumber = 202112345;
+  const newUsername = "dummyfiltertest"; 
+  const studentInstance: Student = new Student(newStudentNumber, "rfid54321", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
-//   beforeEach( async () => {
-//     await studentInstance.insertStudent(); // insert studentInstance first
-//   });
+  beforeEach( async () => {
+    await studentInstance.insertStudent(); // insert studentInstance first
+  });
 
-//   it('success: selected student in database', async () => {
-//     // returned StudentResponse upon successful insert into database
-//     const expectedState: StudentResponse = { 
-//       success: true,
-// 			studentRaws: [],
-// 			error: null
-//     } 
-//     await expect(studentInstance.selectStudents()).resolves.toStrictEqual(expectedState);
-//     await studentInstance.deleteStudent(); // clean up dummy entry
-//   });
-// });
+  it('success: selected student in database', async () => {
+    const oneStudentFilter: StudentFilter = {
+      minStudentNumber: 202112345,
+      maxStudentNumber: 202112345,
+      username: "dummyfiltertest"
+    }
+    // returned StudentResponse upon successful insert into database
+    const expectedState: StudentResponse = { 
+      success: true,
+			studentRaws: [studentInstance],
+			error: null
+    } 
+    const selectOutput = await selectStudentDB(oneStudentFilter);
+    const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
+
+    // compare selected student number with inserted student number
+    await expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber); 
+    await studentInstance.deleteStudent(); // clean up dummy entry
+  });
+  
+});
 
 // not yet working. to be implemented at Sprint
 
