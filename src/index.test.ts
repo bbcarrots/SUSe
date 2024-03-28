@@ -97,37 +97,37 @@ describe('success: Student.updateStudent', () => {
     await studentInstance.deleteStudent(); // clean up dummy entry
   });
 
-  // it('fail: updating with wrong SN', async () => {
-  //   // returned StudentResponse upon successful insert into database
-  //   const expectedState: StudentResponse = { 
-  //     success: false,
-	// 		studentRaws: null,
-	// 		error: null // change to appropriate supabase error message
-  //   } 
-  //   const wrongSN: number = 202133333;
+  it('fail: updating with wrong SN', async () => {
+    // returned StudentResponse upon successful insert into database
+    const expectedState: StudentResponse = { 
+      success: false,
+		  studentRaws: null,
+		  error: 'Error: Student does not exist'
+    } 
+    const wrongSN: number = 202133333;
 
-  //   // instance that updates password, first name, MI, last name, college, program, and phone number
-  //   const updatedStudentInstance: Student = new Student(wrongSN, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+    // instance that updates password, first name, MI, last name, college, program, and phone number
+    const updatedStudentInstance: Student = new Student(wrongSN, "rfid12345", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
 
-  //   await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-  //   await studentInstance.deleteStudent(); // clean up dummy entry
-  // });
+    await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
+    await studentInstance.deleteStudent(); // clean up dummy entry
+  });
 
-  // it('fail: updating with wrong username', async () => {
-  //   // returned StudentResponse upon successful insert into database
-  //   const expectedState: StudentResponse = { 
-  //     success: false,
-	// 		studentRaws: null,
-	// 		error: null // change to appropriate supabase error message
-  //   } 
-  //   const wrongUsername: string = "wrongusername";
+  it('fail: updating with wrong username', async () => {
+    // returned StudentResponse upon successful insert into database
+    const expectedState: StudentResponse = { 
+      success: false,
+		  studentRaws: null,
+		  error: 'Error: Student does not exist'
+    } 
+    const wrongUsername: string = "wrongusername";
 
-  //   // instance that updates password, first name, MI, last name, college, program, and phone number
-  //   const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", wrongUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+    // instance that updates password, first name, MI, last name, college, program, and phone number
+    const updatedStudentInstance: Student = new Student(newStudentNumber, "rfid12345", wrongUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
 
-  //   await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-  //   await studentInstance.deleteStudent(); // clean up dummy entry
-  // });
+    await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
+    await studentInstance.deleteStudent(); // clean up dummy entry
+  });
 
 });
 
