@@ -19,7 +19,7 @@
 
 </script>
 
-<TableBodyRow color="custom" class="overflow-x-auto bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
+<TableBodyRow color="custom" class="group relative overflow-x-auto bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
 
     <!-- checkbox for each table row -->
     <TableBodyCell class="!px-4 py-5 sticky left-0 bg-white">
@@ -57,19 +57,20 @@
         {/if}
       {/each}
 
+      <!-- action buttons -->
+      <div class="group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent">
         <!-- generate the action buttons -->
         <TableBodyCell class="flex gap-4">
-          <!-- delete -->
           <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
-          <!-- approve for students who are not enrolled -->
           {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
             <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
           {/if}
-          <!-- edit -->
           <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
             <Icon src="{Pencil}" micro size="20"/>
           </button>
-        </TableBodyCell>
+        </TableBodyCell>     
+      </div>
+
     {/if}
 
   </TableBodyRow>
@@ -98,4 +99,6 @@
             @apply h-3 w-3 bg-gray-300 rounded-full inline-block;
         }
     }
+
+
 </style>
