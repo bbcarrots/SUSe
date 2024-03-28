@@ -8,6 +8,12 @@ export const supabase = createClient(
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
 );
 
+const success = {
+    success: true,
+    studentRaws: null,
+    error: null
+};
+
 export async function selectStudentDB(filter: StudentFilter): Promise<StudentResponse> {
 	/* Selects the student record/s from the database using a filter.
     Filter only contains option for student number and username for now. */
@@ -63,22 +69,14 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 		};
 	}
 
-	return {
-		success: true,
-		studentRaws: null,
-		error: null
-	};
+	return success;
 }
 
 async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
 	const studentDB = await selectStudentDB(filter);
 
 	if (studentDB.success && studentDB.studentRaws?.length == 1) {
-		return {
-			success: true,
-			studentRaws: null,
-			error: null
-		};
+		return success;
 	}
 
 	return {
@@ -122,11 +120,7 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 		};
 	}
 
-	return {
-		success: true,
-		studentRaws: null,
-		error: null
-	};
+	return success;
 }
 
 export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
@@ -156,11 +150,7 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 		};
 	}
 
-	return {
-		success: true,
-		studentRaws: null,
-		error: null
-	};
+	return success;
 }
 
 export async function approveStudentDB(student: Student): Promise<StudentResponse> {
@@ -175,7 +165,7 @@ export async function approveStudentDB(student: Student): Promise<StudentRespons
 	if (!studentCheck.success) {
 		return studentCheck;
 	}
-    
+
 	const { error } = await supabase
 		.from('student')
 		.update({ is_enrolled: true })
@@ -190,9 +180,5 @@ export async function approveStudentDB(student: Student): Promise<StudentRespons
 		};
 	}
 
-	return {
-		success: true,
-		studentRaws: null,
-		error: null
-	};
+	return success;
 }
