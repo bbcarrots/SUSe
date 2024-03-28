@@ -2,7 +2,8 @@ import {
 	insertStudentDB,
 	selectStudentDB,
 	updateStudentDB,
-	deleteStudentDB
+	deleteStudentDB,
+	approveStudentDB
 } from '$lib/server/supabase';
 
 export type StudentDBObj = {
@@ -145,6 +146,11 @@ export class Student {
 		return deleteStudentDB(this);
 	}
 
+	public async approveStudent(): Promise<StudentResponse> {
+		/* */
+		return approveStudentDB(this);
+	}
+
 	// TO BE IMPLEMENTED:
-	// approveStudent()
+	// filterStudents()
 }
