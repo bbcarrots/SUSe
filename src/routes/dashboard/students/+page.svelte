@@ -2,10 +2,12 @@
 	import NewTable from "$lib/components/NewTable.svelte";
 
 	export let data;
-	let headers = [ "Student Number", "Name", "Email", "Phone Number", "College", "Program"]
+	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
 
     type StudentProcessed = {
-		name: string,
+		firstName: string,
+		middleName: string,
+		lastName: string,
 		studentNumber: number,
 		email: string,
 		phoneNumber: string,
@@ -22,7 +24,9 @@
 		students = studentObjects.map(student => {
 			return {
 				studentNumber: student.sn_id,
-				name: student.first_name + " " + student.middle_initial + " " + student.last_name,
+				firstName: student.first_name,
+				middleName: student.middle_initial,
+				lastName: student.last_name,
 				email: student.username,
 				phoneNumber: student.phone_number,
 				college: student.college,
