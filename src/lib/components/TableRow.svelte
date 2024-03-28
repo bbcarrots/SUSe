@@ -19,10 +19,10 @@
 
 </script>
 
-<TableBodyRow color="custom" class="bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
+<TableBodyRow color="custom" class="overflow-x-auto bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
 
     <!-- checkbox for each table row -->
-    <TableBodyCell class="!px-4 py-5">
+    <TableBodyCell class="!px-4 py-5 sticky left-0">
       <Checkbox />
     </TableBodyCell>
 
@@ -53,7 +53,7 @@
       <!-- generate information for each column -->
       {#each Object.entries(info) as [field, value]}
         {#if field !== "isEnrolled"}
-            <TableCell field={field} value={value} info={info} />
+            <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
         {/if}
       {/each}
 

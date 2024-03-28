@@ -4,9 +4,10 @@
     export let info: any;
     export let field: string;
     export let value: any;
+    export let primaryKey: string;
 </script>
 
-<TableBodyCell>
+<TableBodyCell class="{field === primaryKey ? 'sticky left-14' : ''}">
     {#if field === "name" && Object.hasOwn(info, 'isEnrolled')}
         <span class="flex items-center">
             <span class="pr-2">
