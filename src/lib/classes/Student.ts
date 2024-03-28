@@ -119,13 +119,15 @@ export class Student {
 		);
 	}
 
-	public static async selectStudents(): Promise<StudentResponse> {
-		/* Selects all student records in database using the default filter. */
-		return selectStudentDB({
+	public static async selectStudents(
+		filter: StudentFilter = {
 			minStudentNumber: 2000,
 			maxStudentNumber: new Date().getFullYear(), // gets current year
 			username: ''
-		});
+		}
+	): Promise<StudentResponse> {
+		/* Selects all student records in database using the default filter. */
+		return selectStudentDB(filter);
 	}
 
 	public async insertStudent(): Promise<StudentResponse> {
