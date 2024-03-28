@@ -1,4 +1,9 @@
-import { insertStudentDB, selectStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase';
+import {
+	insertStudentDB,
+	selectStudentDB,
+	updateStudentDB,
+	deleteStudentDB
+} from '$lib/server/supabase';
 
 export type StudentDBObj = {
 	sn_id: number;
@@ -18,6 +23,12 @@ export type StudentResponse = {
 	success: boolean;
 	studentRaws: StudentDBObj[] | null;
 	error: string | null;
+};
+
+export type StudentFilter = {
+	minStudentNumber: number;
+	maxStudentNumber: number;
+	username: string;
 };
 
 export class Student {
@@ -109,8 +120,12 @@ export class Student {
 	}
 
 	public static async selectStudents(): Promise<StudentResponse> {
-		/* Selects all student records in database. */
-		return selectStudentDB();
+		/* Selects all student records in database using the default filter. */
+		return selectStudentDB({
+			minStudentNumber: 2000,
+			maxStudentNumber: new Date().getFullYear(), // gets current year
+			username: ''
+		});
 	}
 
 	public async insertStudent(): Promise<StudentResponse> {
@@ -118,15 +133,15 @@ export class Student {
 		return insertStudentDB(this);
 	}
 
-    public async updateStudent(): Promise<StudentResponse> {
-        /* Updates the student record matching this Student's student number and username. */
-        return updateStudentDB(this);
-    }
+	public async updateStudent(): Promise<StudentResponse> {
+		/* Updates the student record matching this Student's student number and username. */
+		return updateStudentDB(this);
+	}
 
-    public async deleteStudent(): Promise<StudentResponse> {
-        /* Updates the student record matching this Student's student number and username. */
-        return deleteStudentDB(this);
-    }
+	public async deleteStudent(): Promise<StudentResponse> {
+		/* Updates the student record matching this Student's student number and username. */
+		return deleteStudentDB(this);
+	}
 
 	// TO BE IMPLEMENTED:
 	// approveStudent()
