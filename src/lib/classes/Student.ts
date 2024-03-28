@@ -142,12 +142,12 @@ export class Student {
 	}
 
 	public async deleteStudent(): Promise<StudentResponse> {
-		/* Updates the student record matching this Student's student number and username. */
+		/* Deletes the student record matching this Student's student number and username. */
 		return deleteStudentDB(this);
 	}
 
 	public async approveStudent(): Promise<StudentResponse> {
-		/* */
+		/* Approves the student record matching this Student's student number and username. */
 		return approveStudentDB(this);
 	}
 

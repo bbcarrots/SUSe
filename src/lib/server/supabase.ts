@@ -9,9 +9,9 @@ export const supabase = createClient(
 );
 
 const success = {
-    success: true,
-    studentRaws: null,
-    error: null
+	success: true,
+	studentRaws: null,
+	error: null
 };
 
 export async function selectStudentDB(filter: StudentFilter): Promise<StudentResponse> {
@@ -58,7 +58,7 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 }
 
 export async function insertStudentDB(student: Student): Promise<StudentResponse> {
-	/* Inserts a student record into the database. */
+	/* Inserts a non-existing student record into the database. */
 	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
 
 	if (error) {
@@ -73,6 +73,7 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 }
 
 async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
+	/* Checks if there is a single existing record of a student with the given student number and username. */
 	const studentDB = await selectStudentDB(filter);
 
 	if (studentDB.success && studentDB.studentRaws?.length == 1) {
@@ -80,10 +81,10 @@ async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentRespo
 	}
 
 	return {
-        success: false,
-        studentRaws: null,
-        error: 'Error: Student does not exist'
-    };
+		success: false,
+		studentRaws: null,
+		error: 'Error: Student does not exist'
+	};
 }
 
 export async function updateStudentDB(student: Student): Promise<StudentResponse> {
@@ -124,9 +125,8 @@ export async function updateStudentDB(student: Student): Promise<StudentResponse
 }
 
 export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
-	/* Updates a student record based using their student number and username.
-    NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
-    const studentCheck = await checkStudentExistsDB({
+	/* Deletes an existing student record. */
+	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: student.studentNumber,
 		maxStudentNumber: student.studentNumber,
 		username: student.username
@@ -154,9 +154,8 @@ export async function deleteStudentDB(student: Student): Promise<StudentResponse
 }
 
 export async function approveStudentDB(student: Student): Promise<StudentResponse> {
-	/* Updates a student record based using their student number and username.
-    NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
-    const studentCheck = await checkStudentExistsDB({
+	/* Approves an existing student by updating their isEnrolled attribute to true. */
+	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: student.studentNumber,
 		maxStudentNumber: student.studentNumber,
 		username: student.username
