@@ -97,7 +97,7 @@ describe('success: Student.updateStudent', () => {
     await studentInstance.deleteStudent(); // clean up dummy entry
   });
 
-  it('fail: updating with wrong SN', async () => {
+  it('error: updating with wrong SN', async () => {
     // returned StudentResponse upon successful insert into database
     const expectedState: StudentResponse = { 
       success: false,
@@ -113,7 +113,7 @@ describe('success: Student.updateStudent', () => {
     await studentInstance.deleteStudent(); // clean up dummy entry
   });
 
-  it('fail: updating with wrong username', async () => {
+  it('error: updating with wrong username', async () => {
     // returned StudentResponse upon successful insert into database
     const expectedState: StudentResponse = { 
       success: false,
@@ -133,41 +133,41 @@ describe('success: Student.updateStudent', () => {
 
 // delete tests not working yet. deletion of non existent record does not error as expected.
    
-  // describe('success: Student.deleteStudent', () => {
-  //   const newStudentNumber = 202101012;
-  //   const newUsername = "dummy11"; 
-  //   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-    
-  //   beforeEach( async () => {
-  //     await studentInstance.insertStudent(); // insert studentInstance first
-  //   });
-
-  //   it('success: deleted student in database', async () => {
-  //     // returned StudentResponse upon successful deletion from database
-  //     const expectedState: StudentResponse = { 
-  //       success: true,
-  //       studentRaws: null,
-  //       error: null
-  //     } 
-  //     await expect(studentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
-  //   });
-
-  //   it('fail: deleted nonexistent student SN in database', async () => {
-  //     // returned StudentResponse upon failed deletion from database
-  //     const expectedState: StudentResponse = { 
-  //       success: false,
-  //       studentRaws: null,
-  //       error: null
-  //     } 
-
-  //     const nullStudentInstance: Student = new Student(900000000, "rfid00000", "nullusername", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", false);
-
-  //     await expect(nullStudentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
-  //     await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
-  //   });
+describe('success: Student.deleteStudent', () => {
+  const newStudentNumber = 202101012;
+  const newUsername = "dummy11"; 
+  const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
   
-  
-  // });
+  beforeEach( async () => {
+    await studentInstance.insertStudent(); // insert studentInstance first
+  });
+
+  it('success: deleted student in database', async () => {
+    // returned StudentResponse upon successful deletion from database
+    const expectedState: StudentResponse = { 
+      success: true,
+      studentRaws: null,
+      error: null
+    } 
+    await expect(studentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
+  });
+
+  it('error: deleting nonexistent student in database', async () => {
+    // returned StudentResponse upon failed deletion from database
+    const expectedState: StudentResponse = { 
+      success: false,
+      studentRaws: null,
+      error: "Error: Student does not exist"
+    } 
+
+    const nullStudentInstance: Student = new Student(900000000, "rfid00000", "nullusername", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", false);
+
+    await expect(nullStudentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
+    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
+  });
+
+
+});
 
 // selectStudents() test not yet working, next sprint
 
