@@ -29,7 +29,7 @@
 
     <!-- generating each of the headers -->
     {#each headers as header, index}
-    <TableHeadCell class="{index === 0 ? 'sticky left-14 drop-shadow-[0px -10px 4px rgba(17, 51, 17, 0.05)] z-10' : ''} hover:cursor-pointer py-4 bg-white"  on:click={() => sortTable(camelize(header))}>
+    <TableHeadCell class="{index === 0 ? 'sticky left-14' : ''} hover:cursor-pointer py-4 bg-white"  on:click={() => sortTable(camelize(header))}>
         
         <div class="flex gap-2" style="width: 150px;">
             <!-- header name -->
@@ -52,7 +52,9 @@
         </TableHeadCell>
     {/each}
 
-
+    <!-- filler div for header -->
+    <div class="flex p-[27px] bg-white gap-4 pl-20 sticky right-0 bg-gradient-to-l-ml-[100px]">
+    </div>
 </TableHead>
   
 <style>
