@@ -4,6 +4,7 @@
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
     import TableCell from "./TableCell.svelte";
     import { isEditing } from "$lib/stores/TableStores";
+    import Input from "./Input.svelte";
 
     export let info: any;
     export let primaryKey: string;
@@ -19,7 +20,7 @@
 
 </script>
 
-<TableBodyRow color="custom" class="group relative overflow-x-auto bg-white hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
+<TableBodyRow color="custom" class="group relative overflow-x-auto hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
 
     <!-- checkbox for each table row -->
     <TableBodyCell class="!px-4 py-5 sticky left-0 bg-white">
@@ -29,6 +30,7 @@
 
     <!-- If it's for editing, display a form -->
     {#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
+
         {#each Object.entries(info) as [field, value]}
 
           <!-- generate the primary key col (uneditable) -->
@@ -36,13 +38,13 @@
             <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
           {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
-              <input type="text" id={field} name={field} value={value}>
+              <Input field={field} value={value}/>
             </TableBodyCell>
           {/if}
         {/each}
 
         <!-- generate the action buttons -->
-        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
+        <div class="flex p-5 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
 
             <!-- save -->
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
@@ -64,7 +66,7 @@
         {/each}
 
         <!-- action buttons -->
-        <div class="flex p-4 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
+        <div class="flex p-5 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
             <!-- generate the action buttons -->
             <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
             {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
