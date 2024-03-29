@@ -8,7 +8,7 @@
 </script>
 
 <TableBodyCell class="{field === primaryKey ? 'sticky left-14 bg-white drop-shadow-[10px_10px_5px_rgba(17,51,17,0.02)]' : ''}">
-    {#if field === "name" && Object.hasOwn(info, 'isEnrolled')}
+    {#if field === "studentNumber" && Object.hasOwn(info, 'isEnrolled')}
         <span class="flex items-center">
             <span class="pr-2">
             {#if info.isEnrolled === true}
@@ -21,7 +21,7 @@
       </span>
     {/if}
     
-    {#if field !== "name" || !Object.hasOwn(info, 'isEnrolled')}
+    {#if field !== "studentNumber" || !Object.hasOwn(info, 'isEnrolled')}
       <p>{value}</p>
     {/if}
 </TableBodyCell>
