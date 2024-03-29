@@ -9,8 +9,6 @@
 
     $: activeUrl = $page.url.pathname;
 
-    console.log($page.url.pathname)
-
 </script>
 
 <Sidebar {activeUrl} {nonActiveClass} {activeClass}>
