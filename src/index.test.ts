@@ -11,7 +11,7 @@ describe('sanity/integrity test: it should add 2 and 3 properly', () => {
 });
 
 
-describe('success: Student.insertStudent', () => {
+describe('Student.insertStudent', () => {
   const newStudentNumber = 202100001;
   const newUsername = "dummyinsert"; 
   const studentInstance: Student = new Student(newStudentNumber, "rfid123456", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
@@ -75,7 +75,7 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 // fail tests not yet working, i.e., success state returned when expected to fail
 // to be implemented at Sprint 3
 
-describe('success: Student.updateStudent', () => {
+describe('Student.updateStudent', () => {
   const newStudentNumber = 202100004;
   const newUsername = "dummyupdate"; 
   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
@@ -134,7 +134,7 @@ describe('success: Student.updateStudent', () => {
 
 // delete tests not working yet. deletion of non existent record does not error as expected.
    
-describe('success: Student.deleteStudent', () => {
+describe('Student.deleteStudent', () => {
   const newStudentNumber = 202101012;
   const newUsername = "dummy11"; 
   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
@@ -172,8 +172,8 @@ describe('success: Student.deleteStudent', () => {
 
 // selectStudents() test not yet working, next sprint
 
-describe('success: Student.selectStudentDB', () => {
-  const newStudentNumber = 202112345;
+describe('Student.selectStudentDB', () => {
+  const newStudentNumber = 203099998;
   const newUsername = "dummyfiltertest"; 
   const studentInstance: Student = new Student(newStudentNumber, "rfid54321", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
@@ -181,18 +181,12 @@ describe('success: Student.selectStudentDB', () => {
     await studentInstance.insertStudent(); // insert studentInstance first
   });
 
-  it('success: selected student in database', async () => {
+  it('success: selected single student in database', async () => {
     const oneStudentFilter: StudentFilter = {
-      minStudentNumber: 202112345,
-      maxStudentNumber: 202112345,
-      username: "dummyfiltertest"
+      minStudentNumber: newStudentNumber,
+      maxStudentNumber: newStudentNumber,
+      username: newUsername
     }
-    // returned StudentResponse upon successful insert into database
-    const expectedState: StudentResponse = { 
-      success: true,
-			studentRaws: [studentInstance],
-			error: null
-    } 
     const selectOutput = await selectStudentDB(oneStudentFilter);
     const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
 
@@ -200,7 +194,92 @@ describe('success: Student.selectStudentDB', () => {
     await expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber); 
     await studentInstance.deleteStudent(); // clean up dummy entry
   });
+
+  // it('success: entries within valid year range', async () => {
+  //   // insert multiple student entries first
+
+  //   let listOfStudents = [];
+
+  //   for(let offset = 1; offset < 5; offset++){
+  //     let dummySN = newStudentNumber + offset;
+  //     let dummyUsername = newUsername + offset.toString();
+
+  //     let dummyStudent: Student = new Student(dummySN, "rfid54321", dummyUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  //     await dummyStudent.insertStudent(); // insert studentInstance first
+  //     listOfStudents.push(dummyStudent)
+  //   }
+
+  //   const multipleStudentFilter: StudentFilter = {
+  //     minStudentNumber: 2030,
+  //     maxStudentNumber: 2031,
+  //     username: ""
+  //   }
+  //   const selectOutput = await selectStudentDB(multipleStudentFilter);
+  //   const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
+  //   const expectedStudentNumbers = [203099998, 203099999, 203100000, 203100001, 203100002];
+
+  //   // compare selected student number with inserted student number
+  //   await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
+    
+  //   // clean up dummy entries
+  //   await studentInstance.deleteStudent();
+  //   listOfStudents.forEach(function(element){
+  //     element.deleteStudent();
+  //   });
+
+  // });
   
+  it('error: selecting single nonexistent student record', async () => {
+    const nonexistentStudentFilter: StudentFilter = {
+      minStudentNumber: 200000000,
+      maxStudentNumber: 200000000,
+      username: "dummyfiltertest"
+    }
+
+    const selectOutput = await selectStudentDB(nonexistentStudentFilter);
+    const selectOutputArray = selectOutput.studentRaws;
+
+    const expectedArray = []; // studentRaws array filed should be empty since record does not exist
+
+    expect(selectOutputArray).toStrictEqual(expectedArray); 
+    await studentInstance.deleteStudent(); // clean up dummy entry
+
+  });
+
+});
+
+describe('error: Student.selectStudentDB wrong input', () => {
+  it('error: invalid four-digit year inputs', () => {
+    const invalidFourDigitFilter: StudentFilter = {
+      minStudentNumber: 1945,
+      maxStudentNumber: 1989,
+      username: "dummyfiltertest"
+    }
+
+    const expectedError: StudentResponse = {
+      success: false,
+      studentRaws: null,
+      error: "Error: Student number range invalid"
+    }
+
+    expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
+  });
+
+  it('error: invalid nine-digit SN inputs', () => {
+    const invalidFourDigitFilter: StudentFilter = {
+      minStudentNumber: 194512345,
+      maxStudentNumber: 198954321,
+      username: "dummyfiltertest"
+    }
+
+    const expectedError: StudentResponse = {
+      success: false,
+      studentRaws: null,
+      error: "Error: Student number range invalid"
+    }
+
+    expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
+  });
 });
 
 // not yet working. to be implemented at Sprint
