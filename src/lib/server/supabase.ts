@@ -20,14 +20,22 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 	let minSN: number = filter.minStudentNumber;
 	let maxSN: number = filter.maxStudentNumber;
 
-	if (Math.floor(minSN / 2000) == 1 && Math.floor(maxSN / 2000) == 1) {
+	if (Math.floor(minSN / 2000) >= 1 && Math.floor(maxSN / 2000) >= 1) {
 		// inputs are years and not specific student numbers
+		// minimum year is 2000
 		minSN = filter.minStudentNumber * 100000;
 		maxSN = (filter.maxStudentNumber + 1) * 100000;
 	}
 
-	if ((Math.floor(minSN / 200000000) != 1 && Math.floor(maxSN / 200000000) != 1) || minSN > maxSN) {
+	if (
+		Math.floor(minSN / 200000000) == 0 ||
+		Math.floor(maxSN / 200000000) == 0 ||
+		minSN > 999999999 ||
+		maxSN > 999999999 ||
+		minSN > maxSN
+	) {
 		// student numbers range have to be valid
+		// minimum SN is 2000-00000 and max SN is 9999-99999
 		return {
 			success: false,
 			studentRaws: null,
