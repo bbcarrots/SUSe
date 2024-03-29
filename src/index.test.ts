@@ -175,10 +175,17 @@ describe('Student.deleteStudent', () => {
 describe('Student.selectStudentDB', () => {
   const newStudentNumber = 203099998;
   const newUsername = "dummyfiltertest";
+
   const studentInstance: Student = new Student(newStudentNumber, "rfid54321", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const dummyStudent1: Student = new Student(203099999, "rfid54321", "dummyfiltertest1", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const dummyStudent2: Student = new Student(203100000, "rfid54321", "dummyfiltertest2", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const dummyStudent3: Student = new Student(203100001, "rfid54321", "dummyfiltertest2", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
   beforeEach(async () => {
-    await studentInstance.insertStudent(); // insert studentInstance first
+    await studentInstance.insertStudent()
+    .then(() => dummyStudent1.insertStudent())
+    .then(() => dummyStudent2.insertStudent())
+    .then(() => dummyStudent3.insertStudent()); // insert studentInstance first
   });
 
   it('success: selected single student in database', async () => {
@@ -191,43 +198,36 @@ describe('Student.selectStudentDB', () => {
     const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
 
     // compare selected student number with inserted student number
-    await expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber);
-    await studentInstance.deleteStudent(); // clean up dummy entry
+    expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber);
+
+    await studentInstance.insertStudent()
+    .then(() => dummyStudent1.deleteStudent())
+    .then(() => dummyStudent2.deleteStudent())
+    .then(() => dummyStudent3.deleteStudent());
   });
 
-  // it('success: entries within valid year range', async () => {
-  //   // insert multiple student entries first
+  it('success: entries within valid year range', async () => {
+    // insert multiple student entries first
 
-  //   let listOfStudents = [];
+    const multipleStudentFilter: StudentFilter = {
+      minStudentNumber: 2030,
+      maxStudentNumber: 2030,
+      username: ""
+    }
+    const selectOutput = await selectStudentDB(multipleStudentFilter);
+    const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
+    const expectedStudentNumbers = [203099998, 203099999];
 
-  //   for(let offset = 1; offset < 5; offset++){
-  //     let dummySN = newStudentNumber + offset;
-  //     let dummyUsername = newUsername + offset.toString();
+    // compare selected student number with inserted student number
+    await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
 
-  //     let dummyStudent: Student = new Student(dummySN, "rfid54321", dummyUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-  //     await dummyStudent.insertStudent(); // insert studentInstance first
-  //     listOfStudents.push(dummyStudent)
-  //   }
+    // clean up dummy entries
+    await studentInstance.deleteStudent();
+    await dummyStudent1.deleteStudent();
+    await dummyStudent2.deleteStudent();
+    await dummyStudent3.deleteStudent();
 
-  //   const multipleStudentFilter: StudentFilter = {
-  //     minStudentNumber: 2030,
-  //     maxStudentNumber: 2031,
-  //     username: ""
-  //   }
-  //   const selectOutput = await selectStudentDB(multipleStudentFilter);
-  //   const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
-  //   const expectedStudentNumbers = [203099998, 203099999, 203100000, 203100001, 203100002];
-
-  //   // compare selected student number with inserted student number
-  //   await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
-
-  //   // clean up dummy entries
-  //   await studentInstance.deleteStudent();
-  //   listOfStudents.forEach(function(element){
-  //     element.deleteStudent();
-  //   });
-
-  // });
+  });
 
   it('error: selecting single nonexistent student record', async () => {
     const nonexistentStudentFilter: StudentFilter = {
@@ -243,6 +243,9 @@ describe('Student.selectStudentDB', () => {
 
     expect(selectOutputArray).toStrictEqual(expectedArray);
     await studentInstance.deleteStudent(); // clean up dummy entry
+    await dummyStudent1.deleteStudent();
+    await dummyStudent2.deleteStudent();
+    await dummyStudent3.deleteStudent();
 
   });
 
@@ -281,6 +284,46 @@ describe('error: Student.selectStudentDB wrong input', () => {
     expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
   });
 });
+
+
+// it('success: entries within valid year range', async () => {
+//   // insert multiple student entries first
+
+//   let listOfStudents = [];
+
+//   for(let offset = 1; offset < 5; offset++){
+//     let dummySN = newStudentNumber + offset;
+//     let dummyUsername = newUsername + offset.toString();
+
+//     let dummyStudent: Student = new Student(dummySN, "rfid54321", dummyUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+//     listOfStudents.push(dummyStudent)
+//   }
+
+//   for(var student of listOfStudents){
+//     await student.insertStudent();
+//   }
+
+//   const multipleStudentFilter: StudentFilter = {
+//     minStudentNumber: 2000,
+//     maxStudentNumber: 2999,
+//     username: ""
+//   }
+//   const selectOutput = await selectStudentDB(multipleStudentFilter);
+//   const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
+//   const expectedStudentNumbers = [203100000, 203100001, 203100002];
+
+//   // compare selected student number with inserted student number
+//   await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
+
+//   // clean up dummy entries
+//   await studentInstance.deleteStudent();
+
+//   for(var student of listOfStudents){
+//     await student.deleteStudent();
+//   }
+
+// });
+
 
 // not yet working. to be implemented at Sprint
 
