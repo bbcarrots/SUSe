@@ -85,7 +85,7 @@ export const CollegePrograms: Readable<College[]> = readable(
                 ]
             },
             {
-                college: "",
+                college: "College of Home Economics",
                 programs: [
                     "Clothing Technology",
                     "Community Nutrition",
