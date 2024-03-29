@@ -23,6 +23,13 @@
         }
     }
 
+    function cancelEdit(){
+        if ($isEditing == true){
+            isEditing.set(false);
+            primaryKeyEdit = null;
+        }
+    }
+
     // specific store for student tables
     const defaultCollegeValue = info.college ? info.college : '';
     export let college = writable<string>(defaultCollegeValue)
@@ -49,7 +56,10 @@
     //TODO
     //function for submitting the formData
     function submitForm() {
-  
+        if ($isEditing == true){
+            isEditing.set(false);
+            primaryKeyEdit = null;
+        }
     }
 
 </script>
@@ -85,7 +95,7 @@
               <Icon src="{Check}" micro size="20"/>
             </button>
             <!-- cancel -->
-            <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
+            <button on:click={() => cancelEdit()} class="font-medium text-red-600">
               <Icon src="{XMark}" micro size="20"/>
             </button>
         </div>
