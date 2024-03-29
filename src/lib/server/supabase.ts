@@ -20,11 +20,11 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 	let minSN: number = filter.minStudentNumber;
 	let maxSN: number = filter.maxStudentNumber;
 
-	if (Math.floor(minSN / 2000) >= 1 && Math.floor(maxSN / 2000) >= 1) {
+	if (Math.floor(minSN / 2000) >= 1 && Math.floor(minSN / 2000) < 5 && Math.floor(maxSN / 2000) >= 1 && Math.floor(maxSN / 2000) < 5) {
 		// inputs are years and not specific student numbers
 		// minimum year is 2000
 		minSN = filter.minStudentNumber * 100000;
-		maxSN = (filter.maxStudentNumber + 1) * 100000;
+		maxSN = ((filter.maxStudentNumber + 1) * 100000) - 1;
 	}
 
 	if (
