@@ -3,8 +3,11 @@
     import { getKey } from "$lib/utils/utils";
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
     import TableCell from "./TableCell.svelte";
-    import { isEditing } from "$lib/stores/TableStores";
+    import { isEditing, formDataStore } from "$lib/stores/TableStores";
     import Input from "./Input.svelte";
+
+    import { writable } from 'svelte/store';
+
 
     export let info: any;
     export let primaryKey: string;
@@ -13,9 +16,40 @@
     let primaryKeyEdit: string | number | null = null;
 
     function triggerEdit(primaryKey:number) {
-        isEditing.set(true);
-        primaryKeyEdit = primaryKey;
-        console.log(primaryKeyEdit)
+        if ($isEditing == false){
+            isEditing.set(true);
+            primaryKeyEdit = primaryKey;
+            console.log(primaryKeyEdit)
+        }
+    }
+
+    // specific store for student tables
+    const defaultCollegeValue = info.college ? info.college : '';
+    export let college = writable<string>(defaultCollegeValue)
+
+    // update FormData store
+    function updateFormData(property: string) {
+        const element = document.getElementById(property) as HTMLInputElement;
+        const value = element?.value || ''; 
+        if (property == "college"){
+            college.set(value)
+        }
+        formDataStore.update(formData => {
+            formData.set(property, value);
+            return formData;
+        });
+    }
+
+    // event listener for changes in input
+    function handleInputChange(event: any) {
+        const { id } = event.target;
+        updateFormData(id);
+    }
+
+    //TODO
+    //function for submitting the formData
+    function submitForm() {
+  
     }
 
 </script>
@@ -38,7 +72,7 @@
             <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
           {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
-              <Input field={field} value={value}/>
+              <Input college={ field == "program" ? $college : ""} field={field} value={value} on:input={handleInputChange}/>
             </TableBodyCell>
           {/if}
         {/each}
@@ -47,10 +81,10 @@
         <div class="flex p-5 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
 
             <!-- save -->
-            <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
+            <button on:click={() => submitForm()} class="font-medium text-green-800">
               <Icon src="{Check}" micro size="20"/>
             </button>
-            <!-- save -->
+            <!-- cancel -->
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-red-600">
               <Icon src="{XMark}" micro size="20"/>
             </button>
