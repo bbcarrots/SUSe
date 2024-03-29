@@ -5,7 +5,7 @@ type College = {
     programs: string[]
 }
 
-const CollegePrograms: Readable<College[]> = readable(
+export const CollegePrograms: Readable<College[]> = readable(
         [
             {
                 college: "College of Architecture",
