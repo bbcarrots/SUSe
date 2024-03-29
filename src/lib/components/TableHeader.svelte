@@ -53,7 +53,7 @@
     {/each}
 
     <!-- filler div for header -->
-    <div class="flex p-[27px] bg-white gap-4 pl-20 sticky right-0 bg-gradient-to-l-ml-[100px]">
+    <div class="flex p-[27px] bg-white gap-4 pl-20 right-0 bg-gradient-to-l-ml-[100px]">
     </div>
 </TableHead>
   
