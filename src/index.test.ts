@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach, /*afterEach*/ } from 'vitest';
-import { Student, type StudentFilter, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { Student, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { selectStudentDB } from '$lib/server/supabase';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
@@ -217,7 +217,6 @@ describe('Student.updateStudent', () => {
 
 });
 
-// delete tests not working yet. deletion of non existent record does not error as expected.
 
 describe('Student.deleteStudent', () => {
   const newStudentNumber = 202101012;
@@ -261,7 +260,8 @@ describe('Student.deleteStudent', () => {
     }
 
     const nullStudentInstance: Student = new Student(900000000, 
-      "0", "nullusername", 
+      "0", 
+      "nullusername", 
       "NULL", 
       "NULL", 
       "NULL", 
@@ -394,24 +394,3 @@ describe('error: Student.selectStudentDB wrong input', () => {
     expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
   });
 })
-
-// not yet working. to be implemented at Sprint
-
-// describe('fail: Student.insertStudent() with no DB connection', () => {
-//   const newStudentNumber = 202101012;
-//   const newUsername = "dummy11";
-//   const studentInstance: Student = new Student(newStudentNumber, "rfid12345", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-
-//   beforeEach( async () => {
-//     const wrongSupabase = createClient("https://wrongurl.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A");
-//   });
-
-//   it('error: inserting when no database connection', async() => {
-//     const expectedState: DBState = {
-//       success: false,
-//       studentRaws: [],
-//       error: 'Error: No database connection'
-//     }
-//   });
-
-// });
