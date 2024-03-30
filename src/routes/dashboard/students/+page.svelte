@@ -1,11 +1,13 @@
 <script lang="ts">
-	import NewTable from "$lib/components/NewTable.svelte";
+	import Table from "$lib/components/Table.svelte";
 
 	export let data;
-	let headers = ["Name", "Student Number", "Email", "Phone Number", "College", "Program"]
+	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
 
     type StudentProcessed = {
-		name: string,
+		firstName: string,
+		middleName: string,
+		lastName: string,
 		studentNumber: number,
 		email: string,
 		phoneNumber: string,
@@ -21,8 +23,10 @@
 	if (studentObjects !== null && studentObjects !== undefined) {
 		students = studentObjects.map(student => {
 			return {
-				name: student.first_name + " " + student.middle_initial + " " + student.last_name,
 				studentNumber: student.sn_id,
+				firstName: student.first_name,
+				middleName: student.middle_initial,
+				lastName: student.last_name,
 				email: student.username,
 				phoneNumber: student.phone_number,
 				college: student.college,
@@ -34,4 +38,6 @@
 
 </script>
 
-<NewTable headers={headers} information = {students} primaryKey="studentNumber"/>
+<section>
+	<Table headers={headers} information = {students} primaryKey="studentNumber"/>
+</section>
