@@ -66,12 +66,6 @@
 
 <TableBodyRow color="custom" class="group relative overflow-x-auto hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
 
-    <!-- checkbox for each table row -->
-    <TableBodyCell class="!px-4 py-5 sticky left-0 bg-white">
-      <Checkbox />
-    </TableBodyCell>
-
-
     <!-- If it's for editing, display a form -->
     {#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
 

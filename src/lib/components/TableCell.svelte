@@ -7,7 +7,7 @@
     export let primaryKey: string;
 </script>
 
-<TableBodyCell class="{field === primaryKey ? 'sticky left-14 bg-white drop-shadow-[10px_10px_5px_rgba(17,51,17,0.02)]' : ''}">
+<TableBodyCell class="{field === primaryKey ? 'sticky left-0 bg-white drop-shadow-[10px_10px_5px_rgba(17,51,17,0.02)]' : ''}">
     {#if field === "studentNumber" && Object.hasOwn(info, 'isEnrolled')}
         <span class="flex items-center">
             <span class="pr-2">
