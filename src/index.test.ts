@@ -279,27 +279,35 @@ describe('Student.deleteStudent', () => {
 
 describe('Student.selectStudentDB', () => {
   const newStudentNumber = 203099998;
+  const newRFID = 1009;
   const newUsername = "dummyfiltertest";
 
-  const studentInstance: Student = new Student(newStudentNumber, "00001009", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-  const dummyStudent1: Student = new Student(203099999, "00001010", "dummyfiltertest1", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-  const dummyStudent2: Student = new Student(203100000, "00001011", "dummyfiltertest2", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-  const dummyStudent3: Student = new Student(203100001, "00001012", "dummyfiltertest3", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  let studentInstanceList: Student[] = [];
 
   beforeEach(async () => {
     // insert dummmy studentInstances first
-    await studentInstance.insertStudent();
-    await dummyStudent1.insertStudent();
-    await dummyStudent2.insertStudent();
-    await dummyStudent3.insertStudent(); 
+    for(let offset = 0; offset < 5; offset++){
+      let dummyStudent = new Student(newStudentNumber + offset,
+        (newRFID + offset).toString(),
+        newUsername + offset.toString(),
+        "Password1234",
+        "Dummy",
+        "D",
+        "Dumdum",
+        "College of Dummy",
+        "BS Dummy",
+        "09123456789",
+        false);
+        studentInstanceList.push(dummyStudent);
+        await dummyStudent.insertStudent();
+    }
   });
 
   afterEach(async () => {
     // clean up dummy entries
-    await studentInstance.deleteStudent();
-    await dummyStudent1.deleteStudent();
-    await dummyStudent2.deleteStudent();
-    await dummyStudent3.deleteStudent();
+    for(var student of studentInstanceList){
+      await student.deleteStudent();
+    }
   });
 
   it('success: selected single student in database', async () => {
@@ -313,7 +321,7 @@ describe('Student.selectStudentDB', () => {
     if(selectOutput.studentRaws !== null){
       const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
       // compare selected student number with inserted student number
-      expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber);
+      expect(selectOutputSN).toStrictEqual(studentInstanceList[0].studentNumber);
     }
   });
 
@@ -331,7 +339,7 @@ describe('Student.selectStudentDB', () => {
       const expectedStudentNumbers = [203099998, 203099999];
 
       // compare selected student number with inserted student number
-      await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
+      expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
     }
 
   });
