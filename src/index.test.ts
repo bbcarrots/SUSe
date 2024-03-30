@@ -13,7 +13,7 @@ describe('Student.insertStudent', () => {
   const newStudentNumber = 202100001;
   const newUsername = "dummyinsert";
   const studentInstance: Student = new Student(newStudentNumber, 
-    "00001000", 
+    1000, 
     newUsername, 
     "Password1234", 
     "Dummy", 
@@ -41,7 +41,7 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
   const newStudentNumber = 202100002;
   const newUsername = "dummyfailinsert";
   const studentInstance: Student = new Student(newStudentNumber, 
-    "1001", 
+    1001, 
     newUsername, 
     "Password1234", 
     "Dummy", 
@@ -70,7 +70,7 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 
     // create 2nd dummy studentSameSN with same SN
     const studentSameSN: Student = new Student(newStudentNumber, // same student number as the one inserted in beforeEach
-      "1002", 
+      1002, 
       "dummy", 
       "1234Password", 
       "DummyJr", 
@@ -95,7 +95,7 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 
     // create 2nd dummy studentSameUsername with same username
     const studentSameUsername: Student = new Student(202101013, 
-      "1003", 
+      1003, 
       newUsername, // same student number as the one inserted in beforeEach 
       "1234Password", 
       "DummyJr", 
@@ -116,7 +116,7 @@ describe('Student.updateStudent', () => {
   const newStudentNumber = 202100004;
   const newUsername = "dummyupdate";
   const studentInstance: Student = new Student(newStudentNumber, 
-    "1004", 
+    1004, 
     newUsername, 
     "Password1234", 
     "Dummy", 
@@ -138,7 +138,7 @@ describe('Student.updateStudent', () => {
   it('success: inserted student correctly updated in database', async () => {
     // instance that updates password, first name, MI, last name, college, program, and phone number
     const updatedStudentInstance: Student = new Student(newStudentNumber, 
-      "1004", 
+      1004, 
       newUsername, 
       "Password1234", 
       "Stephen", 
@@ -176,7 +176,7 @@ describe('Student.updateStudent', () => {
 
     // instance that updates password, first name, MI, last name, college, program, and phone number
     const updatedStudentInstance: Student = new Student(wrongSN, 
-      "1006", 
+      1006, 
       newUsername, 
       "Password1234", 
       "Stephen", 
@@ -201,7 +201,7 @@ describe('Student.updateStudent', () => {
 
     // instance that updates password, first name, MI, last name, college, program, and phone number
     const updatedStudentInstance: Student = new Student(newStudentNumber, 
-      "00001007", 
+      1007, 
       wrongUsername, 
       "Password1234", 
       "Stephen", 
@@ -222,7 +222,7 @@ describe('Student.deleteStudent', () => {
   const newStudentNumber = 202101012;
   const newUsername = "dummy11";
   const studentInstance: Student = new Student(newStudentNumber, 
-    "1008", 
+    1008, 
     newUsername, 
     "Password1234", 
     "Dummy", 
@@ -260,7 +260,7 @@ describe('Student.deleteStudent', () => {
     }
 
     const nullStudentInstance: Student = new Student(900000000, 
-      "0", 
+      0, 
       "nullusername", 
       "NULL", 
       "NULL", 
@@ -288,7 +288,7 @@ describe('Student.selectStudentDB', () => {
     // insert dummmy studentInstances first
     for(let offset = 0; offset < 5; offset++){
       let dummyStudent = new Student(newStudentNumber + offset,
-        (newRFID + offset).toString(),
+        newRFID + offset,
         newUsername + offset.toString(),
         "Password1234",
         "Dummy",
