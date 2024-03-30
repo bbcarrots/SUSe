@@ -393,47 +393,7 @@ describe('error: Student.selectStudentDB wrong input', () => {
 
     expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
   });
-});
-
-
-// it('success: entries within valid year range', async () => {
-//   // insert multiple student entries first
-
-//   let listOfStudents = [];
-
-//   for(let offset = 1; offset < 5; offset++){
-//     let dummySN = newStudentNumber + offset;
-//     let dummyUsername = newUsername + offset.toString();
-
-//     let dummyStudent: Student = new Student(dummySN, "rfid54321", dummyUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
-//     listOfStudents.push(dummyStudent)
-//   }
-
-//   for(var student of listOfStudents){
-//     await student.insertStudent();
-//   }
-
-//   const multipleStudentFilter: StudentFilter = {
-//     minStudentNumber: 2000,
-//     maxStudentNumber: 2999,
-//     username: ""
-//   }
-//   const selectOutput = await selectStudentDB(multipleStudentFilter);
-//   const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
-//   const expectedStudentNumbers = [203100000, 203100001, 203100002];
-
-//   // compare selected student number with inserted student number
-//   await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
-
-//   // clean up dummy entries
-//   await studentInstance.deleteStudent();
-
-//   for(var student of listOfStudents){
-//     await student.deleteStudent();
-//   }
-
-// });
-
+})
 
 // not yet working. to be implemented at Sprint
 
