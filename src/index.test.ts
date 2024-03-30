@@ -1,8 +1,6 @@
-// import { createClient } from '@supabase/supabase-js';
-import { describe, it, expect, beforeEach, /*afterEach*/ } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, /*afterEach*/ } from 'vitest';
 import { Student, type StudentFilter, type StudentResponse, /*type StudentDBObj*/ } from '$lib/classes/Student';
 import { selectStudentDB } from '$lib/server/supabase';
-// import { supabase, selectStudentDB, insertStudentDB, updateStudentDB, deleteStudentDB } from '$lib/server/supabase'; 
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   it('adds 1 + 2 to equal 3', () => {
@@ -14,7 +12,17 @@ describe('sanity/integrity test: it should add 2 and 3 properly', () => {
 describe('Student.insertStudent', () => {
   const newStudentNumber = 202100001;
   const newUsername = "dummyinsert";
-  const studentInstance: Student = new Student(newStudentNumber, "00001000", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const studentInstance: Student = new Student(newStudentNumber, 
+    "00001000", 
+    newUsername, 
+    "Password1234", 
+    "Dummy", 
+    "D", 
+    "Dumdum", 
+    "College of Dummy", 
+    "BS Dummy", 
+    "09123456789", 
+    false);
 
   it('success: inserted student in database', async () => {
     // returned StudentResponse upon successful insert into database
@@ -32,10 +40,24 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
   // create dummy studentInstance for insertion
   const newStudentNumber = 202100002;
   const newUsername = "dummyfailinsert";
-  const studentInstance: Student = new Student(newStudentNumber, "00001001", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const studentInstance: Student = new Student(newStudentNumber, 
+    "1001", 
+    newUsername, 
+    "Password1234", 
+    "Dummy", 
+    "D", 
+    "Dumdum", 
+    "College of Dummy", 
+    "BS Dummy", 
+    "09123456789", 
+    false);
 
   beforeEach(async () => {
     await studentInstance.insertStudent(); // insert studentInstance first
+  });
+
+  afterEach(async () => {
+    await studentInstance.deleteStudent(); // clean up studentInstance
   });
 
   it('error: inserting with student number already in use', async () => {
@@ -47,11 +69,20 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
     }
 
     // create 2nd dummy studentSameSN with same SN
-    const studentSameSN: Student = new Student(newStudentNumber, "00001002", "dummy", "1234Password", "DummyJr", "D", "Dumdum", "College of Not Dumm", "BS Not Dummy", "09123456789", false);
+    const studentSameSN: Student = new Student(newStudentNumber, // same student number as the one inserted in beforeEach
+      "1002", 
+      "dummy", 
+      "1234Password", 
+      "DummyJr", 
+      "D", 
+      "Dumdum", 
+      "College of Not Dumm", 
+      "BS Not Dummy", 
+      "09123456789", 
+      false);
 
     // insert studentSameSN, should error
     await expect(studentSameSN.insertStudent()).resolves.toStrictEqual(expectedState)
-    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
   });
 
   it('error: inserting with username already in use', async () => {
@@ -63,39 +94,75 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
     }
 
     // create 2nd dummy studentSameUsername with same username
-    const studentSameUsername: Student = new Student(202101013, "00001003", newUsername, "1234Password", "DummyJr", "D", "Dumdum", "College of Not Dummy", "BS Not Dummy", "09123456789", false);
+    const studentSameUsername: Student = new Student(202101013, 
+      "1003", 
+      newUsername, // same student number as the one inserted in beforeEach 
+      "1234Password", 
+      "DummyJr", 
+      "D", 
+      "Dumdum", 
+      "College of Not Dummy", 
+      "BS Not Dummy", 
+      "09123456789", 
+      false);
 
     // insert studentSameUsername, should error
     await expect(studentSameUsername.insertStudent()).resolves.toStrictEqual(expectedState)
-    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
   });
 
 });
 
-// fail tests not yet working, i.e., success state returned when expected to fail
-// to be implemented at Sprint 3
-
 describe('Student.updateStudent', () => {
   const newStudentNumber = 202100004;
   const newUsername = "dummyupdate";
-  const studentInstance: Student = new Student(newStudentNumber, "00001004", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const studentInstance: Student = new Student(newStudentNumber, 
+    "1004", 
+    newUsername, 
+    "Password1234", 
+    "Dummy", 
+    "D", 
+    "Dumdum", 
+    "College of Dummy", 
+    "BS Dummy", 
+    "09123456789", 
+    false);
 
   beforeEach(async () => {
     await studentInstance.insertStudent(); // insert studentInstance first
   });
 
-  it('success: inserted student correctly updated in database', async () => {
-    // returned StudentResponse upon successful insert into database
-    const expectedState: StudentResponse = {
-      success: true,
-      studentRaws: null,
-      error: null
-    }
-    // instance that updates password, first name, MI, last name, college, program, and phone number
-    const updatedStudentInstance: Student = new Student(newStudentNumber, "00001005", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+  afterEach(async () => {
+    await studentInstance.deleteStudent(); // clean up studentInstance
+  });
 
-    await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-    await studentInstance.deleteStudent(); // clean up dummy entry
+  it('success: inserted student correctly updated in database', async () => {
+    // instance that updates password, first name, MI, last name, college, program, and phone number
+    const updatedStudentInstance: Student = new Student(newStudentNumber, 
+      "1004", 
+      newUsername, 
+      "Password1234", 
+      "Stephen", 
+      "", 
+      "Curry", 
+      "College of Social Sciences and Philosophy", 
+      "BA Sociology", 
+      "09876543210", 
+      false);
+
+    // update the student
+    await updatedStudentInstance.updateStudent();
+
+    // select the updated student for crosschecking
+    const updatedStudentFilter: StudentFilter = {
+      minStudentNumber: newStudentNumber,
+      maxStudentNumber: newStudentNumber,
+      username: newUsername
+    }
+    const updatedStudentOutput = await selectStudentDB(updatedStudentFilter);
+    if (updatedStudentOutput.studentRaws !== null){
+      // selected student from DB should be same with our updatedStudentInstance
+      expect(updatedStudentOutput.studentRaws[0]).toStrictEqual(updatedStudentInstance.toStudentDBObj());
+    }
   });
 
   it('error: updating with wrong SN', async () => {
@@ -108,10 +175,19 @@ describe('Student.updateStudent', () => {
     const wrongSN: number = 202133333;
 
     // instance that updates password, first name, MI, last name, college, program, and phone number
-    const updatedStudentInstance: Student = new Student(wrongSN, "00001006", newUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+    const updatedStudentInstance: Student = new Student(wrongSN, 
+      "1006", 
+      newUsername, 
+      "Password1234", 
+      "Stephen", 
+      "", 
+      "Curry", 
+      "College of Social Sciences and Philosophy", 
+      "BA Sociology", 
+      "09876543210", 
+      false);
 
     await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-    await studentInstance.deleteStudent(); // clean up dummy entry
   });
 
   it('error: updating with wrong username', async () => {
@@ -124,10 +200,19 @@ describe('Student.updateStudent', () => {
     const wrongUsername: string = "wrongusername";
 
     // instance that updates password, first name, MI, last name, college, program, and phone number
-    const updatedStudentInstance: Student = new Student(newStudentNumber, "00001007", wrongUsername, "Password1234", "Stephen", "", "Curry", "College of Social Sciences and Philosophy", "BA Sociology", "09876543210", false);
+    const updatedStudentInstance: Student = new Student(newStudentNumber, 
+      "00001007", 
+      wrongUsername, 
+      "Password1234", 
+      "Stephen", 
+      "", 
+      "Curry", 
+      "College of Social Sciences and Philosophy", 
+      "BA Sociology", 
+      "09876543210", 
+      false);
 
     await expect(updatedStudentInstance.updateStudent()).resolves.toStrictEqual(expectedState);
-    await studentInstance.deleteStudent(); // clean up dummy entry
   });
 
 });
@@ -137,10 +222,24 @@ describe('Student.updateStudent', () => {
 describe('Student.deleteStudent', () => {
   const newStudentNumber = 202101012;
   const newUsername = "dummy11";
-  const studentInstance: Student = new Student(newStudentNumber, "00001008", newUsername, "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
+  const studentInstance: Student = new Student(newStudentNumber, 
+    "1008", 
+    newUsername, 
+    "Password1234", 
+    "Dummy", 
+    "D", 
+    "Dumdum", 
+    "College of Dummy", 
+    "BS Dummy", 
+    "09123456789", 
+    false);
 
   beforeEach(async () => {
     await studentInstance.insertStudent(); // insert studentInstance first
+  });
+
+  afterEach(async () => {
+    await studentInstance.deleteStudent(); // clean up studentInstance first
   });
 
   it('success: deleted student in database', async () => {
@@ -161,16 +260,22 @@ describe('Student.deleteStudent', () => {
       error: "Error: Student does not exist"
     }
 
-    const nullStudentInstance: Student = new Student(900000000, "00000000", "nullusername", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", false);
+    const nullStudentInstance: Student = new Student(900000000, 
+      "0", "nullusername", 
+      "NULL", 
+      "NULL", 
+      "NULL", 
+      "NULL", 
+      "NULL", 
+      "NULL", 
+      "NULL", 
+      false);
 
     await expect(nullStudentInstance.deleteStudent()).resolves.toStrictEqual(expectedState);
-    await studentInstance.deleteStudent(); // clean up dummy studentInstance entry
   });
 
 
 });
-
-// selectStudents() test not yet working, next sprint
 
 describe('Student.selectStudentDB', () => {
   const newStudentNumber = 203099998;
@@ -182,10 +287,19 @@ describe('Student.selectStudentDB', () => {
   const dummyStudent3: Student = new Student(203100001, "00001012", "dummyfiltertest3", "Password1234", "Dummy", "D", "Dumdum", "College of Dummy", "BS Dummy", "09123456789", false);
 
   beforeEach(async () => {
-    await studentInstance.insertStudent()
-    .then(() => dummyStudent1.insertStudent())
-    .then(() => dummyStudent2.insertStudent())
-    .then(() => dummyStudent3.insertStudent()); // insert studentInstance first
+    // insert dummmy studentInstances first
+    await studentInstance.insertStudent();
+    await dummyStudent1.insertStudent();
+    await dummyStudent2.insertStudent();
+    await dummyStudent3.insertStudent(); 
+  });
+
+  afterEach(async () => {
+    // clean up dummy entries
+    await studentInstance.deleteStudent();
+    await dummyStudent1.deleteStudent();
+    await dummyStudent2.deleteStudent();
+    await dummyStudent3.deleteStudent();
   });
 
   it('success: selected single student in database', async () => {
@@ -201,11 +315,6 @@ describe('Student.selectStudentDB', () => {
       // compare selected student number with inserted student number
       expect(selectOutputSN).toStrictEqual(studentInstance.studentNumber);
     }
-
-    await studentInstance.insertStudent()
-    .then(() => dummyStudent1.deleteStudent())
-    .then(() => dummyStudent2.deleteStudent())
-    .then(() => dummyStudent3.deleteStudent());
   });
 
   it('success: entries within valid year range', async () => {
@@ -225,12 +334,6 @@ describe('Student.selectStudentDB', () => {
       await expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
     }
 
-    // clean up dummy entries
-    await studentInstance.deleteStudent();
-    await dummyStudent1.deleteStudent();
-    await dummyStudent2.deleteStudent();
-    await dummyStudent3.deleteStudent();
-
   });
 
   it('error: selecting single nonexistent student record', async () => {
@@ -246,11 +349,6 @@ describe('Student.selectStudentDB', () => {
     const expectedArray: Student[] = []; // studentRaws array filed should be empty since record does not exist
 
     expect(selectOutputArray).toStrictEqual(expectedArray);
-    await studentInstance.deleteStudent(); // clean up dummy entry
-    await dummyStudent1.deleteStudent();
-    await dummyStudent2.deleteStudent();
-    await dummyStudent3.deleteStudent();
-
   });
 
 });
