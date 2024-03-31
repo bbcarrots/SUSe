@@ -1,21 +1,29 @@
 <script lang="ts">
-	import Table from "$lib/components/Table.svelte";
-	import { type StudentProcessed } from "$lib/utils/types.js";
+	import Table from '$lib/components/Table.svelte';
+	import { type StudentProcessed } from '$lib/utils/types.js';
 
 	export let data;
-	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
-
+	let headers = [
+		'Student Number',
+		'First Name',
+		'Middle Initial',
+		'Last Name',
+		'Email',
+		'Phone Number',
+		'College',
+		'Program'
+	];
 
 	let studentObjects = data.studentRaws;
 
 	let students: StudentProcessed[] = [];
 
 	if (studentObjects !== null && studentObjects !== undefined) {
-		students = studentObjects.map(student => {
+		students = studentObjects.map((student) => {
 			return {
 				studentNumber: student.sn_id,
 				firstName: student.first_name,
-				middleName: student.middle_initial,
+				middleInitial: student.middle_initial,
 				lastName: student.last_name,
 				email: student.username,
 				phoneNumber: student.phone_number,
@@ -25,9 +33,8 @@
 			};
 		});
 	}
-
 </script>
 
 <section>
-	<Table headers={headers} information = {students} primaryKey="studentNumber"/>
+	<Table {headers} information={students} primaryKey="studentNumber" tableType="students"/>
 </section>
