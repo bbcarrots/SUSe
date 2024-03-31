@@ -36,8 +36,24 @@
 		});
 	}
 
+    async function handleCommand(event: CustomEvent<{command:string}>) {
+        const sn_id = 1
+        const username = "user"
+
+        const response = await fetch(`../api/student`, {
+            method: "POST",
+            body: JSON.stringify(
+                event.detail
+            ),
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+
+        console.log(await response.json())
+    }
 </script>
 
 <section>
-	<Table headers={headers} information = {students} primaryKey="studentNumber"/>
+	<Table headers={headers} information = {students} primaryKey="studentNumber" on:command={handleCommand}/>
 </section>

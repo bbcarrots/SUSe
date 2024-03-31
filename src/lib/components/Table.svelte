@@ -5,9 +5,14 @@
     import TableHeader from "./TableHeader.svelte";
     import TableRow from "./TableRow.svelte";
 
+    import { createEventDispatcher } from "svelte";
+
     export let information: Array<Object>;
     export let headers: Array<String>;
     export let primaryKey: string;
+
+    // for event forwarding
+    const dispatch = createEventDispatcher();
 
     $: {
         const disableSort: boolean = $isEditing;
@@ -31,13 +36,17 @@
             sortedItems.set(items);
         }
     }
+
+    function forwardCommand(event: CustomEvent<{command:string}>) {
+        dispatch('command', event.detail);
+    }
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">
     <TableHeader headers={headers}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow info={info} primaryKey={primaryKey}/>
+            <TableRow info={info} primaryKey={primaryKey} on:command={forwardCommand}/>
         {/each}
     </TableBody>
 </Table>

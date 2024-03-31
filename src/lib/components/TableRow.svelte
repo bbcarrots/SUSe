@@ -7,13 +7,16 @@
     import Input from "./Input.svelte";
 
     import { writable } from 'svelte/store';
-
+    import { createEventDispatcher } from "svelte";
 
     export let info: any;
     export let primaryKey: string;
 
     // for edit
     let primaryKeyEdit: string | number | null = null;
+
+    // for event forwarding
+    const dispatch = createEventDispatcher();
 
     function triggerEdit(primaryKey:number) {
         if ($isEditing == false){
@@ -59,6 +62,11 @@
         if ($isEditing == true){
             isEditing.set(false);
             primaryKeyEdit = null;
+
+            // forward submit event to parent component `Table.svelte`
+            dispatch('command', {
+                command: 'UpdateStudent'
+            })
         }
     }
 
