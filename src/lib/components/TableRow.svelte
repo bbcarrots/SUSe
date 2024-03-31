@@ -55,7 +55,9 @@
     }
 
     //function for submitting the formData
-    const dispatch = createEventDispatcher()
+    //needs to be dynamic for the other table types as well, so any is used for the meantime
+    const dispatch = createEventDispatcher<{submit:any}>()
+
     let isSubmitting = false
 
     const submitForm = async () => {

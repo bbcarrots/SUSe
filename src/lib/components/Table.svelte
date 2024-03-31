@@ -31,13 +31,19 @@
             sortedItems.set(items);
         }
     }
+
+    //handler that gets the payload forwarded from table row
+    //payload contains properties edited and the new value of the property
+    const submitFormHandle = function (a: any) {
+        console.log("From Table Row", a.detail)
+    }
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">
     <TableHeader headers={headers}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow info={info} primaryKey={primaryKey}/>
+            <TableRow on:submit={submitFormHandle} info={info} primaryKey={primaryKey}/>
         {/each}
     </TableBody>
 </Table>
