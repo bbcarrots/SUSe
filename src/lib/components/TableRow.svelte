@@ -1,13 +1,14 @@
 <script lang="ts">
-    import { TableBodyRow, TableBodyCell, Checkbox } from "flowbite-svelte";
-    import { getKey } from "$lib/utils/utils";
-    import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
-    import TableCell from "./TableCell.svelte";
-    import { isEditing, formDataStore } from "$lib/stores/TableStores";
-    import Input from "./Input.svelte";
-
     import { writable } from 'svelte/store';
+    import { createEventDispatcher } from 'svelte'
+    import { TableBodyRow, TableBodyCell} from "flowbite-svelte";
+    import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
 
+    import { getKey } from "$lib/utils/utils";
+    import { isEditing, formDataStore } from "$lib/stores/TableStores";
+
+    import Input from "./Input.svelte";
+    import TableCell from "./TableCell.svelte";
 
     export let info: any;
     export let primaryKey: string;
@@ -53,13 +54,26 @@
         updateFormData(id);
     }
 
-    //TODO
     //function for submitting the formData
-    function submitForm() {
+    const dispatch = createEventDispatcher()
+    let isSubmitting = false
+
+    const submitForm = async () => {
+        isSubmitting = true;
+        const payload:any = {};
+
+        for (let [key, value] of $formDataStore.entries()) {
+            payload[key] = value;
+        }
+        console.log(payload);
+
+        await dispatch('submit', payload);
+
         if ($isEditing == true){
             isEditing.set(false);
             primaryKeyEdit = null;
         }
+        isSubmitting = false;
     }
 
 </script>
