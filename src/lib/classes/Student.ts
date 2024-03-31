@@ -1,7 +1,7 @@
 import {
 	insertStudentDB,
 	selectStudentDB,
-	// updateStudentDB,
+	updateStudentDB,
 	// deleteStudentDB,
 	// approveStudentDB
 } from '$lib/server/supabase';
@@ -22,7 +22,7 @@ export type StudentDBObj = {
 
 export type StudentUIObj = {
     firstName: string,
-    middleName: string,
+    middleInitial: string,
     lastName: string,
     studentNumber: number,
     email: string,
@@ -47,39 +47,20 @@ export type StudentFilter = {
 export class Student {
 	/* Contains all student methods. */
 
-	// public static toStudentDBObj(): StudentDBObj {
-	// 	/* Converts this Student object into a raw student record for database use. */
-	// 	return {
-	// 		sn_id: this._sn,
-	// 		rfid: this._rfid,
-	// 		username: this._username,
-	// 		pw: this._password,
-	// 		first_name: this._firstName,
-	// 		middle_initial: this._middleInitial,
-	// 		last_name: this._lastName,
-	// 		college: this._college,
-	// 		program: this._program,
-	// 		phone_number: this._phoneNumber,
-	// 		is_enrolled: this.isEnrolled
-	// 	};
-	// }
-
-	// public static toStudent(obj: StudentDBObj): Student {
-	// 	/* Converts a raw student record from the database into a Student object. */
-	// 	return new Student(
-	// 		obj.sn_id,
-	// 		obj.rfid,
-	// 		obj.username,
-	// 		obj.pw,
-	// 		obj.first_name,
-	// 		obj.middle_initial,
-	// 		obj.last_name,
-	// 		obj.college,
-	// 		obj.program,
-	// 		obj.phone_number,
-	// 		Boolean(obj.is_enrolled)
-	// 	);
-	// }
+	public static toStudentUIObj(student: StudentDBObj): StudentUIObj {
+		/* Converts a StudentDBObj to a StudentUIObj. */
+		return {
+			firstName: student.first_name,
+            middleInitial: student.middle_initial,
+            lastName: student.last_name,
+            studentNumber: student.sn_id,
+            email: student.username,
+            phoneNumber: student.phone_number,
+            college: student.college,
+            program: student.program,
+            isEnrolled: student.is_enrolled
+		};
+	}
 
 	public static async selectStudents(
 		filter: StudentFilter = {
@@ -97,10 +78,10 @@ export class Student {
 		return insertStudentDB(student);
 	}
 
-	// public async updateStudent(): Promise<StudentResponse> {
-	// 	/* Updates the student record matching this Student's student number and username. */
-	// 	return updateStudentDB(this);
-	// }
+	public static async updateStudent(student: StudentDBObj): Promise<StudentResponse> {
+		/* Updates the student record matching this Student's student number and username. */
+		return updateStudentDB(student);
+	}
 
 	// public async deleteStudent(): Promise<StudentResponse> {
 	// 	/* Deletes the student record matching this Student's student number and username. */

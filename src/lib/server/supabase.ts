@@ -72,57 +72,58 @@ export async function insertStudentDB(student: StudentDBObj): Promise<StudentRes
 	return success;
 }
 
-// async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
-// 	/* Checks if there is a single existing record of a student with the given student number and username. */
-// 	const studentDB = await selectStudentDB(filter);
+async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
+	/* Checks if there is a single existing record of a student with the given student number and username. */
+	const studentDB = await selectStudentDB(filter);
 
-// 	if (studentDB.success && studentDB.studentRaws?.length == 1) {
-// 		return success;
-// 	}
+	if (studentDB.success && studentDB.studentRaws?.length == 1) {
+		return success;
+	}
 
-// 	return {
-// 		success: false,
-// 		studentRaws: null,
-// 		error: 'Error: Student does not exist'
-// 	};
-// }
+	return {
+		success: false,
+		studentRaws: null,
+		error: 'Error: Student does not exist'
+	};
+}
 
-// export async function updateStudentDB(student: Student): Promise<StudentResponse> {
-// 	/* Updates a student record based using their student number and username.
-//     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
-// 	const studentCheck = await checkStudentExistsDB({
-// 		minStudentNumber: student.studentNumber,
-// 		maxStudentNumber: student.studentNumber,
-// 		username: student.username
-// 	});
+export async function updateStudentDB(student: StudentDBObj): Promise<StudentResponse> {
+	/* Updates a student record based using their student number and username.
+    NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+	const studentCheck = await checkStudentExistsDB({
+		minStudentNumber: student.sn_id,
+		maxStudentNumber: student.sn_id,
+		username: student.username
+	});
 
-// 	if (!studentCheck.success) {
-// 		return studentCheck;
-// 	}
+	if (!studentCheck.success) {
+		return studentCheck;
+	}
 
-// 	const { error } = await supabase
-// 		.from('student')
-// 		.update({
-// 			first_name: student.firstName,
-// 			middle_initial: student.middleInitial,
-// 			last_name: student.lastName,
-// 			college: student.college,
-// 			program: student.program,
-// 			phone_number: student.phoneNumber
-// 		})
-// 		.eq('sn_id', student.studentNumber)
-// 		.eq('username', student.username);
+    const updateObj: {[key: string]: string} = {}
 
-// 	if (error) {
-// 		return {
-// 			success: false,
-// 			studentRaws: null,
-// 			error: error.message
-// 		};
-// 	}
+    for (const [key, value] of Object.entries(student)) {
+        if (value && typeof(value) == 'string') {
+            updateObj[key] = value
+        }
+    }
 
-// 	return success;
-// }
+	const { error } = await supabase
+		.from('student')
+		.update(updateObj)
+		.eq('sn_id', student.sn_id)
+		.eq('username', student.username);
+
+	if (error) {
+		return {
+			success: false,
+			studentRaws: null,
+			error: error.message
+		};
+	}
+
+	return success;
+}
 
 // export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
 // 	/* Deletes an existing student record. */
