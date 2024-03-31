@@ -21,14 +21,12 @@
     function handleCancelEdit(tableType: string){
         cancelEdit(tableType)
         currentIsEditing.set(getIsEditing(tableType)); //retrieve the updated value
-        console.log($currentIsEditing);
     }
 
     function handleEdit(tableType: string){
         if(getIsEditing(tableType) === false){
             triggerEdit(tableType); //trigger the edit 
             currentIsEditing.set(getIsEditing(tableType)); //retrieve the updated value
-            console.log($currentIsEditing);
         }
     }
 
@@ -36,7 +34,6 @@
         const { id } = event.target;
         console.log("called")
         formData.set(updateFormData(id, tableType));
-        console.log([...$formData])
     }
 
     const dispatch = createEventDispatcher<{ submit: any }>();
@@ -46,7 +43,6 @@
         for (let [key, value] of formDataStore.entries()) {
             payload[key] = value;
         }
-        console.log(payload);
 
         await dispatch('submit', payload);
 

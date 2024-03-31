@@ -17,7 +17,6 @@
 		if (result) {
 			sortKey.set(result.sortKey);
 			sortDirection.set(result.sortDirection);
-			console.log(result)
 		}
 	};
 
