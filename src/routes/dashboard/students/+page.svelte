@@ -1,21 +1,11 @@
 <script lang="ts">
 	import Table from "$lib/components/Table.svelte";
+	import { type StudentProcessed } from "$lib/utils/types.js";
 
 	export let data;
 	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
 
-    type StudentProcessed = {
-		firstName: string,
-		middleName: string,
-		lastName: string,
-		studentNumber: number,
-		email: string,
-		phoneNumber: string,
-		college: string,
-		program: string,
-		isEnrolled: boolean
-	}
-	
+
 	let studentObjects = data.studentRaws;
 
 	let students: StudentProcessed[] = [];
