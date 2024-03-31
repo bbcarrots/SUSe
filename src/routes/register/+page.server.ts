@@ -14,17 +14,18 @@ export const actions = {
 		studentData['rfid'] = String(Math.floor(Math.random() * 202599999) + 100000000); // TO BE IMPLEMENTED WHEN RFID CAN BE SCANNED
 
 		// Inserts student information using parsed info from the form
-		return new Student(
-			parseInt(studentData.studentNumber),
-			studentData.rfid,
-			studentData.username,
-			studentData.password,
-			studentData.firstName,
-			studentData.middleInitial,
-			studentData.lastName,
-			studentData.college,
-			studentData.program,
-			studentData.phoneNumber
-		).insertStudent();
+		return Student.insertStudent({
+			sn_id: parseInt(studentData.studentNumber),
+			rfid: studentData.rfid,
+			username: studentData.username,
+			pw: studentData.password,
+			first_name: studentData.firstName,
+			middle_initial: studentData.middleInitial,
+			last_name: studentData.lastName,
+			college: studentData.college,
+			program: studentData.program,
+			phone_number: studentData.phoneNumber,
+            is_enrolled: false
+        });
 	}
 };

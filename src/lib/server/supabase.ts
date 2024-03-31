@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import { Student, type StudentFilter, type StudentResponse } from '$lib/classes/Student';
+import { type StudentDBObj, type StudentFilter, type StudentResponse } from '$lib/classes/Student';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -57,9 +57,9 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 	};
 }
 
-export async function insertStudentDB(student: Student): Promise<StudentResponse> {
+export async function insertStudentDB(student: StudentDBObj): Promise<StudentResponse> {
 	/* Inserts a non-existing student record into the database. */
-	const { error } = await supabase.from('student').insert(student.toStudentDBObj());
+	const { error } = await supabase.from('student').insert(student);
 
 	if (error) {
 		return {
@@ -72,112 +72,112 @@ export async function insertStudentDB(student: Student): Promise<StudentResponse
 	return success;
 }
 
-async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
-	/* Checks if there is a single existing record of a student with the given student number and username. */
-	const studentDB = await selectStudentDB(filter);
+// async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentResponse> {
+// 	/* Checks if there is a single existing record of a student with the given student number and username. */
+// 	const studentDB = await selectStudentDB(filter);
 
-	if (studentDB.success && studentDB.studentRaws?.length == 1) {
-		return success;
-	}
+// 	if (studentDB.success && studentDB.studentRaws?.length == 1) {
+// 		return success;
+// 	}
 
-	return {
-		success: false,
-		studentRaws: null,
-		error: 'Error: Student does not exist'
-	};
-}
+// 	return {
+// 		success: false,
+// 		studentRaws: null,
+// 		error: 'Error: Student does not exist'
+// 	};
+// }
 
-export async function updateStudentDB(student: Student): Promise<StudentResponse> {
-	/* Updates a student record based using their student number and username.
-    NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
-	const studentCheck = await checkStudentExistsDB({
-		minStudentNumber: student.studentNumber,
-		maxStudentNumber: student.studentNumber,
-		username: student.username
-	});
+// export async function updateStudentDB(student: Student): Promise<StudentResponse> {
+// 	/* Updates a student record based using their student number and username.
+//     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
+// 	const studentCheck = await checkStudentExistsDB({
+// 		minStudentNumber: student.studentNumber,
+// 		maxStudentNumber: student.studentNumber,
+// 		username: student.username
+// 	});
 
-	if (!studentCheck.success) {
-		return studentCheck;
-	}
+// 	if (!studentCheck.success) {
+// 		return studentCheck;
+// 	}
 
-	const { error } = await supabase
-		.from('student')
-		.update({
-			first_name: student.firstName,
-			middle_initial: student.middleInitial,
-			last_name: student.lastName,
-			college: student.college,
-			program: student.program,
-			phone_number: student.phoneNumber
-		})
-		.eq('sn_id', student.studentNumber)
-		.eq('username', student.username);
+// 	const { error } = await supabase
+// 		.from('student')
+// 		.update({
+// 			first_name: student.firstName,
+// 			middle_initial: student.middleInitial,
+// 			last_name: student.lastName,
+// 			college: student.college,
+// 			program: student.program,
+// 			phone_number: student.phoneNumber
+// 		})
+// 		.eq('sn_id', student.studentNumber)
+// 		.eq('username', student.username);
 
-	if (error) {
-		return {
-			success: false,
-			studentRaws: null,
-			error: error.message
-		};
-	}
+// 	if (error) {
+// 		return {
+// 			success: false,
+// 			studentRaws: null,
+// 			error: error.message
+// 		};
+// 	}
 
-	return success;
-}
+// 	return success;
+// }
 
-export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
-	/* Deletes an existing student record. */
-	const studentCheck = await checkStudentExistsDB({
-		minStudentNumber: student.studentNumber,
-		maxStudentNumber: student.studentNumber,
-		username: student.username
-	});
+// export async function deleteStudentDB(student: Student): Promise<StudentResponse> {
+// 	/* Deletes an existing student record. */
+// 	const studentCheck = await checkStudentExistsDB({
+// 		minStudentNumber: student.studentNumber,
+// 		maxStudentNumber: student.studentNumber,
+// 		username: student.username
+// 	});
 
-	if (!studentCheck.success) {
-		return studentCheck;
-	}
+// 	if (!studentCheck.success) {
+// 		return studentCheck;
+// 	}
 
-	const { error } = await supabase
-		.from('student')
-		.delete()
-		.eq('sn_id', student.studentNumber)
-		.eq('username', student.username);
+// 	const { error } = await supabase
+// 		.from('student')
+// 		.delete()
+// 		.eq('sn_id', student.studentNumber)
+// 		.eq('username', student.username);
 
-	if (error) {
-		return {
-			success: false,
-			studentRaws: null,
-			error: error.message
-		};
-	}
+// 	if (error) {
+// 		return {
+// 			success: false,
+// 			studentRaws: null,
+// 			error: error.message
+// 		};
+// 	}
 
-	return success;
-}
+// 	return success;
+// }
 
-export async function approveStudentDB(student: Student): Promise<StudentResponse> {
-	/* Approves an existing student by updating their isEnrolled attribute to true. */
-	const studentCheck = await checkStudentExistsDB({
-		minStudentNumber: student.studentNumber,
-		maxStudentNumber: student.studentNumber,
-		username: student.username
-	});
+// export async function approveStudentDB(student: Student): Promise<StudentResponse> {
+// 	/* Approves an existing student by updating their isEnrolled attribute to true. */
+// 	const studentCheck = await checkStudentExistsDB({
+// 		minStudentNumber: student.studentNumber,
+// 		maxStudentNumber: student.studentNumber,
+// 		username: student.username
+// 	});
 
-	if (!studentCheck.success) {
-		return studentCheck;
-	}
+// 	if (!studentCheck.success) {
+// 		return studentCheck;
+// 	}
 
-	const { error } = await supabase
-		.from('student')
-		.update({ is_enrolled: true })
-		.eq('sn_id', student.studentNumber)
-		.eq('username', student.username);
+// 	const { error } = await supabase
+// 		.from('student')
+// 		.update({ is_enrolled: true })
+// 		.eq('sn_id', student.studentNumber)
+// 		.eq('username', student.username);
 
-	if (error) {
-		return {
-			success: false,
-			studentRaws: null,
-			error: error.message
-		};
-	}
+// 	if (error) {
+// 		return {
+// 			success: false,
+// 			studentRaws: null,
+// 			error: error.message
+// 		};
+// 	}
 
-	return success;
-}
+// 	return success;
+// }

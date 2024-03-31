@@ -9,11 +9,11 @@ export async function POST({ request }) {
     })
 }
 
-export async function DELETE({ request }) {
-    const urlParams = request.url
-    console.log(urlParams)
-    // const { command } = await request.json()
-    return json({
-        val: "Received: DELETE"
-    })
-}
+// export async function DELETE({ request }) {
+//     const urlParams = request.url
+//     console.log(urlParams)
+//     // const { command } = await request.json()
+//     return json({
+//         val: "Received: DELETE"
+//     })
+// }
