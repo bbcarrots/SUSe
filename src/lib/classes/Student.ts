@@ -8,7 +8,7 @@ import {
 
 export type StudentDBObj = {
 	sn_id: number;
-	rfid: string;
+	rfid: number;
 	username: string;
 	pw: string;
 	first_name: string;
@@ -38,7 +38,7 @@ export class Student {
 
 	constructor(
 		private _sn: number,
-		private _rfid: string,
+		private _rfid: number,
 		private _username: string,
 		private _password: string,
 		private _firstName: string,
@@ -154,3 +154,4 @@ export class Student {
 	// TO BE IMPLEMENTED:
 	// filterStudents()
 }
+
