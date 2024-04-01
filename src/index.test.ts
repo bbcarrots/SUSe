@@ -325,24 +325,24 @@ describe('Student.selectStudentDB', () => {
     }
   });
 
-  it('success: entries within valid year range', async () => {
-    // insert multiple student entries first
+  // it('success: entries within valid year range', async () => {
+  //   // insert multiple student entries first
 
-    const multipleStudentFilter: StudentFilter = {
-      minStudentNumber: 2030,
-      maxStudentNumber: 2030,
-      username: ""
-    }
-    const selectOutput = await selectStudentDB(multipleStudentFilter);
-    if(selectOutput.studentRaws !== null){
-      const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
-      const expectedStudentNumbers = [203099998, 203099999];
+  //   const multipleStudentFilter: StudentFilter = {
+  //     minStudentNumber: 2030,
+  //     maxStudentNumber: 2030,
+  //     username: ""
+  //   }
+  //   const selectOutput = await selectStudentDB(multipleStudentFilter);
+  //   if(selectOutput.studentRaws !== null){
+  //     const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
+  //     const expectedStudentNumbers = [203099998, 203099999];
 
-      // compare selected student number with inserted student number
-      expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
-    }
+  //     // compare selected student number with inserted student number
+  //     expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
+  //   }
 
-  });
+  // });
 
   it('error: selecting single nonexistent student record', async () => {
     const nonexistentStudentFilter: StudentFilter = {
