@@ -21,15 +21,11 @@
 </script>
   
 <!-- TABLE HEADER -->
-<TableHead theadClass="sentencecase" class="bg-white drop-shadow-[0_4px_4px_rgba(17,51,17,0.03)]">
-    <!-- checkbox for the header -->
-    <TableHeadCell class="!p-4">
-        <Checkbox />
-    </TableHeadCell>
+<TableHead theadClass="sentencecase" class="drop-shadow-[0_4px_4px_rgba(17,51,17,0.05)]">
 
     <!-- generating each of the headers -->
-    {#each headers as header}
-        <TableHeadCell class="hover:cursor-pointer py-4" on:click={() => sortTable(camelize(header))}>
+    {#each headers as header, index}
+    <TableHeadCell class="{index === 0 ? 'sticky left-0' : ''} hover:cursor-pointer py-4 bg-white"  on:click={() => sortTable(camelize(header))}>
         
         <div class="flex gap-2" style="width: 150px;">
             <!-- header name -->
@@ -52,10 +48,9 @@
         </TableHeadCell>
     {/each}
 
-    <!-- Add separate actions column -->
-    <TableHeadCell>
-        <p class="font-bold">Actions</p>
-    </TableHeadCell>
+    <!-- filler div for header -->
+    <div class="flex p-[27px] bg-white gap-4 pl-20 right-0 bg-gradient-to-l-ml-[100px]">
+    </div>
 </TableHead>
   
 <style>

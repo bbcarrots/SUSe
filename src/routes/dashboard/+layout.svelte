@@ -2,11 +2,11 @@
     import Sidebar from "$lib/components/Sidebar.svelte";
 </script>
 
-<div class="flex">
-    <div class="h-screen">
+<div class="">
+    <div class="h-screen float-left">
         <Sidebar ></Sidebar>
     </div>
-    <div class="flex-grow">
-        <slot/>
+    <div class="w-full">
+        <slot />
     </div>
 </div>
