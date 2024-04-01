@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TableBody, Table } from "flowbite-svelte";
+    import { TableBody, Table, TableHead } from "flowbite-svelte";
     import { sortDirection, sortKey, isEditing, sortedItems } from "$lib/stores/TableStores";
 
     import TableHeader from "./TableHeader.svelte";
@@ -31,13 +31,11 @@
             sortedItems.set(items);
         }
     }
-
 </script>
 
-<Table hoverable={true}>
+<Table hoverable={true} divClass="overflow-x-auto">
     <TableHeader headers={headers}/>
     <TableBody>
-        <!-- generate all sorted items -->
         {#each $sortedItems as info}
             <TableRow info={info} primaryKey={primaryKey}/>
         {/each}
