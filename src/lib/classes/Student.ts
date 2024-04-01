@@ -2,13 +2,13 @@ import {
 	insertStudentDB,
 	selectStudentDB,
 	updateStudentDB,
-	// deleteStudentDB,
-	// approveStudentDB
+	deleteStudentDB,
+	approveStudentDB
 } from '$lib/server/supabase';
 
 export type StudentDBObj = {
 	sn_id: number;
-	rfid: string;
+	rfid: number;
 	username: string;
 	pw: string;
 	first_name: string;
@@ -83,16 +83,13 @@ export class Student {
 		return updateStudentDB(student);
 	}
 
-	// public async deleteStudent(): Promise<StudentResponse> {
-	// 	/* Deletes the student record matching this Student's student number and username. */
-	// 	return deleteStudentDB(this);
-	// }
+	public static async deleteStudent(studentNumber: number, username: string): Promise<StudentResponse> {
+		/* Deletes the student record matching this Student's student number and username. */
+		return deleteStudentDB(studentNumber, username);
+	}
 
-	// public async approveStudent(): Promise<StudentResponse> {
-	// 	/* Approves the student record matching this Student's student number and username. */
-	// 	return approveStudentDB(this);
-	// }
-
-	// TO BE IMPLEMENTED:
-	// filterStudents()
+	public static async approveStudent(studentNumber: number, username: string): Promise<StudentResponse> {
+		/* Approves the student record matching this Student's student number and username. */
+		return approveStudentDB(studentNumber, username);
+	}
 }
