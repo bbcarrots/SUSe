@@ -3,7 +3,7 @@
     import { getKey } from "$lib/utils/utils";
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
     import TableCell from "./TableCell.svelte";
-    import { isEditing, formDataStore } from "$lib/stores/TableStores";
+    import { isEditing, ToUpdateStudentStore } from "$lib/stores/TableStores";
     import Input from "./Input.svelte";
 
     import { writable } from 'svelte/store';
@@ -38,22 +38,19 @@
     export let college = writable<string>(defaultCollegeValue)
 
     // update FormData store
-    function updateFormData(property: string) {
+    function updateStudentStore(property: string) {
         const element = document.getElementById(property) as HTMLInputElement;
         const value = element?.value || ''; 
         if (property == "college"){
             college.set(value)
         }
-        formDataStore.update(formData => {
-            formData.set(property, value);
-            return formData;
-        });
+        $ToUpdateStudentStore[property] = value
     }
 
     // event listener for changes in input
     function handleInputChange(event: any) {
         const { id } = event.target;
-        updateFormData(id);
+        updateStudentStore(id);
     }
 
     //TODO

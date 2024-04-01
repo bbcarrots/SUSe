@@ -7,3 +7,4 @@ export let sortedItems = writable<Array<any>>([]);
 
 export const formDataStore = writable(new FormData());
 
+export const ToUpdateStudentStore = writable<{[key: string]: string}>({});

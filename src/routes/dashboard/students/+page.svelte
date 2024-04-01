@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Table from "$lib/components/Table.svelte";
+    import { ToUpdateStudentStore } from "$lib/stores/TableStores.js";
 
 	export let data;
 	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
@@ -41,9 +42,9 @@
         const username = "user"
 
         const response = await fetch(`../api/student`, {
-            method: "POST",
+            method: "PATCH",
             body: JSON.stringify(
-                event.detail
+                $ToUpdateStudentStore
             ),
             headers: {
                 'content-type': 'application/json'
