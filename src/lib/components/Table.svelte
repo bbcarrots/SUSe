@@ -10,7 +10,7 @@
     export let primaryKey: string;
 
     let sortKey: string; 
-    let sortDirection:number; 
+    let sortDirection: number; 
     let isEditing: boolean;
     let sortedItems = writable<Array<any>>([]); 
 
@@ -40,6 +40,7 @@
     const submitFormHandle = function (a: any) {
         console.log("From Table Row", a.detail)
     }
+
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">
