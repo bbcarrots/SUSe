@@ -83,7 +83,6 @@
 
     //is called to update what appears on the DOM
     function updateInfo() {
-        console.log("updating info", info)
         info = info;
     }
 </script>
