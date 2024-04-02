@@ -1,50 +1,51 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { TableBodyRow, TableBodyCell, Checkbox } from "flowbite-svelte";
-    import { getKey } from "$lib/utils/utils";
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
+
+    import { getKey } from "$lib/utils/utils";
+
     import TableCell from "./TableCell.svelte";
-    import { isEditing, formDataStore } from "$lib/stores/TableStores";
     import Input from "./Input.svelte";
-
-    import { writable } from 'svelte/store';
-
 
     export let info: any;
     export let primaryKey: string;
-
+    export let isEditing: boolean = false;
+    
     // for edit
     let primaryKeyEdit: string | number | null = null;
 
     function triggerEdit(primaryKey:number) {
-        if ($isEditing == false){
-            isEditing.set(true);
+        if (isEditing == false){
+            isEditing = true;
             primaryKeyEdit = primaryKey;
             console.log(primaryKeyEdit)
         }
     }
 
     function cancelEdit(){
-        if ($isEditing == true){
-            isEditing.set(false);
+        if (isEditing == true){
+            isEditing = false;
             primaryKeyEdit = null;
         }
     }
 
     // specific store for student tables
     const defaultCollegeValue = info.college ? info.college : '';
-    export let college = writable<string>(defaultCollegeValue)
+    export let college = defaultCollegeValue;
 
     // update FormData store
+    let formData = new FormData()
+
     function updateFormData(property: string) {
         const element = document.getElementById(property) as HTMLInputElement;
         const value = element?.value || ''; 
+
         if (property == "college"){
-            college.set(value)
+            college = value;
         }
-        formDataStore.update(formData => {
-            formData.set(property, value);
-            return formData;
-        });
+
+        formData.set(property, value)
     }
 
     // event listener for changes in input
@@ -55,13 +56,22 @@
 
     //TODO
     //function for submitting the formData
-    function submitForm() {
-        if ($isEditing == true){
-            isEditing.set(false);
+    const dispatch = createEventDispatcher<{submit:any}>()
+    let isSubmitting = false
+    const submitForm = async () => {
+        isSubmitting = true;
+        const payload:any = {};
+        for (let [key, value] of formData.entries()) {
+            payload[key] = value;
+        }
+        console.log(payload);
+        await dispatch('submit', payload);
+        if (isEditing == true){
+            isEditing = false;
             primaryKeyEdit = null;
         }
+        isSubmitting = false;
     }
-
 </script>
 
 <TableBodyRow color="custom" class="group relative overflow-x-auto hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
@@ -72,11 +82,11 @@
         {#each Object.entries(info) as [field, value]}
 
           <!-- generate the primary key col (uneditable) -->
-          {#if field == primaryKey}
+          {#if field == primaryKey || field == "email"}
             <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
           {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
-              <Input college={ field == "program" ? $college : ""} field={field} value={value} on:input={handleInputChange}/>
+              <Input college={ field == "program" ? college : ""} field={field} value={value} on:input={handleInputChange}/>
             </TableBodyCell>
           {/if}
         {/each}

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { TableBody, Table, TableHead } from "flowbite-svelte";
-    import { sortDirection, sortKey, isEditing, sortedItems } from "$lib/stores/TableStores";
+    import { TableBody, Table } from "flowbite-svelte";
+    import { writable } from "svelte/store";
 
     import TableHeader from "./TableHeader.svelte";
     import TableRow from "./TableRow.svelte";
@@ -9,10 +9,15 @@
     export let headers: Array<String>;
     export let primaryKey: string;
 
+    let sortKey: string; 
+    let sortDirection:number; 
+    let isEditing: boolean;
+    let sortedItems = writable<Array<any>>([]); 
+
     $: {
-        const disableSort: boolean = $isEditing;
-        const key: string = $sortKey;
-        const direction: number = $sortDirection;
+        const disableSort: boolean = isEditing;
+        const key: string = sortKey;
+        const direction: number = sortDirection;
         const items: Array<any> = [...information];
         
         if (!disableSort){
@@ -31,13 +36,17 @@
             sortedItems.set(items);
         }
     }
+
+    const submitFormHandle = function (a: any) {
+        console.log("From Table Row", a.detail)
+    }
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">
-    <TableHeader headers={headers}/>
+    <TableHeader headers={headers} bind:sortKey bind:sortDirection isEditing={isEditing}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow info={info} primaryKey={primaryKey}/>
+            <TableRow on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
         {/each}
     </TableBody>
 </Table>

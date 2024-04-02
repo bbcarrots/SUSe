@@ -1,6 +1,7 @@
 <script lang="ts">
     import { TableBodyCell } from "flowbite-svelte";
     import { ExclamationCircle, Icon } from "svelte-hero-icons";
+    
     export let info: any;
     export let field: string;
     export let value: any;

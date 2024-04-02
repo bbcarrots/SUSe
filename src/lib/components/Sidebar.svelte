@@ -47,7 +47,7 @@
                     </span>
                 </svelte:fragment>
             </SidebarItem>
-            <SidebarItem label="Admin" href="/dashboard/admin" {spanClass}>
+            <SidebarItem label="Admins" href="/dashboard/admins" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
                         {#if activeUrl == "/dashboard/admin"}
