@@ -14,6 +14,8 @@
     
     // for edit
     let primaryKeyEdit: string | number | null = null;
+    const dispatchEdit = createEventDispatcher<{submit:any}>()
+    const dispatchApprove = createEventDispatcher<{approve:any}>()
 
     function triggerEdit(primaryKey:number) {
         if (isEditing == false){
@@ -29,8 +31,11 @@
         }
     }
 
-    function approveEnrollment(primaryKey: string, info: any){
+    function approveEnrollment(primaryKeyApprove: string, info: any){
         info.isEnrolled = true;
+        const payload:any = {};
+        payload[primaryKey] = primaryKeyApprove;
+        dispatchApprove('approve', payload);
         updateInfo();
     }
 
@@ -58,9 +63,8 @@
         updateFormData(id);
     }
 
-    //TODO
-    //function for submitting the formData
-    const dispatch = createEventDispatcher<{submit:any}>()
+
+
     let isSubmitting = false
     const submitForm = async () => {
         isSubmitting = true;
@@ -71,7 +75,7 @@
             payload[key] = value;
         }
 
-        dispatch('submit', payload);
+        dispatchEdit('submit', payload);
         
         if (isEditing == true){
             isEditing = false;
