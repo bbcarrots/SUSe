@@ -39,9 +39,32 @@
     }
 
     const dispatch = createEventDispatcher<{submit:any}>()
+    const dispatchDelete = createEventDispatcher<{delete:any}>()
 
     const submitFormHandle = async (a: any) => {
         dispatch('submit', a.detail);
+    }
+
+    const deleteEntryHandle = async (a: any) => {
+        dispatchDelete('delete', a.detail);
+        console.log(a.detail);
+
+        const primaryKeyDelete = a.detail[primaryKey];
+        console.log(primaryKeyDelete)
+
+        const index = information.findIndex((entry: { [key: string]: any }) => 
+            entry[primaryKey] === primaryKeyDelete
+        );
+
+        if (index !== -1) {
+            information.splice(index, 1);
+        }
+
+        update()
+    };
+
+    function update(){
+        information = information;
     }
 
 </script>
@@ -50,7 +73,7 @@
     <TableHeader headers={headers} bind:sortKey bind:sortDirection isEditing={isEditing}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
+            <TableRow on:delete={deleteEntryHandle} on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
         {/each}
     </TableBody>
 </Table>

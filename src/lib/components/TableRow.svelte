@@ -79,8 +79,12 @@
         isSubmitting = false;
     }
 
-    const deleteEntry = async() => {
+    const dispatchDelete = createEventDispatcher<{delete:any}>()
 
+    function deleteEntry( primaryKeyDelete: string ) {
+        const payload:any = {};
+        payload[primaryKey] = primaryKeyDelete;
+        dispatchDelete('delete', payload);
     }
 </script>
 
@@ -153,7 +157,7 @@
     <!-- Action buttons -->
     <div class="flex justify-center gap-4">
         <Button inverse={true}>Cancel</Button>
-        <Button icon="delete">Delete</Button>
+        <Button on:click={() => deleteEntry(getKey(info, primaryKey))} icon="delete">Delete</Button>
     </div>
 </Modal>
 
