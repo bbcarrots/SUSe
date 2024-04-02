@@ -82,7 +82,7 @@
         {#each Object.entries(info) as [field, value]}
 
           <!-- generate the primary key col (uneditable) -->
-          {#if field == primaryKey}
+          {#if field == primaryKey || field == "email"}
             <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
           {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
