@@ -17,6 +17,8 @@
     
     // for edit
     let primaryKeyEdit: string | number | null = null;
+    const dispatchEdit = createEventDispatcher<{submit:any}>()
+    const dispatchApprove = createEventDispatcher<{approve:any}>()
 
     function triggerEdit(primaryKey:number) {
         if (isEditing == false){
@@ -32,9 +34,17 @@
         }
     }
 
+    function approveEnrollment(primaryKeyApprove: string, info: any){
+        info.isEnrolled = true;
+        const payload:any = {};
+        payload[primaryKey] = primaryKeyApprove;
+        dispatchApprove('approve', payload);
+        updateInfo();
+    }
+
     // specific store for student tables
     const defaultCollegeValue = info.college ? info.college : '';
-    export let college = defaultCollegeValue;
+    export let  college = defaultCollegeValue;
 
     // update FormData store
     let formData = new FormData()
@@ -56,27 +66,41 @@
         updateFormData(id);
     }
 
-    //TODO
-    //function for submitting the formData
-    const dispatch = createEventDispatcher<{submit:any}>()
+
+
     let isSubmitting = false
 
     const submitForm = async () => {
         isSubmitting = true;
         const payload:any = {};
-
         payload[primaryKey] = primaryKeyEdit;
+
         for (let [key, value] of formData.entries()) {
             payload[key] = value;
+            if (info.hasOwnProperty(key)) {
+                info[key] = value;
+            }        
         }
 
-        dispatch('submit', payload);
+        dispatchEdit('submit', payload);
         
         if (isEditing == true){
             isEditing = false;
             primaryKeyEdit = null;
         }
         isSubmitting = false;
+        
+        updateInfo()
+    }
+
+    //is called to update what appears on the DOM
+    function updateInfo() {
+        info = info;
+    }
+
+    //is called to update what appears on the DOM
+    function updateInfo() {
+        info = info;
     }
 
     const dispatchDelete = createEventDispatcher<{delete:any}>()
@@ -134,7 +158,9 @@
                 <Icon src="{Trash}" micro size="20"/>
             </button>
             {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
-                <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
+                <button on:click={() => approveEnrollment(getKey(info, primaryKey), info)} class="font-medium text-green-800">
+                    <Icon src="{Check}" micro size="20"/>
+                </button>
             {/if}
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
                 <Icon src="{Pencil}" micro size="20"/>
