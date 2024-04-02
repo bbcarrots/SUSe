@@ -62,6 +62,23 @@ export class Student {
 		};
 	}
 
+    public static toStudentDBObj(student: StudentUIObj): StudentDBObj {
+        /* Converts a StudentUIObj to a StudentDBObj. */
+		return {
+            sn_id: student.studentNumber,
+            rfid: 0,
+            username: "",
+            pw: "",
+            first_name: student.firstName,
+            middle_initial: student.middleInitial,
+            last_name: student.lastName,
+            college: student.college,
+            program: student.program,
+            phone_number: student.phoneNumber,
+            is_enrolled: false,
+        }
+    }
+
 	public static async selectStudents(
 		filter: StudentFilter = {
 			minStudentNumber: 2000,
@@ -78,7 +95,7 @@ export class Student {
 		return insertStudentDB(student);
 	}
 
-	public static async updateStudent(student: {sn_id : number} | StudentDBObj): Promise<StudentResponse> {
+	public static async updateStudent(student: StudentDBObj): Promise<StudentResponse> {
 		/* Updates the student record matching this Student's student number. */
 		return updateStudentDB(student);
 	}

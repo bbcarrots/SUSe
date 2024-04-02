@@ -95,7 +95,7 @@ async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentRespo
 	};
 }
 
-export async function updateStudentDB(student: {sn_id : number} | StudentDBObj): Promise<StudentResponse> {
+export async function updateStudentDB(student: StudentDBObj): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
 	const studentCheck = await checkStudentExistsDB({
@@ -108,10 +108,10 @@ export async function updateStudentDB(student: {sn_id : number} | StudentDBObj):
 		return studentCheck;
 	}
 
-    const updateObj: {[key: string]: string | boolean} = {}
+    const updateObj: {[key: string]: string} = {}
 
     for (const [key, value] of Object.entries(student)) {
-        if (value && (typeof(value) == 'string' || typeof(value) == 'boolean')) {
+        if (value && (typeof(value) == 'string')) {
             updateObj[key] = value
         }
     }
