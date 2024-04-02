@@ -29,9 +29,14 @@
         }
     }
 
+    function approveEnrollment(primaryKey: string, info: any){
+        info.isEnrolled = true;
+        updateInfo();
+    }
+
     // specific store for student tables
     const defaultCollegeValue = info.college ? info.college : '';
-    export let college = defaultCollegeValue;
+    export let  college = defaultCollegeValue;
 
     // update FormData store
     let formData = new FormData()
@@ -73,6 +78,11 @@
             primaryKeyEdit = null;
         }
         isSubmitting = false;
+    }
+
+    //is called to update what appears on the DOM
+    function updateInfo() {
+        info = info;
     }
 </script>
 
@@ -120,7 +130,9 @@
             <!-- generate the action buttons -->
             <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
             {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
-                <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
+                <button on:click={() => approveEnrollment(getKey(info, primaryKey), info)} class="font-medium text-green-800">
+                    <Icon src="{Check}" micro size="20"/>
+                </button>
             {/if}
             <button on:click={() => triggerEdit(getKey(info, primaryKey))} class="font-medium text-green-800">
                 <Icon src="{Pencil}" micro size="20"/>
