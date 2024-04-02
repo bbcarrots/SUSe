@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { TableBodyRow, TableBodyCell, Checkbox } from "flowbite-svelte";
+    import { TableBodyRow, TableBodyCell, Modal } from "flowbite-svelte";
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
 
     import { getKey } from "$lib/utils/utils";
@@ -11,6 +11,8 @@
     export let info: any;
     export let primaryKey: string;
     export let isEditing: boolean = false;
+    let popupModal = false;
+
     
     // for edit
     let primaryKeyEdit: string | number | null = null;
@@ -118,7 +120,9 @@
         <!-- action buttons -->
         <div class="flex p-5 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
             <!-- generate the action buttons -->
-            <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+            <button on:click={() => (popupModal = true)} class="font-medium text-red-600">
+                <Icon src="{Trash}" micro size="20"/>
+            </button>
             {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
                 <a href="/tables" class="font-medium text-green-800"><Icon src="{Check}" micro size="20"/></a>
             {/if}
@@ -128,6 +132,12 @@
         </div>
     {/if}
 </TableBodyRow>
+
+<Modal bind:open={popupModal} size="xs" autoclose>
+    <div class="text-center">
+      <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this product?</h3>
+    </div>
+</Modal>
 
 <style lang="postcss">
     @tailwind components;
