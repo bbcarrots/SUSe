@@ -78,19 +78,19 @@ export class Student {
 		return insertStudentDB(student);
 	}
 
-	public static async updateStudent(student: StudentDBObj): Promise<StudentResponse> {
-		/* Updates the student record matching this Student's student number and username. */
+	public static async updateStudent(student: {sn_id : number} | StudentDBObj): Promise<StudentResponse> {
+		/* Updates the student record matching this Student's student number. */
 		return updateStudentDB(student);
 	}
 
-	public static async deleteStudent(studentNumber: number, username: string): Promise<StudentResponse> {
-		/* Deletes the student record matching this Student's student number and username. */
-		return deleteStudentDB(studentNumber, username);
+	public static async deleteStudent(studentNumber: number): Promise<StudentResponse> {
+		/* Deletes the student record matching this Student's student number. */
+		return deleteStudentDB(studentNumber);
 	}
 
-	public static async approveStudent(studentNumber: number, username: string): Promise<StudentResponse> {
-		/* Approves the student record matching this Student's student number and username. */
-		return approveStudentDB(studentNumber, username);
+	public static async approveStudent(studentNumber: number): Promise<StudentResponse> {
+		/* Approves the student record matching this Student's student number. */
+		return approveStudentDB(studentNumber);
 	}
 }
 

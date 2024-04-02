@@ -95,13 +95,13 @@ async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentRespo
 	};
 }
 
-export async function updateStudentDB(student: StudentDBObj): Promise<StudentResponse> {
+export async function updateStudentDB(student: {sn_id : number} | StudentDBObj): Promise<StudentResponse> {
 	/* Updates a student record based using their student number and username.
     NOTE: Cannot update the student number or username of a student. Need to delete and register again. */
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: student.sn_id,
 		maxStudentNumber: student.sn_id,
-		username: student.username
+		username: ""
 	});
 
 	if (!studentCheck.success) {
@@ -120,7 +120,6 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 		.from('student')
 		.update(updateObj)
 		.eq('sn_id', student.sn_id)
-		.eq('username', student.username);
 
 	if (error) {
 		return {
@@ -133,12 +132,12 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 	return success;
 }
 
-export async function deleteStudentDB(studentNumber: number, username: string): Promise<StudentResponse> {
+export async function deleteStudentDB(studentNumber: number): Promise<StudentResponse> {
 	/* Deletes an existing student record. */
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: studentNumber,
 		maxStudentNumber: studentNumber,
-		username: username
+		username: ""
 	});
 
 	if (!studentCheck.success) {
@@ -148,8 +147,7 @@ export async function deleteStudentDB(studentNumber: number, username: string): 
 	const { error } = await supabase
 		.from('student')
 		.delete()
-		.eq('sn_id', studentNumber)
-		.eq('username', username);
+		.eq('sn_id', studentNumber);
 
 	if (error) {
 		return {
@@ -162,12 +160,12 @@ export async function deleteStudentDB(studentNumber: number, username: string): 
 	return success;
 }
 
-export async function approveStudentDB(studentNumber: number, username: string): Promise<StudentResponse> {
+export async function approveStudentDB(studentNumber: number): Promise<StudentResponse> {
 	/* Approves an existing student by updating their isEnrolled attribute to true. */
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: studentNumber,
 		maxStudentNumber: studentNumber,
-		username: username
+		username: ""
 	});
 
 	if (!studentCheck.success) {
@@ -177,8 +175,7 @@ export async function approveStudentDB(studentNumber: number, username: string):
 	const { error } = await supabase
 		.from('student')
 		.update({ is_enrolled: true })
-		.eq('sn_id', studentNumber)
-		.eq('username', username);
+		.eq('sn_id', studentNumber);
 
 	if (error) {
 		return {
