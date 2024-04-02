@@ -23,21 +23,21 @@
 			}
 		})
 	}
-	
-	function onCommand (a: any){
-        console.log("edit");
-		console.log(a.detail);
-	}
 
-	function onDelete (a: any){
-        console.log("delete");
-		console.log(a.detail);
-	}
-
-    function onApprove (a: any){
+    function handleApprove (a: any){
         console.log("approve");
+		console.log(a.detail);
+	}
+
+    function handleDelete (a: any){
+        console.log("delete");
+        console.log(a.detail);
+    }
+	
+	function handleUpdate (a: any){
+        console.log("edit");
 		console.log(a.detail);
 	}
 </script>
 
-<Table on:delete={onDelete} on:approve={onApprove} on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table on:approve={handleApprove} on:delete={handleDelete} on:update={handleUpdate} headers={headers} information = {students} primaryKey="studentNumber"/>

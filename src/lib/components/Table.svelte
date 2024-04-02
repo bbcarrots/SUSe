@@ -38,20 +38,14 @@
         }
     }
 
-    const dispatchDelete = createEventDispatcher<{delete:any}>()
-    const dispatchEdit = createEventDispatcher<{submit:any}>()
-    const dispatchApprove = createEventDispatcher<{approve:any}>()
+    const dispatch = createEventDispatcher()
 
-    const submitFormHandle = async (a: any) => {
-        dispatchEdit('submit', a.detail);
+    const forwardApprove = async (a: any) => {
+        dispatch('approve', a.detail);
     }
 
-    const submitApproveHandle = async (a: any) => {
-        dispatchApprove('approve', a.detail);
-    }
-
-    const deleteEntryHandle = async (a: any) => {
-        dispatchDelete('delete', a.detail);
+    const forwardDelete = async (a: any) => {
+        dispatch('delete', a.detail);
         // console.log(a.detail);
 
         const primaryKeyDelete = a.detail[primaryKey];
@@ -65,10 +59,14 @@
             information.splice(index, 1);
         }
 
-        update()
+        updateInfo()
     };
 
-    function update(){
+    const forwardUpdate = async (a: any) => {
+        dispatch('update', a.detail);
+    }
+
+    function updateInfo(){
         information = information;
     }
 
@@ -78,7 +76,7 @@
     <TableHeader headers={headers} bind:sortKey bind:sortDirection isEditing={isEditing}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow on:approve={submitApproveHandle} on:delete={deleteEntryHandle} on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
+            <TableRow on:approve={forwardApprove} on:delete={forwardDelete} on:update={forwardUpdate} info={info} primaryKey={primaryKey} bind:isEditing/>
         {/each}
     </TableBody>
 </Table>

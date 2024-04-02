@@ -79,7 +79,7 @@
             }        
         }
 
-        dispatch('submit', payload);
+        dispatch('update', payload);
         
         if (isEditing == true){
             isEditing = false;
