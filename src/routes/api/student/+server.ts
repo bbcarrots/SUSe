@@ -1,14 +1,16 @@
-// import { Student } from '$lib/classes/Student.js'
+import { Student } from '$lib/classes/Student.js'
 import { json } from '@sveltejs/kit'
 
 export async function PATCH({ request }) {
-    const updateInfo = await request.json()
+    const updateInfo = Student.toStudentDBObj(await request.json())
     console.log(updateInfo)
 
-    // return json(Student.updateStudent(updateInfo))
-    return json({
-                val: "Received: PATCH command"
-            })
+    return json(await Student.updateStudent(updateInfo))
+}
+
+export async function DELETE({ request }) {
+    const student = await request.json()
+    return json(await Student.deleteStudent(student.studentNumber))
 }
 
 // export async function POST({ request }) {
@@ -17,14 +19,5 @@ export async function PATCH({ request }) {
 //     const { command } = await request.json()
 //     return json({
 //         val: "Received: " + command
-//     })
-// }
-
-// export async function DELETE({ request }) {
-//     const urlParams = request.url
-//     console.log(urlParams)
-//     // const { command } = await request.json()
-//     return json({
-//         val: "Received: DELETE"
 //     })
 // }

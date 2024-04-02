@@ -3,7 +3,7 @@ import {
 	selectStudentDB,
 	updateStudentDB,
 	deleteStudentDB,
-	approveStudentDB
+	// approveStudentDB
 } from '$lib/server/supabase';
 
 export type StudentDBObj = {
@@ -69,13 +69,13 @@ export class Student {
             rfid: 0,
             username: "",
             pw: "",
-            first_name: student.firstName,
-            middle_initial: student.middleInitial,
-            last_name: student.lastName,
-            college: student.college,
-            program: student.program,
-            phone_number: student.phoneNumber,
-            is_enrolled: false,
+            first_name: "firstName" in student ? student.firstName : "",
+            middle_initial: "middleInitial" in student ? student.middleInitial : "",
+            last_name: "lastName" in student ? student.lastName : "",
+            college: "college" in student ? student.college : "",
+            program: "program" in student ? student.program : "",
+            phone_number: "phoneNumber" in student ? student.phoneNumber : "",
+            is_enrolled: "isEnrolled" in student ? student.isEnrolled : false
         }
     }
 
@@ -105,9 +105,9 @@ export class Student {
 		return deleteStudentDB(studentNumber);
 	}
 
-	public static async approveStudent(studentNumber: number): Promise<StudentResponse> {
-		/* Approves the student record matching this Student's student number. */
-		return approveStudentDB(studentNumber);
-	}
+	// public static async approveStudent(studentNumber: number): Promise<StudentResponse> {
+	// 	/* Approves the student record matching this Student's student number. */
+	// 	return approveStudentDB(studentNumber);
+	// }
 }
 

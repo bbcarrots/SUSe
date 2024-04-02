@@ -1,9 +1,19 @@
 <script lang="ts">
 	export let data;
-	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
+	let headers = [
+		'Student Number',
+		'First Name',
+		'Middle Initial',
+		'Last Name',
+		'Email',
+		'Phone Number',
+		'College',
+		'Program'
+	];
 
-	import Table from "$lib/components/Table.svelte";
-	import { type StudentProcessed } from "$lib/utils/types.js";
+	import Table from '$lib/components/Table.svelte';
+	import { type StudentProcessed } from '$lib/utils/types.js';
+
 	let studentObjects = data.studentRaws;
 
 	let students: StudentProcessed[] = [];
@@ -19,25 +29,69 @@
 				phoneNumber: student.phone_number,
 				college: student.college,
 				program: student.program,
-				isEnrolled: student.is_enrolled,
+				isEnrolled: student.is_enrolled
+			};
+		});
+	}
+
+	// ----------------------------------------------------------------------------------
+	let approveResponse;
+	let deleteResponse;
+	let updateResponse;
+
+	async function handleApprove(event: any) {
+		console.log('approve');
+		console.log(event.detail);
+
+		const payload = { isEnrolled: true, ...event.detail };
+
+		approveResponse = await fetch('../api/student', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
 			}
-		})
+		});
+
+		console.log(await approveResponse.json());
 	}
 
-    function handleApprove (a: any){
-        console.log("approve");
-		console.log(a.detail);
+	async function handleDelete(event: any) {
+		console.log('delete');
+		console.log(event.detail);
+
+        deleteResponse = await fetch('../api/student', {
+			method: 'DELETE',
+			body: JSON.stringify(event.detail),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		console.log(await deleteResponse.json());
 	}
 
-    function handleDelete (a: any){
-        console.log("delete");
-        console.log(a.detail);
-    }
-	
-	function handleUpdate (a: any){
-        console.log("edit");
-		console.log(a.detail);
+	async function handleUpdate(event: any) {
+		console.log('edit');
+		console.log(event.detail);
+
+		updateResponse = await fetch('../api/student', {
+			method: 'PATCH',
+			body: JSON.stringify(event.detail),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		console.log(await updateResponse.json());
 	}
 </script>
 
-<Table on:approve={handleApprove} on:delete={handleDelete} on:update={handleUpdate} headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table
+	on:approve={handleApprove}
+	on:delete={handleDelete}
+	on:update={handleUpdate}
+	{headers}
+	information={students}
+	primaryKey="studentNumber"
+/>

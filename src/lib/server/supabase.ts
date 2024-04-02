@@ -108,10 +108,10 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 		return studentCheck;
 	}
 
-    const updateObj: {[key: string]: string} = {}
+    const updateObj: {[key: string]: string | boolean} = {}
 
     for (const [key, value] of Object.entries(student)) {
-        if (value && (typeof(value) == 'string')) {
+        if (value && (typeof(value) == 'string' || typeof(value) == 'boolean')) {
             updateObj[key] = value
         }
     }
@@ -160,30 +160,30 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 	return success;
 }
 
-export async function approveStudentDB(studentNumber: number): Promise<StudentResponse> {
-	/* Approves an existing student by updating their isEnrolled attribute to true. */
-	const studentCheck = await checkStudentExistsDB({
-		minStudentNumber: studentNumber,
-		maxStudentNumber: studentNumber,
-		username: ""
-	});
+// export async function approveStudentDB(studentNumber: number): Promise<StudentResponse> {
+// 	/* Approves an existing student by updating their isEnrolled attribute to true. */
+// 	const studentCheck = await checkStudentExistsDB({
+// 		minStudentNumber: studentNumber,
+// 		maxStudentNumber: studentNumber,
+// 		username: ""
+// 	});
 
-	if (!studentCheck.success) {
-		return studentCheck;
-	}
+// 	if (!studentCheck.success) {
+// 		return studentCheck;
+// 	}
 
-	const { error } = await supabase
-		.from('student')
-		.update({ is_enrolled: true })
-		.eq('sn_id', studentNumber);
+// 	const { error } = await supabase
+// 		.from('student')
+// 		.update({ is_enrolled: true })
+// 		.eq('sn_id', studentNumber);
 
-	if (error) {
-		return {
-			success: false,
-			studentRaws: null,
-			error: error.message
-		};
-	}
+// 	if (error) {
+// 		return {
+// 			success: false,
+// 			studentRaws: null,
+// 			error: error.message
+// 		};
+// 	}
 
-	return success;
-}
+// 	return success;
+// }
