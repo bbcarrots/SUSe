@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { TableBody, Table } from "flowbite-svelte";
     import { writable } from "svelte/store";
 
@@ -10,7 +11,7 @@
     export let primaryKey: string;
 
     let sortKey: string; 
-    let sortDirection:number; 
+    let sortDirection: number; 
     let isEditing: boolean;
     let sortedItems = writable<Array<any>>([]); 
 
@@ -37,9 +38,12 @@
         }
     }
 
-    const submitFormHandle = function (a: any) {
-        console.log("From Table Row", a.detail)
+    const dispatch = createEventDispatcher<{submit:any}>()
+
+    const submitFormHandle = async (a: any) => {
+        dispatch('submit', a.detail);
     }
+
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">

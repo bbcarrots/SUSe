@@ -6,7 +6,7 @@
     export let headers: Array<String>;
     export let sortKey: string; 
     export let sortDirection: number; 
-    export let isEditing:boolean;
+    export let isEditing: boolean;
 
     export const sortTable = (key: string): void => {
         console.log(isEditing, sortDirection, sortKey)

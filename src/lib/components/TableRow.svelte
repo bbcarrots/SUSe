@@ -19,7 +19,6 @@
         if (isEditing == false){
             isEditing = true;
             primaryKeyEdit = primaryKey;
-            console.log(primaryKeyEdit)
         }
     }
 
@@ -61,11 +60,14 @@
     const submitForm = async () => {
         isSubmitting = true;
         const payload:any = {};
+
+        payload[primaryKey] = primaryKeyEdit;
         for (let [key, value] of formData.entries()) {
             payload[key] = value;
         }
-        console.log(payload);
-        await dispatch('submit', payload);
+
+        dispatch('submit', payload);
+        
         if (isEditing == true){
             isEditing = false;
             primaryKeyEdit = null;
