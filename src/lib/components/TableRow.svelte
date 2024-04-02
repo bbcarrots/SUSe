@@ -7,6 +7,7 @@
 
     import TableCell from "./TableCell.svelte";
     import Input from "./Input.svelte";
+    import Button from "./Button.svelte"
 
     export let info: any;
     export let primaryKey: string;
@@ -59,6 +60,7 @@
     //function for submitting the formData
     const dispatch = createEventDispatcher<{submit:any}>()
     let isSubmitting = false
+
     const submitForm = async () => {
         isSubmitting = true;
         const payload:any = {};
@@ -75,6 +77,10 @@
             primaryKeyEdit = null;
         }
         isSubmitting = false;
+    }
+
+    const deleteEntry = async() => {
+
     }
 </script>
 
@@ -135,7 +141,19 @@
 
 <Modal bind:open={popupModal} size="xs" autoclose>
     <div class="text-center">
-      <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Are you sure you want to delete this product?</h3>
+        <p class="text-[#131416] font-bold">Are you sure you want to delete this entry?</p>
+        <p>This cannot be undone.</p>
+        {#each Object.entries(info) as [field, value], index}
+            {#if field !== "isEnrolled"}
+                <span> {value}, </span>
+            {/if}
+        {/each}
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex justify-center gap-4">
+        <Button inverse={true}>Cancel</Button>
+        <Button icon="delete">Delete</Button>
     </div>
 </Modal>
 
