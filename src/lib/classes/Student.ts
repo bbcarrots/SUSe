@@ -93,3 +93,4 @@ export class Student {
 		return approveStudentDB(studentNumber, username);
 	}
 }
+
