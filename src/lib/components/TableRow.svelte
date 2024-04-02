@@ -57,13 +57,17 @@
     //function for submitting the formData
     const dispatch = createEventDispatcher<{submit:any}>()
     let isSubmitting = false
+
     const submitForm = async () => {
         isSubmitting = true;
         const payload:any = {};
-
         payload[primaryKey] = primaryKeyEdit;
+
         for (let [key, value] of formData.entries()) {
             payload[key] = value;
+            if (info.hasOwnProperty(key)) {
+                info[key] = value;
+            }        
         }
 
         dispatch('submit', payload);
@@ -73,6 +77,14 @@
             primaryKeyEdit = null;
         }
         isSubmitting = false;
+        
+        updateInfo()
+    }
+
+    //is called to update what appears on the DOM
+    function updateInfo() {
+        console.log("updating info", info)
+        info = info;
     }
 </script>
 
