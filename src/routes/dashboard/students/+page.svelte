@@ -28,9 +28,10 @@
 		console.log(a.detail);
 	}
 
-	function onApprove (a: any){
-		console.log(a.detail)
+	function onDelete (a: any){
+		console.log(a.detail);
 	}
+
 </script>
 
-<Table on:approve={onApprove} on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table on:delete={onDelete} on:approve={onApprove} on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>

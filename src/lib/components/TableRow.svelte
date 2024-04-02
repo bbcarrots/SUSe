@@ -1,16 +1,19 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import { TableBodyRow, TableBodyCell, Checkbox } from "flowbite-svelte";
+    import { TableBodyRow, TableBodyCell, Modal } from "flowbite-svelte";
     import { Check, XMark, Icon, Pencil, Trash } from "svelte-hero-icons";
 
     import { getKey } from "$lib/utils/utils";
 
     import TableCell from "./TableCell.svelte";
     import Input from "./Input.svelte";
+    import Button from "./Button.svelte"
 
     export let info: any;
     export let primaryKey: string;
     export let isEditing: boolean = false;
+    let popupModal = false;
+
     
     // for edit
     let primaryKeyEdit: string | number | null = null;
@@ -99,6 +102,14 @@
     function updateInfo() {
         info = info;
     }
+
+    const dispatchDelete = createEventDispatcher<{delete:any}>()
+
+    function deleteEntry( primaryKeyDelete: string ) {
+        const payload:any = {};
+        payload[primaryKey] = primaryKeyDelete;
+        dispatchDelete('delete', payload);
+    }
 </script>
 
 <TableBodyRow color="custom" class="group relative overflow-x-auto hover:bg-[#FBFBFB] outline-1 outline-[#D2D2D2]/[.50]">
@@ -143,7 +154,9 @@
         <!-- action buttons -->
         <div class="flex p-5 gap-4 group-hover:visible invisible pl-20 sticky right-0 bg-gradient-to-l from-white via-white to-transparent -ml-[100px]">
             <!-- generate the action buttons -->
-            <a href="/tables" class="font-medium text-red-600"><Icon src="{Trash}" micro size="20"/></a>
+            <button on:click={() => (popupModal = true)} class="font-medium text-red-600">
+                <Icon src="{Trash}" micro size="20"/>
+            </button>
             {#if info.hasOwnProperty("isEnrolled") && info.isEnrolled == "0"}
                 <button on:click={() => approveEnrollment(getKey(info, primaryKey), info)} class="font-medium text-green-800">
                     <Icon src="{Check}" micro size="20"/>
@@ -155,6 +168,24 @@
         </div>
     {/if}
 </TableBodyRow>
+
+<Modal bind:open={popupModal} size="xs" autoclose>
+    <div class="text-center">
+        <p class="text-[#131416] font-bold">Are you sure you want to delete this entry?</p>
+        <p>This cannot be undone.</p>
+        {#each Object.entries(info) as [field, value], index}
+            {#if field !== "isEnrolled"}
+                <span> {value}, </span>
+            {/if}
+        {/each}
+    </div>
+
+    <!-- Action buttons -->
+    <div class="flex justify-center gap-4">
+        <Button inverse={true}>Cancel</Button>
+        <Button on:click={() => deleteEntry(getKey(info, primaryKey))} icon="delete">Delete</Button>
+    </div>
+</Modal>
 
 <style lang="postcss">
     @tailwind components;
