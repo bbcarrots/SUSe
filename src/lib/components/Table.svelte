@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { TableBody, Table } from "flowbite-svelte";
     import { writable } from "svelte/store";
 
@@ -37,8 +38,10 @@
         }
     }
 
-    const submitFormHandle = function (a: any) {
-        console.log("From Table Row", a.detail)
+    const dispatch = createEventDispatcher<{submit:any}>()
+
+    const submitFormHandle = async (a: any) => {
+        dispatch('submit', a.detail);
     }
 
 </script>

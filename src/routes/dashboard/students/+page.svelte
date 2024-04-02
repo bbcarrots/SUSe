@@ -23,7 +23,11 @@
 			}
 		})
 	}
+	
+	function onCommand (a: any){
+		console.log(a.detail);
+	}
 
 </script>
 
-<Table headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>
