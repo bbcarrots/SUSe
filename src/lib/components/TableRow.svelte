@@ -66,13 +66,17 @@
 
 
     let isSubmitting = false
+
     const submitForm = async () => {
         isSubmitting = true;
         const payload:any = {};
-
         payload[primaryKey] = primaryKeyEdit;
+
         for (let [key, value] of formData.entries()) {
             payload[key] = value;
+            if (info.hasOwnProperty(key)) {
+                info[key] = value;
+            }        
         }
 
         dispatchEdit('submit', payload);
@@ -82,6 +86,13 @@
             primaryKeyEdit = null;
         }
         isSubmitting = false;
+        
+        updateInfo()
+    }
+
+    //is called to update what appears on the DOM
+    function updateInfo() {
+        info = info;
     }
 
     //is called to update what appears on the DOM
