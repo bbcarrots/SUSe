@@ -2,7 +2,7 @@
 	export let data;
 	let headers = [ "Student Number", "First Name", "Middle Initial", "Last Name", "Email", "Phone Number", "College", "Program"]
 
-	import NewTable from "$lib/components/NewTable.svelte";
+	import Table from "$lib/components/Table.svelte";
 	import { type StudentProcessed } from "$lib/utils/types.js";
 	let studentObjects = data.studentRaws;
 
@@ -26,4 +26,4 @@
 
 </script>
 
-<NewTable headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table headers={headers} information = {students} primaryKey="studentNumber"/>

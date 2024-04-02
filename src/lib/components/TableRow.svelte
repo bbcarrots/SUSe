@@ -5,7 +5,7 @@
 
     import { getKey } from "$lib/utils/utils";
 
-    import NewTableCell from "./NewTableCell.svelte";
+    import TableCell from "./TableCell.svelte";
     import Input from "./Input.svelte";
 
     export let info: any;
@@ -83,7 +83,7 @@
 
           <!-- generate the primary key col (uneditable) -->
           {#if field == primaryKey}
-            <NewTableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
+            <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
           {:else if field !== "isEnrolled"}
             <TableBodyCell class="pt-0 pb-0 pl-[12px]">
               <Input college={ field == "program" ? college : ""} field={field} value={value} on:input={handleInputChange}/>
@@ -109,7 +109,7 @@
         <!-- generate information for each column -->
         {#each Object.entries(info) as [field, value]}
             {#if field !== "isEnrolled"}
-                <NewTableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
+                <TableCell field={field} value={value} info={info} primaryKey={primaryKey}/>
             {/if}
         {/each}
 

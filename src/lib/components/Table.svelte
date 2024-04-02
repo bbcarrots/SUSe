@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { TableBody, Table, TableHead } from "flowbite-svelte";
+    import { TableBody, Table } from "flowbite-svelte";
     import { writable } from "svelte/store";
 
-    import TableHeader from "./NewTableHeader.svelte";
-    import TableRow from "./NewTableRow.svelte";
+    import TableHeader from "./TableHeader.svelte";
+    import TableRow from "./TableRow.svelte";
 
     export let information: Array<Object>;
     export let headers: Array<String>;
