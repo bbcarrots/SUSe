@@ -25,10 +25,17 @@
 	}
 	
 	function onCommand (a: any){
+        console.log("edit");
 		console.log(a.detail);
 	}
 
 	function onDelete (a: any){
+        console.log("delete");
+		console.log(a.detail);
+	}
+
+    function onApprove (a: any){
+        console.log("approve");
 		console.log(a.detail);
 	}
 </script>

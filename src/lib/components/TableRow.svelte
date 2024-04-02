@@ -14,11 +14,10 @@
     export let isEditing: boolean = false;
     let popupModal = false;
 
+    const dispatch = createEventDispatcher()
     
     // for edit
-    let primaryKeyEdit: string | number | null = null;
-    const dispatchEdit = createEventDispatcher<{submit:any}>()
-    const dispatchApprove = createEventDispatcher<{approve:any}>()
+    let primaryKeyEdit: number | null = null;
 
     function triggerEdit(primaryKey:number) {
         if (isEditing == false){
@@ -38,7 +37,7 @@
         info.isEnrolled = true;
         const payload:any = {};
         payload[primaryKey] = primaryKeyApprove;
-        dispatchApprove('approve', payload);
+        dispatch('approve', payload);
         updateInfo();
     }
 
@@ -66,8 +65,6 @@
         updateFormData(id);
     }
 
-
-
     let isSubmitting = false
 
     const submitForm = async () => {
@@ -82,7 +79,7 @@
             }        
         }
 
-        dispatchEdit('submit', payload);
+        dispatch('submit', payload);
         
         if (isEditing == true){
             isEditing = false;
@@ -98,12 +95,12 @@
         info = info;
     }
 
-    const dispatchDelete = createEventDispatcher<{delete:any}>()
+    // const dispatchDelete = createEventDispatcher<{delete:any}>()
 
     function deleteEntry( primaryKeyDelete: string ) {
         const payload:any = {};
         payload[primaryKey] = primaryKeyDelete;
-        dispatchDelete('delete', payload);
+        dispatch('delete', payload);
     }
 </script>
 

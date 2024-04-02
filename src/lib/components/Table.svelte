@@ -52,10 +52,10 @@
 
     const deleteEntryHandle = async (a: any) => {
         dispatchDelete('delete', a.detail);
-        console.log(a.detail);
+        // console.log(a.detail);
 
         const primaryKeyDelete = a.detail[primaryKey];
-        console.log(primaryKeyDelete)
+        // console.log(primaryKeyDelete)
 
         const index = information.findIndex((entry: { [key: string]: any }) => 
             entry[primaryKey] === primaryKeyDelete
