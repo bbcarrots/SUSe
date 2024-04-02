@@ -38,10 +38,15 @@
         }
     }
 
-    const dispatch = createEventDispatcher<{submit:any}>()
+    const dispatchEdit = createEventDispatcher<{submit:any}>()
+    const dispatchApprove = createEventDispatcher<{approve:any}>()
 
     const submitFormHandle = async (a: any) => {
-        dispatch('submit', a.detail);
+        dispatchEdit('submit', a.detail);
+    }
+
+    const submitApproveHandle = async (a: any) => {
+        dispatchApprove('approve', a.detail);
     }
 
 </script>
@@ -50,7 +55,7 @@
     <TableHeader headers={headers} bind:sortKey bind:sortDirection isEditing={isEditing}/>
     <TableBody>
         {#each $sortedItems as info}
-            <TableRow on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
+            <TableRow on:approve={submitApproveHandle} on:submit={submitFormHandle} info={info} primaryKey={primaryKey} bind:isEditing/>
         {/each}
     </TableBody>
 </Table>

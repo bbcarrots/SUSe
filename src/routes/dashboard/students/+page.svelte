@@ -28,6 +28,9 @@
 		console.log(a.detail);
 	}
 
+	function onApprove (a: any){
+		console.log(a.detail)
+	}
 </script>
 
-<Table on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>
+<Table on:approve={onApprove} on:submit={onCommand} headers={headers} information = {students} primaryKey="studentNumber"/>
