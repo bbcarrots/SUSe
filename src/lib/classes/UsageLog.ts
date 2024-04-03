@@ -1,10 +1,12 @@
+import { selectUsageLogDB } from "$lib/server/UsageLogSB";
+
 export type UsageLogDBObj = {
 	ul_id: number;
 	sn_id: number;
 	admin_id: number;
 	service_type: string;
-	datetime_start: Date;
-	datetime_end: Date;
+	datetime_start: string;
+	datetime_end: string;
 };
 
 export type UsageLogUIObj = {
@@ -18,13 +20,13 @@ export type UsageLogUIObj = {
 
 export type UsageLogResponse = {
 	success: boolean;
-	studentRaws: UsageLogDBObj[] | null;
+	usageLogRaws: UsageLogDBObj[] | null;
 	error: string | null;
 };
 
 export type UsageLogFilter = {
-	minDate: Date;
-	maxDate: Date;
+	minDate: string;
+	maxDate: string;
 };
 
 export class UsageLog {
@@ -37,8 +39,8 @@ export class UsageLog {
 			studentNumber: log.sn_id,
 			AdminID: log.admin_id,
 			ServiceType: log.service_type,
-			DateTimeIn: log.datetime_start,
-			DateTimeOut: log.datetime_end
+			DateTimeIn: new Date(log.datetime_start),
+			DateTimeOut: new Date(log.datetime_end)
 		};
 	}
 
@@ -49,18 +51,18 @@ export class UsageLog {
 			sn_id: log.studentNumber,
 			admin_id: log.AdminID,
 			service_type: log.ServiceType,
-			datetime_start: log.DateTimeIn,
-			datetime_end: log.DateTimeOut
+			datetime_start: new Date(log.DateTimeIn).toISOString(),
+			datetime_end: new Date(log.DateTimeOut).toISOString()
 		};
 	}
 
-    // public static async selectUsageLogs(
-	// 	filter: UsageLogFilter = {
-    //         minDate: new Date(2000),
-    //         maxDate: new Date(),
-	// 	}
-	// ): Promise<UsageLogResponse> {
-	// 	/* Selects all student records in database using the default or given filter. */
-	// 	return selectUsageLogDB(filter);
-	// }
+    public static async selectUsageLogs(
+		filter: UsageLogFilter = {
+            minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
+            maxDate: new Date().toISOString(),
+		}
+	): Promise<UsageLogResponse> {
+		/* Selects all student records in database using the default or given filter. */
+		return selectUsageLogDB(filter);
+	}
 }

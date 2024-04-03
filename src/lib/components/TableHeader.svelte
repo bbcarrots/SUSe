@@ -9,7 +9,7 @@
     export let isEditing: boolean;
 
     export const sortTable = (key: string): void => {
-        console.log(isEditing, sortDirection, sortKey)
+        // console.log(isEditing, sortDirection, sortKey)
         if (!isEditing){
             if (sortKey === key) {
                 sortDirection = -sortDirection;

@@ -3,7 +3,7 @@ import {
 	selectStudentDB,
 	updateStudentDB,
 	deleteStudentDB
-} from '$lib/server/supabase';
+} from '$lib/server/StudentSB';
 
 export type StudentDBObj = {
 	sn_id: number;
