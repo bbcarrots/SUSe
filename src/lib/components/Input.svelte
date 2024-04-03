@@ -18,8 +18,15 @@
             {/if}
         {/each}
     </select>
-    
-
+{:else if field=="dateTimeStart" || field=="dateTimeEnd"}
+    <input
+        class="datetime"
+        on:input
+        type="datetime-local"
+        id={field} 
+        name={field} 
+        value={value}
+    />
 {:else if field=="program"}
     <select on:input name={field} id={field} class="border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         {#each $CollegePrograms as program}
@@ -53,6 +60,10 @@
         
         input.error {
             @apply border-pink-600 text-pink-600; 
+        }
+
+        input.datetime {
+            @apply border border-gray-300 text-gray-900 block w-full text-[14px] px-2.5 py-1.5 h-1/2 rounded;
         }
 
         input.error:focus{
