@@ -32,7 +32,7 @@
     {#each headers as header, index}
     <TableHeadCell class="{index === 0 ? 'sticky left-0' : ''} hover:cursor-pointer py-4 bg-white"  on:click={() => sortTable(camelize(header))}>
         
-        <div class="flex gap-2" style="width: 150px;">
+        <div class="flex gap-2" style="width: 180px;">
             <!-- header name -->
             <p class="font-bold">{header}</p>
 

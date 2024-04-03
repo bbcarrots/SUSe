@@ -26,7 +26,7 @@
     {#if field == "dateTimeStart" || field == "dateTimeEnd"}
         <time datetime={value}>{formatDateTime(value)}</time>
     {:else if field !== "studentNumber" || !Object.hasOwn(info, 'isEnrolled')}
-      <p>{value}</p>
+        <p>{value}</p>
     {/if}
 
 </TableBodyCell>

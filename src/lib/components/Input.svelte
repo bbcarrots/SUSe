@@ -7,7 +7,7 @@
 
 </script>
 
-
+<div class="max-w-[190px]">
 {#if field == "college"}
     <select on:input name={field} id={field} class="border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         {#each $CollegePrograms as program}
@@ -45,6 +45,7 @@
 {:else}
     <input type="text" id={field} name={field} value={value} on:input>
 {/if}
+</div>
 
 <style lang="postcss">
     @tailwind components;
