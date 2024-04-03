@@ -9,17 +9,17 @@
 	import Input from './Input.svelte';
 	import Button from './Button.svelte';
 
-	export let info: any;
-	export let primaryKey: string;
-	export let isEditing: boolean = false;
+	export let info: any; // stores the information of the object in the TableRow entry
+	export let primaryKey: string; // stores the name of the primary key of the table
+	export let isEditing: boolean = false; // stores whether or not the user is currently editing an entry
 
-	let popupModal = false;
-	let primaryKeyEdit: number | null = null; // for edit
+	let popupModal = false; // stores whether or not the delete modal should appear
+	let primaryKeyEdit: number | null = null; // stores the primaryKey of the entry being edited
 
 	const dispatch = createEventDispatcher(); // for forwarding events
 
 	function triggerEdit(primaryKey: number) {
-		/* Please put function description. */
+		/* Sets the isEditing variable to true and keeps track of the current primaryKey being edited. */
 		if (isEditing == false) {
 			isEditing = true;
 			primaryKeyEdit = primaryKey;
@@ -27,7 +27,7 @@
 	}
 
 	function cancelEdit() {
-		/* Please put function description and parameter annotation. */
+		/* If isEditing is true, set it back to false after the editing is done and reset the primaryKey being edited. */
 		if (isEditing == true) {
 			isEditing = false;
 			primaryKeyEdit = null;
@@ -35,23 +35,28 @@
 	}
 
 	function approveEnrollment(primaryKeyApprove: string, info: any) {
-		/* Please put function description. */
+		/* Edits the isEnrolled field of the information to true. */
+		/* Forwards the information to Table.svelte */
 		const payload: any = {};
 
 		info.isEnrolled = true;
 		payload[primaryKey] = primaryKeyApprove;
 
 		dispatch('approve', payload);
-		updateInfo(); // Do we really need a function call for this?
+
+        /* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
+		updateInfo(); 
 	}
 
 	// specific store for student tables
-	const defaultCollegeValue = info.college ? info.college : '';
-	export let college = defaultCollegeValue;
+	const defaultCollegeValue = info.college ? info.college : ''; // gets the default value of college based on info.college
+	export let college = defaultCollegeValue; // stores the current value of the college property to dynamically show which programs are available
 
-	let formData = new FormData();
+	let formData = new FormData(); // stores the data from the input fields
 
 	function updateFormData(property: string) {
+		/* Gets the value in the input field given the property being edited. */
+		/* Stores the value in formData corresponding to the correct property. */
 		const element = document.getElementById(property) as HTMLInputElement;
 		const value = element?.value || '';
 
@@ -62,16 +67,16 @@
 		formData.set(property, value);
 	}
 
-	// event listener for changes in input
 	function handleInputChange(event: any) {
+		/* Handles everytime the input is changed. */
+		/* Takes the ID of the current input and calls updateFormDate on the ID. */
 		const { id } = event.target;
 		updateFormData(id);
 	}
 
-	let isSubmitting = false;
-
 	const submitForm = async () => {
-		isSubmitting = true;
+		/* Handles the operation when the editing is saved. */
+		/* Forwards the formData to Table.svelte. */
 		const payload: any = {};
 		payload[primaryKey] = primaryKeyEdit;
 
@@ -84,22 +89,24 @@
 
 		dispatch('update', payload);
 
+		/* Reset isEditing and primaryKeyEdit */
 		if (isEditing == true) {
 			isEditing = false;
 			primaryKeyEdit = null;
 		}
-		isSubmitting = false;
-
-		updateInfo(); // do we need this function call?
+        
+		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
+		updateInfo();
 	};
 
-	// is called to update what appears on the DOM
-	function updateInfo() { // do we need this function?
+
+	function updateInfo() { 
+		/* Updates information shown in the TableRow component. */
 		info = info;
 	}
 
 	function deleteEntry(primaryKeyDelete: string) {
-		/* Please put function description. */
+		/* Forwards the primary key to be deleted to Table.svelte */
 		const payload: any = {};
 		payload[primaryKey] = primaryKeyDelete;
 
