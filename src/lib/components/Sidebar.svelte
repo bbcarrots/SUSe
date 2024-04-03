@@ -12,7 +12,7 @@
 </script>
 
 <Sidebar {activeUrl} {nonActiveClass} {activeClass}>
-    <SidebarWrapper class="h-screen">
+    <SidebarWrapper class="h-screen max-w-[230px]">
         <SidebarGroup>
             <SidebarItem label="Usage Logs" href="/dashboard/usage-logs" {spanClass}>
                 <svelte:fragment slot="icon">
