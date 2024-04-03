@@ -2,8 +2,7 @@ import {
 	insertStudentDB,
 	selectStudentDB,
 	updateStudentDB,
-	deleteStudentDB,
-	// approveStudentDB
+	deleteStudentDB
 } from '$lib/server/supabase';
 
 export type StudentDBObj = {
@@ -21,16 +20,16 @@ export type StudentDBObj = {
 };
 
 export type StudentUIObj = {
-    firstName: string,
-    middleInitial: string,
-    lastName: string,
-    studentNumber: number,
-    email: string,
-    phoneNumber: string,
-    college: string,
-    program: string,
-    isEnrolled: boolean
-}
+	firstName: string;
+	middleInitial: string;
+	lastName: string;
+	studentNumber: number;
+	email: string;
+	phoneNumber: string;
+	college: string;
+	program: string;
+	isEnrolled: boolean;
+};
 
 export type StudentResponse = {
 	success: boolean;
@@ -51,33 +50,33 @@ export class Student {
 		/* Converts a StudentDBObj to a StudentUIObj. */
 		return {
 			firstName: student.first_name,
-            middleInitial: student.middle_initial,
-            lastName: student.last_name,
-            studentNumber: student.sn_id,
-            email: student.username,
-            phoneNumber: student.phone_number,
-            college: student.college,
-            program: student.program,
-            isEnrolled: student.is_enrolled
+			middleInitial: student.middle_initial,
+			lastName: student.last_name,
+			studentNumber: student.sn_id,
+			email: student.username,
+			phoneNumber: student.phone_number,
+			college: student.college,
+			program: student.program,
+			isEnrolled: student.is_enrolled
 		};
 	}
 
-    public static toStudentDBObj(student: StudentUIObj): StudentDBObj {
-        /* Converts a StudentUIObj to a StudentDBObj. */
+	public static toStudentDBObj(student: StudentUIObj): StudentDBObj {
+		/* Converts a StudentUIObj to a StudentDBObj. */
 		return {
-            sn_id: student.studentNumber,
-            rfid: 0,
-            username: "",
-            pw: "",
-            first_name: "firstName" in student ? student.firstName : "",
-            middle_initial: "middleInitial" in student ? student.middleInitial : "",
-            last_name: "lastName" in student ? student.lastName : "",
-            college: "college" in student ? student.college : "",
-            program: "program" in student ? student.program : "",
-            phone_number: "phoneNumber" in student ? student.phoneNumber : "",
-            is_enrolled: "isEnrolled" in student ? student.isEnrolled : false
-        }
-    }
+			sn_id: student.studentNumber,
+			rfid: 0,
+			username: '',
+			pw: '',
+			first_name: 'firstName' in student ? student.firstName : '',
+			middle_initial: 'middleInitial' in student ? student.middleInitial : '',
+			last_name: 'lastName' in student ? student.lastName : '',
+			college: 'college' in student ? student.college : '',
+			program: 'program' in student ? student.program : '',
+			phone_number: 'phoneNumber' in student ? student.phoneNumber : '',
+			is_enrolled: 'isEnrolled' in student ? student.isEnrolled : false
+		};
+	}
 
 	public static async selectStudents(
 		filter: StudentFilter = {
@@ -105,4 +104,3 @@ export class Student {
 		return deleteStudentDB(studentNumber);
 	}
 }
-

@@ -20,11 +20,16 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 	let minSN: number = filter.minStudentNumber;
 	let maxSN: number = filter.maxStudentNumber;
 
-	if (Math.floor(minSN / 2000) >= 1 && Math.floor(minSN / 2000) < 5 && Math.floor(maxSN / 2000) >= 1 && Math.floor(maxSN / 2000) < 5) {
+	if (
+		Math.floor(minSN / 2000) >= 1 &&
+		Math.floor(minSN / 2000) < 5 &&
+		Math.floor(maxSN / 2000) >= 1 &&
+		Math.floor(maxSN / 2000) < 5
+	) {
 		// inputs are years and not specific student numbers
 		// minimum year is 2000
 		minSN = filter.minStudentNumber * 100000;
-		maxSN = ((filter.maxStudentNumber + 1) * 100000) - 1;
+		maxSN = (filter.maxStudentNumber + 1) * 100000 - 1;
 	}
 
 	if (
@@ -101,25 +106,22 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: student.sn_id,
 		maxStudentNumber: student.sn_id,
-		username: ""
+		username: ''
 	});
 
 	if (!studentCheck.success) {
 		return studentCheck;
 	}
 
-    const updateObj: {[key: string]: string | boolean} = {}
+	const updateObj: { [key: string]: string | boolean } = {};
 
-    for (const [key, value] of Object.entries(student)) {
-        if (value && (typeof(value) == 'string' || typeof(value) == 'boolean')) {
-            updateObj[key] = value
-        }
-    }
+	for (const [key, value] of Object.entries(student)) {
+		if (value && (typeof value == 'string' || typeof value == 'boolean')) {
+			updateObj[key] = value;
+		}
+	}
 
-	const { error } = await supabase
-		.from('student')
-		.update(updateObj)
-		.eq('sn_id', student.sn_id)
+	const { error } = await supabase.from('student').update(updateObj).eq('sn_id', student.sn_id);
 
 	if (error) {
 		return {
@@ -137,17 +139,14 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: studentNumber,
 		maxStudentNumber: studentNumber,
-		username: ""
+		username: ''
 	});
 
 	if (!studentCheck.success) {
 		return studentCheck;
 	}
 
-	const { error } = await supabase
-		.from('student')
-		.delete()
-		.eq('sn_id', studentNumber);
+	const { error } = await supabase.from('student').delete().eq('sn_id', studentNumber);
 
 	if (error) {
 		return {
