@@ -10,10 +10,16 @@
 	export let headers: Array<String>;
 	export let primaryKey: string;
 
+    /* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
 	let sortDirection: number;
+
+    /* isEditing is binded to the value from TableRow.svelte. */
 	let isEditing: boolean;
 	let sortedItems = writable<Array<any>>([]);
+
+    /* Reactively sorts the items and stores in sortedItems based on the sortKey and sortDirection. */
+    /* The sorting will be disabled if isEditing is true. */
 
 	$: {
 		const disableSort: boolean = isEditing;
@@ -55,11 +61,13 @@
 			(entry: { [key: string]: any }) => entry[primaryKey] === primaryKeyDelete
 		);
 
+        /* Delete the current entry from all the other entries */
 		if (index !== -1) {
 			info.splice(index, 1);
 		}
 
-		updateInfo(); // why do we need this function? 
+        /* Update the content of info for the changes to be reflected in the DOM without needing to refresh */
+		updateInfo(); 
 	}
 
 	function updateInfo() {
