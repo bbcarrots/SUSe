@@ -3,8 +3,6 @@ import { json } from '@sveltejs/kit';
 
 export async function PATCH({ request }) {
 	const updateInfo = Student.toStudentDBObj(await request.json());
-	console.log(updateInfo);
-
 	return json(await Student.updateStudent(updateInfo));
 }
 

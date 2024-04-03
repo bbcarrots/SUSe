@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Student, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
-import { selectStudentDB } from '$lib/server/supabase';
+import { selectStudentDB } from '$lib/server/StudentSB';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   it('adds 1 + 2 to equal 3', () => {
