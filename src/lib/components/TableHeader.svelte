@@ -12,7 +12,7 @@
         /* If the user is not editing, set the appropriate sortKey and sortDirection based on the key. */
         /* If the key is the same, inverse the direction of the sorting. */
         /* If the key is different, sort upwards and set the sortKey to the new key. */
-
+        // console.log(isEditing, sortDirection, sortKey)
         if (!isEditing){
             if (sortKey === key) {
                 sortDirection = -sortDirection;
