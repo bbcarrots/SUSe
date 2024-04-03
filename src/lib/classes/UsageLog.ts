@@ -1,4 +1,9 @@
-import { selectUsageLogDB } from "$lib/server/UsageLogSB";
+import {
+	deleteUsageLogDB,
+	insertUsageLogDB,
+	selectUsageLogDB,
+	updateUsageLogDB
+} from '$lib/server/UsageLogSB';
 
 export type UsageLogDBObj = {
 	ul_id: number;
@@ -25,6 +30,7 @@ export type UsageLogResponse = {
 };
 
 export type UsageLogFilter = {
+	usageLogID: number;
 	minDate: string;
 	maxDate: string;
 };
@@ -56,13 +62,29 @@ export class UsageLog {
 		};
 	}
 
-    public static async selectUsageLogs(
+	public static async selectUsageLogs(
 		filter: UsageLogFilter = {
-            minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
-            maxDate: new Date().toISOString(),
+			usageLogID: 0,
+			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
+			maxDate: new Date().toISOString()
 		}
 	): Promise<UsageLogResponse> {
-		/* Selects all student records in database using the default or given filter. */
+		/* Selects all usage logs in database using the default or given filter. */
 		return selectUsageLogDB(filter);
+	}
+
+	public static async insertUsageLog(log: UsageLogDBObj): Promise<UsageLogResponse> {
+		/* Inserts unique student information in database. */
+		return insertUsageLogDB(log);
+	}
+
+	public static async updateUsageLog(log: UsageLogDBObj): Promise<UsageLogResponse> {
+		/* Updates the student record matching this Student's student number. */
+		return updateUsageLogDB(log);
+	}
+
+	public static async deleteUsageLog(usageLogID: number): Promise<UsageLogResponse> {
+		/* Deletes the student record matching this Student's student number. */
+		return deleteUsageLogDB(usageLogID);
 	}
 }
