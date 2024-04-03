@@ -63,7 +63,7 @@
         }
 
         input.datetime {
-            @apply border border-gray-300 text-gray-900 block w-full text-[14px] px-2.5 py-1.5 h-1/2 rounded;
+            @apply border border-gray-300 text-gray-900 block w-full text-[14px] px-2.5 py-1.5 h-1/2 rounded max-w-[230px];
         }
 
         input.error:focus{
