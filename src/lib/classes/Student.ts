@@ -104,10 +104,5 @@ export class Student {
 		/* Deletes the student record matching this Student's student number. */
 		return deleteStudentDB(studentNumber);
 	}
-
-	// public static async approveStudent(studentNumber: number): Promise<StudentResponse> {
-	// 	/* Approves the student record matching this Student's student number. */
-	// 	return approveStudentDB(studentNumber);
-	// }
 }
 

@@ -35,17 +35,19 @@
 	}
 
 	// ----------------------------------------------------------------------------------
-	let approveResponse;
-	let deleteResponse;
-	let updateResponse;
+	import type { StudentResponse } from '$lib/classes/Student.js';
 
-	async function handleApprove(event: any) {
-		console.log('approve');
-		console.log(event.detail);
+	let approveResponse: StudentResponse;
+	let deleteResponse: StudentResponse;
+	let updateResponse: StudentResponse;
+
+	async function handleApprove(event: CustomEvent) {
+		/* Handles Approve event from TableRow by sending a PATCH request 
+        with payload requirements: studentNumber and isEnrolled=true. */
 
 		const payload = { isEnrolled: true, ...event.detail };
 
-		approveResponse = await fetch('../api/student', {
+		const response = await fetch('../api/student', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -53,14 +55,14 @@
 			}
 		});
 
-		console.log(await approveResponse.json());
+		approveResponse = await response.json();
 	}
 
-	async function handleDelete(event: any) {
-		console.log('delete');
-		console.log(event.detail);
+	async function handleDelete(event: CustomEvent) {
+		/* Handles Delete event from TableRow by sending a DELETE request 
+        with payload requirement: studentNumber. */
 
-        deleteResponse = await fetch('../api/student', {
+		const response = await fetch('../api/student', {
 			method: 'DELETE',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -68,14 +70,15 @@
 			}
 		});
 
-		console.log(await deleteResponse.json());
+		deleteResponse = await response.json();
 	}
 
-	async function handleUpdate(event: any) {
-		console.log('edit');
-		console.log(event.detail);
+	async function handleUpdate(event: CustomEvent) {
+		/* Handles Update event from TableRow by sending a PATCH request with 
+        payload requirement: studentNumber, 
+        optional: firstName, middleInitial, lastName, college, program, phoneNumber. */
 
-		updateResponse = await fetch('../api/student', {
+		const response = await fetch('../api/student', {
 			method: 'PATCH',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -83,7 +86,7 @@
 			}
 		});
 
-		console.log(await updateResponse.json());
+		updateResponse = await response.json();
 	}
 </script>
 
@@ -92,6 +95,6 @@
 	on:delete={handleDelete}
 	on:update={handleUpdate}
 	{headers}
-	information={students}
+	info={students}
 	primaryKey="studentNumber"
 />

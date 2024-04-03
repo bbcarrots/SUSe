@@ -159,31 +159,3 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 
 	return success;
 }
-
-// export async function approveStudentDB(studentNumber: number): Promise<StudentResponse> {
-// 	/* Approves an existing student by updating their isEnrolled attribute to true. */
-// 	const studentCheck = await checkStudentExistsDB({
-// 		minStudentNumber: studentNumber,
-// 		maxStudentNumber: studentNumber,
-// 		username: ""
-// 	});
-
-// 	if (!studentCheck.success) {
-// 		return studentCheck;
-// 	}
-
-// 	const { error } = await supabase
-// 		.from('student')
-// 		.update({ is_enrolled: true })
-// 		.eq('sn_id', studentNumber);
-
-// 	if (error) {
-// 		return {
-// 			success: false,
-// 			studentRaws: null,
-// 			error: error.message
-// 		};
-// 	}
-
-// 	return success;
-// }
