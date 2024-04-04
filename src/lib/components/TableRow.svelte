@@ -116,7 +116,7 @@
 
 <TableBodyRow
 	color="custom"
-	class="group relative overflow-x-auto outline-1 outline-[#D2D2D2]/[.50] hover:bg-[#FBFBFB]"
+	class="group overflow-x-auto outline-1 outline-[#D2D2D2]/[.50] hover:bg-[#FBFBFB]"
 >
 	<!-- If it's for editing, display a form -->
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
@@ -138,7 +138,7 @@
 
 		<!-- generate the action buttons -->
 		<div
-			class="invisible sticky right-0 -ml-[100px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent p-5 pl-20 group-hover:visible"
+			class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible"
 		>
 			<!-- save -->
 			<button on:click={() => submitForm()} class="font-medium text-green-800">
@@ -161,7 +161,7 @@
 
 		<!-- action buttons -->
 		<div
-			class="invisible sticky right-0 -ml-[100px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent p-5 pl-20 group-hover:visible"
+			class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible"
 		>
 			<!-- generate the action buttons -->
 			<button on:click={() => (popupModal = true)} class="font-medium text-red-600">

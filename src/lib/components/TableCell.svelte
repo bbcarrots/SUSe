@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Indicator, TableBodyCell } from "flowbite-svelte";
     import { ExclamationCircle, Icon } from "svelte-hero-icons";
-    
+    import { formatDateTime } from "$lib/utils/utils";
     export let info: any;
     export let field: string;
     export let value: any;
@@ -23,7 +23,10 @@
       </span>
     {/if}
     
-    {#if field !== "studentNumber" || !Object.hasOwn(info, 'isEnrolled')}
-      <p>{value}</p>
+    {#if field == "dateTimeStart" || field == "dateTimeEnd"}
+        <time datetime={value}>{formatDateTime(value)}</time>
+    {:else if field !== "studentNumber" || !Object.hasOwn(info, 'isEnrolled')}
+        <p>{value}</p>
     {/if}
+
 </TableBodyCell>
