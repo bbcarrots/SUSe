@@ -32,7 +32,7 @@
     {#each headers as header, index}
     <TableHeadCell class="{index === 0 ? 'sticky left-0' : ''} hover:cursor-pointer py-4 bg-white"  on:click={() => sortTable(camelize(header))}>
         
-        <div class="flex gap-2" style="width: 150px;">
+        <div class="flex gap-2" style="width: 180px;">
             <!-- header name -->
             <p class="font-bold">{header}</p>
 
@@ -54,7 +54,7 @@
     {/each}
 
     <!-- filler div for header -->
-    <div class="flex p-[27px] bg-white gap-4 pl-20 right-0 bg-gradient-to-l-ml-[100px]">
+    <div class="flex p-[27px] bg-white gap-4 pl-20 right-0 bg-gradient-to-l-ml-[50px]">
     </div>
 </TableHead>
   
