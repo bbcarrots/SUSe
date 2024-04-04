@@ -9,18 +9,20 @@ export type UsageLogDBObj = {
 	ul_id: number;
 	sn_id: number;
 	admin_id: number;
+    service_id: number;
 	service_type: string;
 	datetime_start: string;
 	datetime_end: string;
 };
 
 export type UsageLogUIObj = {
-	usageLogID: number;
+	usageLogId: number;
 	studentNumber: number;
-	AdminID: number;
-	ServiceType: string;
-	DateTimeIn: Date;
-	DateTimeOut: Date;
+	adminId: number;
+    serviceId: number;
+	serviceType: string;
+	dateTimeIn: Date;
+	dateTimeOut: Date;
 };
 
 export type UsageLogResponse = {
@@ -41,24 +43,26 @@ export class UsageLog {
 	public static toUsageLogUIObj(log: UsageLogDBObj): UsageLogUIObj {
 		/* Converts a UsageLogDBObj to a UsageLogUIObj. */
 		return {
-			usageLogID: log.ul_id,
+			usageLogId: log.ul_id,
 			studentNumber: log.sn_id,
-			AdminID: log.admin_id,
-			ServiceType: log.service_type,
-			DateTimeIn: new Date(log.datetime_start),
-			DateTimeOut: new Date(log.datetime_end)
+			adminId: log.admin_id,
+            serviceId: log.service_id,
+			serviceType: log.service_type,
+			dateTimeIn: new Date(log.datetime_start),
+			dateTimeOut: new Date(log.datetime_end)
 		};
 	}
 
-	public static toSUsageLogDBObj(log: UsageLogUIObj): UsageLogDBObj {
+	public static toUsageLogDBObj(log: UsageLogUIObj): UsageLogDBObj {
 		/* Converts a UsageLogUIObj to a UsageLogUIObj. */
 		return {
-			ul_id: log.usageLogID,
+			ul_id: log.usageLogId,
 			sn_id: log.studentNumber,
-			admin_id: log.AdminID,
-			service_type: log.ServiceType,
-			datetime_start: new Date(log.DateTimeIn).toISOString(),
-			datetime_end: new Date(log.DateTimeOut).toISOString()
+			admin_id: log.adminId,
+            service_id: log.serviceId,
+			service_type: log.serviceType,
+			datetime_start: new Date(log.dateTimeIn).toISOString(),
+			datetime_end: new Date(log.dateTimeOut).toISOString()
 		};
 	}
 
