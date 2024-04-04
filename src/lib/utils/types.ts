@@ -11,10 +11,11 @@ export type StudentProcessed = {
 };
 
 export type UsageLogProcessed = {
-	usageLogID: number;
+	usageLogId: number;
+	serviceId: number;
 	serviceType: string;
 	studentNumber: number;
-	adminID: number;
+	adminId: number;
 	dateTimeStart: string;
 	dateTimeEnd: string;
 };

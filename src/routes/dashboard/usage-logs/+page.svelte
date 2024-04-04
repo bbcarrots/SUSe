@@ -2,6 +2,7 @@
 	export let data;
 	let headers = [
 		'Usage Log ID',
+		'Service ID',
 		'Service Type',
 		'Student Number',
 		'Admin ID',
@@ -19,10 +20,11 @@
 	if (usageLogObjects !== null && usageLogObjects !== undefined) {
 		usageLogs = usageLogObjects.map((usageLog) => {
 			return {
-				usageLogID: usageLog.ul_id,
+				usageLogId: usageLog.ul_id,
+				serviceId: usageLog.service_id,
 				serviceType: usageLog.service_type,
 				studentNumber: usageLog.sn_id,
-				adminID: usageLog.admin_id,
+				adminId: usageLog.admin_id,
 				dateTimeStart: usageLog.datetime_start,
                 dateTimeEnd: usageLog.datetime_end
 			};
@@ -88,5 +90,5 @@
 <Table
 	{headers}
 	info={usageLogs}
-	primaryKey="usageLogID"
+	primaryKey="usageLogId"
 />
