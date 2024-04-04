@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let data;
-	let headers = [
+	let headers: string[] = [
 		'Usage Log ID',
 		'Service ID',
 		'Service Type',
@@ -9,6 +9,17 @@
 		'Date Time Start',
 		'Date Time End'
 	];
+
+	let hide: string[] = [
+	]
+
+	let disableEdit: string[] = [
+		"usageLogID",
+		"serviceID",
+		"studentNumber",
+		"serviceType",
+		"adminID"
+	]
 
 	import Table from '$lib/components/Table.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
@@ -20,11 +31,11 @@
 	if (usageLogObjects !== null && usageLogObjects !== undefined) {
 		usageLogs = usageLogObjects.map((usageLog) => {
 			return {
-				usageLogId: usageLog.ul_id,
-				serviceId: usageLog.service_id,
+				usageLogID: usageLog.ul_id,
+				serviceID: usageLog.service_id,
 				serviceType: usageLog.service_type,
 				studentNumber: usageLog.sn_id,
-				adminId: usageLog.admin_id,
+				adminID: usageLog.admin_id,
 				dateTimeStart: usageLog.datetime_start,
                 dateTimeEnd: usageLog.datetime_end
 			};
@@ -90,5 +101,7 @@
 <Table
 	{headers}
 	info={usageLogs}
-	primaryKey="usageLogId"
+	primaryKey="usageLogID"
+	hide={hide}
+	disableEdit={disableEdit}
 />
