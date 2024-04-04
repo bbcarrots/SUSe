@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let data;
-	let headers = [
+	let headers: string[] = [
 		'Student Number',
 		'First Name',
 		'Middle Initial',
@@ -8,8 +8,19 @@
 		'Email',
 		'Phone Number',
 		'College',
-		'Program'
+		'Program',
+		'Is Enrolled'
 	];
+
+	let hide: string[] = [
+		"firstName",
+		"isEnrolled"
+	]
+
+	let disableEdit: string[] = [
+		"email",
+		"studentNumber"
+	]
 
 	import Table from '$lib/components/Table.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
@@ -97,4 +108,6 @@
 	{headers}
 	info={students}
 	primaryKey="studentNumber"
+	hide={hide}
+	disableEdit={disableEdit}
 />

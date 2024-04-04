@@ -9,6 +9,8 @@
 	export let info: Array<Object>;
 	export let headers: Array<String>;
 	export let primaryKey: string;
+	export let hide: Array<string>;
+	export let disableEdit: Array<string>;
 
     /* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
@@ -82,7 +84,7 @@
 </script>
 
 <Table hoverable={true} divClass="overflow-x-auto">
-	<TableHeader {headers} bind:sortKey bind:sortDirection {isEditing} />
+	<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
 	<TableBody>
 		{#each $sortedItems as info}
 			<TableRow
@@ -92,6 +94,8 @@
 				{info}
 				{primaryKey}
 				bind:isEditing
+				{hide}
+				{disableEdit}
 			/>
 		{/each}
 	</TableBody>

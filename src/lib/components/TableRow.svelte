@@ -12,6 +12,8 @@
 	export let info: any; // stores the information of the object in the TableRow entry
 	export let primaryKey: string; // stores the name of the primary key of the table
 	export let isEditing: boolean = false; // stores whether or not the user is currently editing an entry
+	export let hide: Array<string>;
+	export let disableEdit: Array<string>;
 
 	let popupModal = false; // stores whether or not the delete modal should appear
 	let primaryKeyEdit: number | null = null; // stores the primaryKey of the entry being edited
@@ -122,9 +124,9 @@
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
 		{#each Object.entries(info) as [field, value]}
 			<!-- generate the primary key col (uneditable) -->
-			{#if field == primaryKey || field == 'email'}
+			{#if disableEdit.includes(field) && !hide.includes(field)}
 				<TableCell {field} {value} {info} {primaryKey} />
-			{:else if field !== 'isEnrolled'}
+			{:else if !disableEdit.includes(field) && !hide.includes(field)}
 				<TableBodyCell class="pb-0 pl-[12px] pt-0">
 					<Input
 						college={field == 'program' ? college : ''}
@@ -154,7 +156,7 @@
 	{:else}
 		<!-- generate information for each column -->
 		{#each Object.entries(info) as [field, value]}
-			{#if field !== 'isEnrolled'}
+			{#if !hide.includes(field)}
 				<TableCell {field} {value} {info} {primaryKey} />
 			{/if}
 		{/each}
