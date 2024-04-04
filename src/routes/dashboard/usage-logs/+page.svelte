@@ -42,63 +42,49 @@
 		});
 	}
 
-	// // ----------------------------------------------------------------------------------
-	// import type { StudentResponse } from '$lib/classes/Student.js';
+	// ----------------------------------------------------------------------------------
+	import type { UsageLogResponse } from '$lib/classes/UsageLog.js';
 
-	// let approveResponse: StudentResponse;
-	// let deleteResponse: StudentResponse;
-	// let updateResponse: StudentResponse;
+	let deleteResponse: UsageLogResponse;
+	let updateResponse: UsageLogResponse;
 
-	// async function handleApprove(event: CustomEvent) {
-	// 	/* Handles Approve event from TableRow by sending a PATCH request 
-    //     with payload requirements: studentNumber and isEnrolled=true. */
+	async function handleDelete(event: CustomEvent) {
+		/* Handles Delete event from UsageLogResponse by sending a DELETE request 
+        with payload requirement: usageLogID. */
 
-	// 	const payload = { isEnrolled: true, ...event.detail };
+		// TODO: fetch from correct api
+		const response = await fetch('../api/usagelog', {
+			method: 'DELETE',
+			body: JSON.stringify(event.detail),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
 
-	// 	const response = await fetch('../api/student', {
-	// 		method: 'PATCH',
-	// 		body: JSON.stringify(payload),
-	// 		headers: {
-	// 			'content-type': 'application/json'
-	// 		}
-	// 	});
+		deleteResponse = await response.json();
+	}
 
-	// 	approveResponse = await response.json();
-	// }
+	async function handleUpdate(event: CustomEvent) {
+		/* Handles Update event from TableRow by sending a PATCH request with 
+        payload requirement: usageLodID, 
+        optional: dateTimeStart, dateTimeEnd. */
 
-	// async function handleDelete(event: CustomEvent) {
-	// 	/* Handles Delete event from TableRow by sending a DELETE request 
-    //     with payload requirement: studentNumber. */
+		// TODO: fetch from correct api
+		const response = await fetch('../api/usagelog', {
+			method: 'PATCH',
+			body: JSON.stringify(event.detail),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
 
-	// 	const response = await fetch('../api/student', {
-	// 		method: 'DELETE',
-	// 		body: JSON.stringify(event.detail),
-	// 		headers: {
-	// 			'content-type': 'application/json'
-	// 		}
-	// 	});
-
-	// 	deleteResponse = await response.json();
-	// }
-
-	// async function handleUpdate(event: CustomEvent) {
-	// 	/* Handles Update event from TableRow by sending a PATCH request with 
-    //     payload requirement: studentNumber, 
-    //     optional: firstName, middleInitial, lastName, college, program, phoneNumber. */
-
-	// 	const response = await fetch('../api/student', {
-	// 		method: 'PATCH',
-	// 		body: JSON.stringify(event.detail),
-	// 		headers: {
-	// 			'content-type': 'application/json'
-	// 		}
-	// 	});
-
-	// 	updateResponse = await response.json();
-	// }
+		updateResponse = await response.json();
+	}
 </script>
 
 <Table
+	on:delete={handleDelete}
+	on:update={handleUpdate}
 	{headers}
 	info={usageLogs}
 	primaryKey="usageLogID"
