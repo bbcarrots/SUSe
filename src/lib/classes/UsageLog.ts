@@ -61,8 +61,8 @@ export class UsageLog {
 			admin_id: log.adminId,
             service_id: log.serviceId,
 			service_type: log.serviceType,
-			datetime_start: new Date(log.dateTimeIn).toISOString(),
-			datetime_end: new Date(log.dateTimeOut).toISOString()
+			datetime_start: log.dateTimeIn.toISOString(),
+			datetime_end: log.dateTimeOut.toISOString()
 		};
 	}
 
