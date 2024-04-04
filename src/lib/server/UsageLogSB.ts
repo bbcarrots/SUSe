@@ -18,12 +18,16 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	/* Selects the usage logs/s from the database using a filter.
     Filter only contains option for date start and end for now. */
 
-	let query = supabase.from('usage_log').select('*');
+	let query = supabase
+		.from('usage_log')
+		.select('ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )');
 
-	if (filter.usageLogID) { // if there is a given usageLogID, search for that
+	if (filter.usageLogID) {
+		// if there is a given usageLogID, search for that
 		query = query.eq('ul_id', filter.usageLogID);
 	}
-	if (filter.minDate && filter.maxDate) { // if there is a given start and end date range, search for that
+	if (filter.minDate && filter.maxDate) {
+		// if there is a given start and end date range, search for that
 		query = query.gte('datetime_start', filter.minDate).lte('datetime_end', filter.maxDate);
 	}
 
@@ -37,9 +41,23 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 		};
 	}
 
+	const formattedData: UsageLogDBObj[] = [];
+
+	for (const row of data) {
+		formattedData.push({
+			ul_id: row.ul_id,
+			sn_id: row.sn_id,
+			admin_id: row.admin_id,
+			service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
+			service_type: row.service.service_type.service_type, // we assume each service only has one service_type
+			datetime_start: row.datetime_start,
+			datetime_end: row.datetime_end
+		});
+	}
+
 	return {
 		success: true,
-		usageLogRaws: data,
+		usageLogRaws: formattedData,
 		error: null
 	};
 }
