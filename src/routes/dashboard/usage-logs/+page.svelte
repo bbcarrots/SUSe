@@ -10,16 +10,15 @@
 		'Date Time End'
 	];
 
-	let hide: string[] = [
-	]
+	let hide: string[] = [];
 
 	let disableEdit: string[] = [
-		"usageLogID",
-		"serviceID",
-		"studentNumber",
-		"serviceType",
-		"adminID"
-	]
+		'usageLogID',
+		'serviceID',
+		'studentNumber',
+		'serviceType',
+		'adminID'
+	];
 
 	import Table from '$lib/components/Table.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
@@ -37,7 +36,7 @@
 				studentNumber: usageLog.sn_id,
 				adminID: usageLog.admin_id,
 				dateTimeStart: usageLog.datetime_start,
-                dateTimeEnd: usageLog.datetime_end
+				dateTimeEnd: usageLog.datetime_end
 			};
 		});
 	}
@@ -52,7 +51,6 @@
 		/* Handles Delete event from UsageLogResponse by sending a DELETE request 
         with payload requirement: usageLogID. */
 
-		// TODO: fetch from correct api
 		const response = await fetch('../api/usagelog', {
 			method: 'DELETE',
 			body: JSON.stringify(event.detail),
@@ -69,9 +67,6 @@
         payload requirement: usageLogID, 
         optional: dateTimeStart, dateTimeEnd. */
 
-        console.log(event.detail)
-
-		// TODO: fetch from correct api
 		const response = await fetch('../api/usagelog', {
 			method: 'PATCH',
 			body: JSON.stringify(event.detail),
@@ -90,6 +85,6 @@
 	{headers}
 	info={usageLogs}
 	primaryKey="usageLogID"
-	hide={hide}
-	disableEdit={disableEdit}
+	{hide}
+	{disableEdit}
 />

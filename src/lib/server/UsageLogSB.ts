@@ -20,8 +20,10 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 	let query = supabase
 		.from('usage_log')
-		.select('ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )');
-        // .select() joins the usage_log, service, and service_type tables to get the `service_type` property
+		.select(
+			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )'
+		);
+	// .select() joins the usage_log, service, and service_type tables to get the `service_type` property
 
 	if (filter.usageLogID) {
 		// if there is a given usageLogID, search for that

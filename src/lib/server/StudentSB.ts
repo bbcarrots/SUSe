@@ -20,7 +20,7 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 	let minSN: number = filter.minStudentNumber;
 	let maxSN: number = filter.maxStudentNumber;
 
-    // checks if the SN provided are years between 2000 and 9999
+	// checks if the SN provided are years between 2000 and 9999
 	if (
 		Math.floor(minSN / 2000) >= 1 &&
 		Math.floor(minSN / 2000) < 5 &&
@@ -31,7 +31,7 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 		maxSN = (filter.maxStudentNumber + 1) * 100000 - 1; // max SN should be 1 below the year
 	}
 
-    // checks if the SN provided is a valid 9-digit 
+	// checks if the SN provided is a valid 9-digit
 	if (
 		Math.floor(minSN / 200000000) == 0 ||
 		Math.floor(maxSN / 200000000) == 0 ||
