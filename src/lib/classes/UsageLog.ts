@@ -4,6 +4,7 @@ import {
 	selectUsageLogDB,
 	updateUsageLogDB
 } from '$lib/server/UsageLogSB';
+import type { UsageLogProcessed } from '$lib/utils/types';
 
 export type UsageLogDBObj = {
 	ul_id: number;
@@ -13,16 +14,6 @@ export type UsageLogDBObj = {
 	service_type: string;
 	datetime_start: string;
 	datetime_end: string;
-};
-
-export type UsageLogUIObj = {
-	usageLogId: number;
-	studentNumber: number;
-	adminId: number;
-    serviceId: number;
-	serviceType: string;
-	dateTimeIn: Date;
-	dateTimeOut: Date;
 };
 
 export type UsageLogResponse = {
@@ -40,29 +31,16 @@ export type UsageLogFilter = {
 export class UsageLog {
 	/* Contains all usage log methods. */
 
-	public static toUsageLogUIObj(log: UsageLogDBObj): UsageLogUIObj {
-		/* Converts a UsageLogDBObj to a UsageLogUIObj. */
-		return {
-			usageLogId: log.ul_id,
-			studentNumber: log.sn_id,
-			adminId: log.admin_id,
-            serviceId: log.service_id,
-			serviceType: log.service_type,
-			dateTimeIn: new Date(log.datetime_start),
-			dateTimeOut: new Date(log.datetime_end)
-		};
-	}
-
-	public static toUsageLogDBObj(log: UsageLogUIObj): UsageLogDBObj {
+	public static toUsageLogDBObj(log: UsageLogProcessed): UsageLogDBObj {
 		/* Converts a UsageLogUIObj to a UsageLogUIObj. */
 		return {
-			ul_id: log.usageLogId,
+			ul_id: log.usageLogID,
 			sn_id: log.studentNumber,
-			admin_id: log.adminId,
-            service_id: log.serviceId,
+			admin_id: log.adminID,
+            service_id: log.serviceID,
 			service_type: log.serviceType,
-			datetime_start: log.dateTimeIn.toISOString(),
-			datetime_end: log.dateTimeOut.toISOString()
+			datetime_start: new Date(log.dateTimeStart).toISOString(),
+			datetime_end: new Date(log.dateTimeEnd).toISOString()
 		};
 	}
 

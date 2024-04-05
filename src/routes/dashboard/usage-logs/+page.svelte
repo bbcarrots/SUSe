@@ -66,8 +66,10 @@
 
 	async function handleUpdate(event: CustomEvent) {
 		/* Handles Update event from TableRow by sending a PATCH request with 
-        payload requirement: usageLodID, 
+        payload requirement: usageLogID, 
         optional: dateTimeStart, dateTimeEnd. */
+
+        console.log(event.detail)
 
 		// TODO: fetch from correct api
 		const response = await fetch('../api/usagelog', {

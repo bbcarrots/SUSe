@@ -4,6 +4,7 @@ import {
 	updateStudentDB,
 	deleteStudentDB
 } from '$lib/server/StudentSB';
+import type { StudentProcessed } from '$lib/utils/types';
 
 export type StudentDBObj = {
 	sn_id: number;
@@ -17,18 +18,6 @@ export type StudentDBObj = {
 	program: string;
 	phone_number: string;
 	is_enrolled: boolean;
-};
-
-export type StudentUIObj = {
-	firstName: string;
-	middleInitial: string;
-	lastName: string;
-	studentNumber: number;
-	email: string;
-	phoneNumber: string;
-	college: string;
-	program: string;
-	isEnrolled: boolean;
 };
 
 export type StudentResponse = {
@@ -46,22 +35,7 @@ export type StudentFilter = {
 export class Student {
 	/* Contains all student methods. */
 
-	public static toStudentUIObj(student: StudentDBObj): StudentUIObj {
-		/* Converts a StudentDBObj to a StudentUIObj. */
-		return {
-			firstName: student.first_name,
-			middleInitial: student.middle_initial,
-			lastName: student.last_name,
-			studentNumber: student.sn_id,
-			email: student.username,
-			phoneNumber: student.phone_number,
-			college: student.college,
-			program: student.program,
-			isEnrolled: student.is_enrolled
-		};
-	}
-
-	public static toStudentDBObj(student: StudentUIObj): StudentDBObj {
+	public static toStudentDBObj(student: StudentProcessed): StudentDBObj {
 		/* Converts a StudentUIObj to a StudentDBObj. */
 		return {
 			sn_id: student.studentNumber,
