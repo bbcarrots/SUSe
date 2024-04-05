@@ -40,7 +40,7 @@ export class Student {
 		return {
 			sn_id: student.studentNumber,
 			rfid: 0,
-			username: '',
+			username: 'email' in student ? student.email : '',
 			pw: '',
 			first_name: 'firstName' in student ? student.firstName : '',
 			middle_initial: 'middleInitial' in student ? student.middleInitial : '',

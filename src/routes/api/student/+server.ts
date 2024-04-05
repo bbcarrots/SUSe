@@ -10,12 +10,3 @@ export async function DELETE({ request }) {
 	const student = await request.json();
 	return json(await Student.deleteStudent(student.studentNumber));
 }
-
-// export async function POST({ request }) {
-//     const urlParams = request.url
-//     console.log(urlParams)
-//     const { command } = await request.json()
-//     return json({
-//         val: "Received: " + command
-//     })
-// }

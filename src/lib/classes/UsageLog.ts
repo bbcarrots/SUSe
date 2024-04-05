@@ -35,10 +35,10 @@ export class UsageLog {
 		/* Converts a UsageLogUIObj to a UsageLogUIObj. */
 		return {
 			ul_id: log.usageLogID,
-			sn_id: log.studentNumber,
-			admin_id: log.adminID,
-            service_id: log.serviceID,
-			service_type: log.serviceType,
+			sn_id: 'studentNumber' in log ? log.studentNumber : 0,
+			admin_id: 'adminID' in log ? log.adminID : 0,
+            service_id: 'serviceID' in log ? log.serviceID : 0,
+			service_type: 'serviceType' in log ? log.serviceType : '',
 			datetime_start: new Date(log.dateTimeStart).toISOString(),
 			datetime_end: new Date(log.dateTimeEnd).toISOString()
 		};
