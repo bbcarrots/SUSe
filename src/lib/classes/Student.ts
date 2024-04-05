@@ -6,6 +6,7 @@ import {
 } from '$lib/server/StudentSB';
 import type { StudentProcessed } from '$lib/utils/types';
 
+// parameter type for insert and update student DB functions
 export type StudentDBObj = {
 	sn_id: number;
 	rfid: number;
@@ -20,12 +21,14 @@ export type StudentDBObj = {
 	is_enrolled: boolean;
 };
 
+// return value of student DB functions
 export type StudentResponse = {
 	success: boolean;
 	studentRaws: StudentDBObj[] | null;
 	error: string | null;
 };
 
+// filters for selecting student records
 export type StudentFilter = {
 	minStudentNumber: number;
 	maxStudentNumber: number;
@@ -33,10 +36,10 @@ export type StudentFilter = {
 };
 
 export class Student {
-	/* Contains all student methods. */
+	/* Contains all student methods for conversion and DB communication. */
 
 	public static toStudentDBObj(student: StudentProcessed): StudentDBObj {
-		/* Converts a StudentUIObj to a StudentDBObj. */
+		/* Converts a StudentProcessed to a StudentDBObj. */
 		return {
 			sn_id: student.studentNumber,
 			rfid: 0,
@@ -69,7 +72,7 @@ export class Student {
 	}
 
 	public static async updateStudent(student: StudentDBObj): Promise<StudentResponse> {
-		/* Updates the student record matching this Student's student number. */
+		/* Updates the student record matching this student's student number. */
 		return updateStudentDB(student);
 	}
 
