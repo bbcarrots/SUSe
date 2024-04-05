@@ -4,7 +4,9 @@ import {
 	updateStudentDB,
 	deleteStudentDB
 } from '$lib/server/StudentSB';
+import type { StudentProcessed } from '$lib/utils/types';
 
+// parameter type for insert and update student DB functions
 export type StudentDBObj = {
 	sn_id: number;
 	rfid: number;
@@ -19,24 +21,14 @@ export type StudentDBObj = {
 	is_enrolled: boolean;
 };
 
-export type StudentUIObj = {
-	firstName: string;
-	middleInitial: string;
-	lastName: string;
-	studentNumber: number;
-	email: string;
-	phoneNumber: string;
-	college: string;
-	program: string;
-	isEnrolled: boolean;
-};
-
+// return value of student DB functions
 export type StudentResponse = {
 	success: boolean;
 	studentRaws: StudentDBObj[] | null;
 	error: string | null;
 };
 
+// filters for selecting student records
 export type StudentFilter = {
 	minStudentNumber: number;
 	maxStudentNumber: number;
@@ -44,29 +36,14 @@ export type StudentFilter = {
 };
 
 export class Student {
-	/* Contains all student methods. */
+	/* Contains all student methods for conversion and DB communication. */
 
-	public static toStudentUIObj(student: StudentDBObj): StudentUIObj {
-		/* Converts a StudentDBObj to a StudentUIObj. */
-		return {
-			firstName: student.first_name,
-			middleInitial: student.middle_initial,
-			lastName: student.last_name,
-			studentNumber: student.sn_id,
-			email: student.username,
-			phoneNumber: student.phone_number,
-			college: student.college,
-			program: student.program,
-			isEnrolled: student.is_enrolled
-		};
-	}
-
-	public static toStudentDBObj(student: StudentUIObj): StudentDBObj {
-		/* Converts a StudentUIObj to a StudentDBObj. */
+	public static toStudentDBObj(student: StudentProcessed): StudentDBObj {
+		/* Converts a StudentProcessed to a StudentDBObj. */
 		return {
 			sn_id: student.studentNumber,
 			rfid: 0,
-			username: '',
+			username: 'email' in student ? student.email : '',
 			pw: '',
 			first_name: 'firstName' in student ? student.firstName : '',
 			middle_initial: 'middleInitial' in student ? student.middleInitial : '',
@@ -95,7 +72,7 @@ export class Student {
 	}
 
 	public static async updateStudent(student: StudentDBObj): Promise<StudentResponse> {
-		/* Updates the student record matching this Student's student number. */
+		/* Updates the student record matching this student's student number. */
 		return updateStudentDB(student);
 	}
 

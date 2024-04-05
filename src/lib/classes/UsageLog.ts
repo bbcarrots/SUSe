@@ -4,33 +4,27 @@ import {
 	selectUsageLogDB,
 	updateUsageLogDB
 } from '$lib/server/UsageLogSB';
+import type { UsageLogProcessed } from '$lib/utils/types';
 
+// parameter type for insert and update usage log DB functions
 export type UsageLogDBObj = {
 	ul_id: number;
 	sn_id: number;
 	admin_id: number;
-    service_id: number;
+	service_id: number;
 	service_type: string;
 	datetime_start: string;
 	datetime_end: string;
 };
 
-export type UsageLogUIObj = {
-	usageLogId: number;
-	studentNumber: number;
-	adminId: number;
-    serviceId: number;
-	serviceType: string;
-	dateTimeIn: Date;
-	dateTimeOut: Date;
-};
-
+// return value of usage log DB functions
 export type UsageLogResponse = {
 	success: boolean;
 	usageLogRaws: UsageLogDBObj[] | null;
 	error: string | null;
 };
 
+// filters for selecting usage log records
 export type UsageLogFilter = {
 	usageLogID: number;
 	minDate: string;
@@ -38,31 +32,18 @@ export type UsageLogFilter = {
 };
 
 export class UsageLog {
-	/* Contains all usage log methods. */
+	/* Contains all usage log methods for conversion and DB communication. */
 
-	public static toUsageLogUIObj(log: UsageLogDBObj): UsageLogUIObj {
-		/* Converts a UsageLogDBObj to a UsageLogUIObj. */
+	public static toUsageLogDBObj(log: UsageLogProcessed): UsageLogDBObj {
+		/* Converts a UsageLogProcessed to a UsageLogUIObj. */
 		return {
-			usageLogId: log.ul_id,
-			studentNumber: log.sn_id,
-			adminId: log.admin_id,
-            serviceId: log.service_id,
-			serviceType: log.service_type,
-			dateTimeIn: new Date(log.datetime_start),
-			dateTimeOut: new Date(log.datetime_end)
-		};
-	}
-
-	public static toUsageLogDBObj(log: UsageLogUIObj): UsageLogDBObj {
-		/* Converts a UsageLogUIObj to a UsageLogUIObj. */
-		return {
-			ul_id: log.usageLogId,
-			sn_id: log.studentNumber,
-			admin_id: log.adminId,
-            service_id: log.serviceId,
-			service_type: log.serviceType,
-			datetime_start: log.dateTimeIn.toISOString(),
-			datetime_end: log.dateTimeOut.toISOString()
+			ul_id: log.usageLogID,
+			sn_id: 'studentNumber' in log ? log.studentNumber : 0,
+			admin_id: 'adminID' in log ? log.adminID : 0,
+			service_id: 'serviceID' in log ? log.serviceID : 0,
+			service_type: 'serviceType' in log ? log.serviceType : '',
+			datetime_start: 'dateTimeStart' in log ? new Date(log.dateTimeStart).toISOString() : '',
+			datetime_end: 'dateTimeEnd' in log ? new Date(log.dateTimeEnd).toISOString() : ''
 		};
 	}
 
@@ -70,7 +51,7 @@ export class UsageLog {
 		filter: UsageLogFilter = {
 			usageLogID: 0,
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
-			maxDate: new Date().toISOString()
+			maxDate: new Date().toISOString() // gets date today
 		}
 	): Promise<UsageLogResponse> {
 		/* Selects all usage logs in database using the default or given filter. */
@@ -78,17 +59,17 @@ export class UsageLog {
 	}
 
 	public static async insertUsageLog(log: UsageLogDBObj): Promise<UsageLogResponse> {
-		/* Inserts unique student information in database. */
+		/* Inserts unique usage log information in database. */
 		return insertUsageLogDB(log);
 	}
 
 	public static async updateUsageLog(log: UsageLogDBObj): Promise<UsageLogResponse> {
-		/* Updates the student record matching this Student's student number. */
+		/* Updates the usage log record matching this log's usage log ID. */
 		return updateUsageLogDB(log);
 	}
 
 	public static async deleteUsageLog(usageLogID: number): Promise<UsageLogResponse> {
-		/* Deletes the student record matching this Student's student number. */
+		/* Deletes the usage log record matching this log's usage log ID. */
 		return deleteUsageLogDB(usageLogID);
 	}
 }

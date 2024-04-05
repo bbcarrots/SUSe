@@ -20,7 +20,10 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 	let query = supabase
 		.from('usage_log')
-		.select('ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )');
+		.select(
+			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )'
+		);
+	// .select() joins the usage_log, service, and service_type tables to get the `service_type` property
 
 	if (filter.usageLogID) {
 		// if there is a given usageLogID, search for that
@@ -93,7 +96,8 @@ async function checkUsageLogExistsDB(filter: UsageLogFilter): Promise<UsageLogRe
 }
 
 export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResponse> {
-	/* Updates a usage log based using the usage log ID. */
+	/* Updates a usage log based using the usage log ID.
+    NOTE: We can only update date start and end for now. */
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: log.ul_id,
 		minDate: '',
