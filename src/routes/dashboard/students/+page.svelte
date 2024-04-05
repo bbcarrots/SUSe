@@ -12,15 +12,9 @@
 		'Is Enrolled'
 	];
 
-	let hide: string[] = [
-		"firstName",
-		"isEnrolled"
-	]
+	let hide: string[] = ['firstName', 'isEnrolled'];
 
-	let disableEdit: string[] = [
-		"email",
-		"studentNumber"
-	]
+	let disableEdit: string[] = ['email', 'studentNumber'];
 
 	import Table from '$lib/components/Table.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
@@ -54,7 +48,7 @@
 
 	async function handleApprove(event: CustomEvent) {
 		/* Handles Approve event from TableRow by sending a PATCH request 
-        with payload requirements: studentNumber and isEnrolled=true. */
+        with payload requirements: studentNumber, isEnrolled=true. */
 
 		const payload = { isEnrolled: true, ...event.detail };
 
@@ -108,6 +102,6 @@
 	{headers}
 	info={students}
 	primaryKey="studentNumber"
-	hide={hide}
-	disableEdit={disableEdit}
+	{hide}
+	{disableEdit}
 />
