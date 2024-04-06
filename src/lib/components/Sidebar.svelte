@@ -4,8 +4,8 @@
     import { Icon, CheckCircle, BookOpen, UserGroup, WrenchScrewdriver, ShieldCheck} from 'svelte-hero-icons';
     let spanClass = 'flex-1 ms-3 text-[14px] whitespace-nowrap';
     
-    let activeClass = 'flex items-center p-2 text-base font-normal text-white bg-[#3D6765] dark:hover:bg-[#3D6765] rounded-md';
-    let nonActiveClass = 'flex items-center p-2 text-base font-normal text-green-900 rounded-lg dark:text-white hover:bg-[#F1F1F1] dark:hover:bg-[#3D6765]';
+    let activeClass = 'flex items-center p-2 text-base font-normal text-white bg-suse-green rounded-md';
+    let nonActiveClass = 'flex items-center p-2 text-base font-normal text-green-900 rounded-lg hover:bg-suse-white';
 
     $: activeUrl = $page.url.pathname;
 

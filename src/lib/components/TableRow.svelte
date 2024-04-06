@@ -133,7 +133,7 @@
 
 <TableBodyRow
 	color="custom"
-	class="group overflow-x-auto outline-1 outline-[#D2D2D2]/[.50] hover:bg-[#FBFBFB]"
+	class="group overflow-x-auto outline-1 outline-suse-black/[.20] hover:bg-suse-grey/[.10]"
 >
 	<!-- If it's for editing, display a form -->
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
@@ -204,7 +204,7 @@
 
 <Modal bind:open={popupModal} size="xs" autoclose>
 	<div class="text-center">
-		<p class="font-bold text-[#131416]">Are you sure you want to delete this entry?</p>
+		<p class="font-bold text-suse-black">Are you sure you want to delete this entry?</p>
 		<p>This cannot be undone.</p>
 		{#each Object.entries(info) as [field, value], index}
 			{#if field !== 'isEnrolled'}

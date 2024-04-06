@@ -14,8 +14,8 @@
 
 <button 
     type={submit ? 'submit' : 'button'}
-    class="flex gap-2 py-3 px-6 rounded-md hover:bg-[#24292F]/95 font-medium text-sm inline-flex items-center
-        {inverse ? 'bg-transparent text-black border border-black border-solid hover:bg-[#24292F]/40' : 'bg-black text-white'}
+    class="flex gap-2 py-3 px-6 rounded-md hover:bg-suse-black/95 font-medium text-sm inline-flex items-center
+        {inverse ? 'bg-transparent text-suse-black border border-suse-black border-solid hover:bg-suse-black/40' : 'bg-suse-black text-suse-white'}
         {small ? 'py-2 px-4' : 'py-3 px-6'}
         {disabled ? 'opacity-50 pointer-events-none' : ''}"
     on:click

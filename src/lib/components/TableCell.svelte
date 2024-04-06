@@ -17,7 +17,7 @@
                 <Indicator size="md" color="gray" />
                 <Tooltip>Student is not using a service.</Tooltip>
             {:else if info.isEnrolled === false}
-                <span class="text-[#FFA800]"><Icon src="{ExclamationCircle}" micro size="12"/></span>
+                <span class="text-yellow-400"><Icon src="{ExclamationCircle}" micro size="12"/></span>
                 <Tooltip>Student is not yet approved.</Tooltip>
             {/if}
             </span>
