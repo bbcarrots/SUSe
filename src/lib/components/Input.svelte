@@ -5,6 +5,19 @@
     export let value: any;
     export let college = "College of Engineering";
 
+    interface Patterns {
+        [key: string]: string;
+    }
+
+    let patterns: Patterns = {
+        firstName: "[A-Za-z\s]+", 
+        middleInitial:"[A-Za-z\s]+",
+        lastName: "[A-Za-z\s]+",
+        email: "[A-Za-z\s]+",
+        studentNumber: "^\d{'{'}9{'}'}$",
+        phoneNumber: "^\d{'{'}11{'}'}$",
+    }
+
 </script>
 
 <div class="max-w-[190px]">
@@ -43,7 +56,7 @@
     </select>
 
 {:else}
-    <input type="text" id={field} name={field} value={value} on:input>
+    <input type="text" id={field} name={field} value={value} pattern="^\d{'{'}9{'}'}$" on:input>
 {/if}
 </div>
 

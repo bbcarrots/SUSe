@@ -12,7 +12,7 @@
 		'Is Enrolled'
 	];
 
-	let hide: string[] = ['firstName', 'isEnrolled'];
+	let hide: string[] = ['isEnrolled'];
 
 	let disableEdit: string[] = ['email', 'studentNumber'];
 
