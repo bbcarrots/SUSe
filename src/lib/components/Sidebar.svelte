@@ -14,10 +14,10 @@
 <Sidebar {activeUrl} {nonActiveClass} {activeClass}>
     <SidebarWrapper class="h-screen max-w-[230px]">
         <SidebarGroup>
-            <SidebarItem label="Usage Logs" href="/dashboard/usage-logs" {spanClass}>
+            <SidebarItem label="Usage Logs" href="/dashboard/usagelogs" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/usage-logs"}
+                        {#if activeUrl == "/dashboard/usagelogs"}
                             <Icon src="{BookOpen}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{BookOpen}" outline size="20"/>
