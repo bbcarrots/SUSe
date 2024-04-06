@@ -39,13 +39,13 @@
 
                     <!-- sort buttons div -->
                     <div class="flex flex-col">
-                        <button type="button" class="p-0 -mb-1 sort-button text-[#B8B9B9]"
-                            class:darkened={sortKey === camelize(header) && sortDirection === 1}
+                        <button type="button" class="p-0 -mb-1 sort-button
+                            {(sortKey === camelize(header) && sortDirection === 1) ? 'text-suse-black' : 'text-suse-grey'}"
                         > 
                             <Icon src="{ChevronUp}" micro size="15"/> 
                         </button>
-                        <button type="button" class="p-0 -mt-1 sort-button text-[#B8B9B9]"
-                            class:darkened={sortKey === camelize(header) && sortDirection === -1}
+                        <button type="button" class="p-0 -mt-1 sort-button
+                            {(sortKey === camelize(header) && sortDirection === -1) ? 'text-suse-black' : 'text-suse-grey'}"
                         > 
                             <Icon src="{ChevronDown}" micro size="15"/> 
                         </button>
@@ -59,10 +59,3 @@
     <div class="flex p-[27px] bg-white gap-4 pl-20 right-0 bg-gradient-to-l-ml-[50px]">
     </div>
 </TableHead>
-  
-<style>
-.sort-button.darkened{
-    color:  var(--suse-black);
-}
-</style>
-  

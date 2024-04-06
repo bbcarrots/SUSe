@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Indicator, TableBodyCell } from "flowbite-svelte";
+    import { Indicator, TableBodyCell, Tooltip } from "flowbite-svelte";
     import { ExclamationCircle, Icon } from "svelte-hero-icons";
     import { formatDateTime } from "$lib/utils/utils";
     export let info: any;
@@ -15,8 +15,10 @@
             <span class="pr-2">
             {#if info.isEnrolled === true}
                 <Indicator size="md" color="gray" />
+                <Tooltip>Student is not using a service.</Tooltip>
             {:else if info.isEnrolled === false}
-                <span class="text-[#FFA800]"><Icon src="{ExclamationCircle}" micro size="12"/></span>
+                <span class="text-yellow-400"><Icon src="{ExclamationCircle}" micro size="12"/></span>
+                <Tooltip>Student is not yet approved.</Tooltip>
             {/if}
             </span>
             <p>{value}</p>
@@ -28,5 +30,4 @@
     {:else if field !== "studentNumber" || !Object.hasOwn(info, 'isEnrolled')}
         <p>{value}</p>
     {/if}
-
 </TableBodyCell>

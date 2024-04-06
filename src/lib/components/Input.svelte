@@ -1,10 +1,53 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { CollegePrograms } from "$lib/stores/CollegePrograms";
 
     export let field: string;
     export let value: any;
     export let college = "College of Engineering";
 
+    interface Patterns {
+        [key: string]: string;
+    }
+
+    let patterns: Patterns = {
+        firstName: "[A-Za-z\s]+", 
+        middleInitial:"[A-Za-z\s]+",
+        lastName: "[A-Za-z\s]+",
+        email: "[A-Za-z\s]+",
+        studentNumber: "[0-9]{9}",
+        phoneNumber: "[0-9]{11}",
+    }
+    
+    onMount(() => {
+        let inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
+
+        inputs.forEach(input => {
+            input.addEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.addEventListener('input', () => {
+            if (input.validity.valid) {
+                input.classList.remove('error');
+            }
+            });
+        });
+
+        return () => {
+            inputs.forEach(input => {
+            input.removeEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.removeEventListener('input', () => {
+                if (input.validity.valid) {
+                input.classList.remove('error');
+                }
+            });
+            });
+        };
+    });
 </script>
 
 <div class="max-w-[190px]">
@@ -43,7 +86,7 @@
     </select>
 
 {:else}
-    <input type="text" id={field} name={field} value={value} on:input>
+    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} required on:input>
 {/if}
 </div>
 

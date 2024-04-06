@@ -81,24 +81,39 @@
 		/* Forwards the formData to Table.svelte. */
 		const payload: any = {};
 		payload[primaryKey] = primaryKeyEdit;
+		let hasInvalid = false;
 
-		for (let [key, value] of formData.entries()) {
-			payload[key] = value;
-			if (info.hasOwnProperty(key)) {
-				info[key] = value;
+		/* Check if each input has valid entries */
+		document.querySelectorAll('input').forEach(input => {
+			console.log(input.reportValidity());
+
+			if (!input.reportValidity()) {
+				hasInvalid = true
 			}
+		});
+
+		if (!hasInvalid) {
+			for (let [key, value] of formData.entries()) {
+				payload[key] = value;
+				if (info.hasOwnProperty(key)) {
+					info[key] = value;
+				}
+			}
+
+			dispatch('update', payload);
+
+			/* Reset isEditing and primaryKeyEdit */
+			if (isEditing == true) {
+				isEditing = false;
+				primaryKeyEdit = null;
+			}
+			
+			/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
+			updateInfo();
+		} else {
+			hasInvalid = false;
 		}
 
-		dispatch('update', payload);
-
-		/* Reset isEditing and primaryKeyEdit */
-		if (isEditing == true) {
-			isEditing = false;
-			primaryKeyEdit = null;
-		}
-        
-		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
-		updateInfo();
 	};
 
 
@@ -118,7 +133,7 @@
 
 <TableBodyRow
 	color="custom"
-	class="group overflow-x-auto outline-1 outline-[#D2D2D2]/[.50] hover:bg-[#FBFBFB]"
+	class="group overflow-x-auto outline-1 outline-suse-black/[.20] hover:bg-suse-grey/[.10]"
 >
 	<!-- If it's for editing, display a form -->
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
@@ -189,7 +204,7 @@
 
 <Modal bind:open={popupModal} size="xs" autoclose>
 	<div class="text-center">
-		<p class="font-bold text-[#131416]">Are you sure you want to delete this entry?</p>
+		<p class="font-bold text-suse-black">Are you sure you want to delete this entry?</p>
 		<p>This cannot be undone.</p>
 		{#each Object.entries(info) as [field, value], index}
 			{#if field !== 'isEnrolled'}
@@ -204,29 +219,3 @@
 		<Button on:click={() => deleteEntry(getKey(info, primaryKey))} icon="delete">Delete</Button>
 	</div>
 </Modal>
-
-<style lang="postcss">
-	@tailwind components;
-
-	@layer components {
-		input {
-			@apply block h-1/2 w-full rounded border border-gray-300 p-2.5 text-[14px] text-gray-900;
-		}
-
-		input:focus {
-			@apply border-blue-500 ring-blue-500;
-		}
-
-		input.error {
-			@apply border-pink-600 text-pink-600;
-		}
-
-		input.error:focus {
-			@apply border-pink-500 ring-pink-500;
-		}
-
-		.dot {
-			@apply inline-block h-3 w-3 rounded-full bg-gray-300;
-		}
-	}
-</style>

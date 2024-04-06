@@ -11,9 +11,9 @@
     </div>
     
     <div class="relative flex items-center">
-        <div class="flex-grow border-t bg-[#131416]/50"></div>
-        <span class="flex-shrink mx-2 text-[#131416]/50"><p>or view available services by logging in via username</p></span>
-        <div class="flex-grow border-t bg-[#131416]/50"></div>
+        <div class="flex-grow border-t bg-suse-black/50"></div>
+        <span class="flex-shrink mx-2 text-suse-black/50"><p>or view available services by logging in via username</p></span>
+        <div class="flex-grow border-t bg-suse-black/50"></div>
     </div>
 
     <!-- FORM -->
