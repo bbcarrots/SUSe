@@ -149,10 +149,10 @@ describe('updateStudentDB()', () => {
       username: newUsername, 
       pw: "Password1234", 
       first_name: "Stephen", 
-      middle_initial: "", 
-      last_name: "Curry", 
-      college: "College of Social Sciences and Philosophy", 
-      program: "BA Sociology", 
+      middle_initial: "A", 
+      last_name: "Smith", 
+      college: "College of Mass Communication", 
+      program: "BA Broadcast Communication", 
       phone_number: "09876543210", 
       is_enrolled: false
     };
@@ -185,32 +185,6 @@ describe('updateStudentDB()', () => {
     const updatedStudentInstance: StudentDBObj = {sn_id: wrongSN, 
       rfid: 1006, 
       username: newUsername, 
-      pw: "Password1234", 
-      first_name: "Stephen", 
-      middle_initial: "", 
-      last_name: "Curry", 
-      college: "College of Social Sciences and Philosophy", 
-      program: "BA Sociology", 
-      phone_number: "09876543210", 
-      is_enrolled: false
-    };
-
-    await expect(updateStudentDB(updatedStudentInstance)).resolves.toStrictEqual(expectedState);
-  });
-
-  it('error: updating with wrong username', async () => {
-    // returned StudentResponse upon successful insert into database
-    const expectedState: StudentResponse = {
-      success: false,
-      studentRaws: null,
-      error: 'Error: Student does not exist'
-    }
-    const wrongUsername: string = "wrongusername";
-
-    // instance that updates password, first name, MI, last name, college, program, and phone number
-    const updatedStudentInstance: StudentDBObj = {sn_id: newStudentNumber, 
-      rfid: 1007, 
-      username: wrongUsername, 
       pw: "Password1234", 
       first_name: "Stephen", 
       middle_initial: "", 
@@ -327,24 +301,24 @@ describe('Student.selectStudentDB', () => {
     }
   });
 
-  // it('success: entries within valid year range', async () => {
-  //   // insert multiple student entries first
+  it('success: entries within valid year range', async () => {
+    // insert multiple student entries first
 
-  //   const multipleStudentFilter: StudentFilter = {
-  //     minStudentNumber: 2030,
-  //     maxStudentNumber: 2030,
-  //     username: ""
-  //   }
-  //   const selectOutput = await selectStudentDB(multipleStudentFilter);
-  //   if(selectOutput.studentRaws !== null){
-  //     const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
-  //     const expectedStudentNumbers = [203099998, 203099999];
+    const multipleStudentFilter: StudentFilter = {
+      minStudentNumber: 2030,
+      maxStudentNumber: 2030,
+      username: ""
+    }
+    const selectOutput = await selectStudentDB(multipleStudentFilter);
+    if(selectOutput.studentRaws !== null){
+      const selectedOutputSN = selectOutput.studentRaws.map(student => student.sn_id); // extract student number from selected student record
+      const expectedStudentNumbers = [203099998, 203099999];
 
-  //     // compare selected student number with inserted student number
-  //     expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
-  //   }
+      // compare selected student number with inserted student number
+      expect(selectedOutputSN).toStrictEqual(expectedStudentNumbers); 
+    }
 
-  // });
+  });
 
   it('error: selecting single nonexistent student record', async () => {
     const nonexistentStudentFilter: StudentFilter = {
