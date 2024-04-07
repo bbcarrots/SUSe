@@ -3,10 +3,10 @@
 </script>
 
 <div class="">
-    <div class="h-screen float-left">
+    <div class="h-screen absolute">
         <Sidebar ></Sidebar>
     </div>
-    <div class="w-full">
+    <div class="ml-[230px]">
         <slot />
     </div>
 </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let data;
-	let headers = [
+	let headers: string[] = [
 		'Student Number',
 		'First Name',
 		'Middle Initial',
@@ -8,8 +8,13 @@
 		'Email',
 		'Phone Number',
 		'College',
-		'Program'
+		'Program',
+		'Is Enrolled'
 	];
+
+	let hide: string[] = ['isEnrolled'];
+
+	let disableEdit: string[] = ['email', 'studentNumber'];
 
 	import Table from '$lib/components/Table.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
@@ -43,7 +48,7 @@
 
 	async function handleApprove(event: CustomEvent) {
 		/* Handles Approve event from TableRow by sending a PATCH request 
-        with payload requirements: studentNumber and isEnrolled=true. */
+        with payload requirements: studentNumber, isEnrolled=true. */
 
 		const payload = { isEnrolled: true, ...event.detail };
 
@@ -97,4 +102,6 @@
 	{headers}
 	info={students}
 	primaryKey="studentNumber"
+	{hide}
+	{disableEdit}
 />

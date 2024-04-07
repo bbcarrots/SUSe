@@ -1,13 +1,56 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { CollegePrograms } from "$lib/stores/CollegePrograms";
 
     export let field: string;
     export let value: any;
     export let college = "College of Engineering";
 
+    interface Patterns {
+        [key: string]: string;
+    }
+
+    let patterns: Patterns = {
+        firstName: "[A-Za-z\s]+", 
+        middleInitial:"[A-Za-z\s]+",
+        lastName: "[A-Za-z\s]+",
+        email: "[A-Za-z\s]+",
+        studentNumber: "[0-9]{9}",
+        phoneNumber: "[0-9]{11}",
+    }
+    
+    onMount(() => {
+        let inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
+
+        inputs.forEach(input => {
+            input.addEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.addEventListener('input', () => {
+            if (input.validity.valid) {
+                input.classList.remove('error');
+            }
+            });
+        });
+
+        return () => {
+            inputs.forEach(input => {
+            input.removeEventListener('invalid', () => {
+                input.classList.add('error');
+            });
+
+            input.removeEventListener('input', () => {
+                if (input.validity.valid) {
+                input.classList.remove('error');
+                }
+            });
+            });
+        };
+    });
 </script>
 
-
+<div class="max-w-[190px]">
 {#if field == "college"}
     <select on:input name={field} id={field} class="border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         {#each $CollegePrograms as program}
@@ -18,8 +61,15 @@
             {/if}
         {/each}
     </select>
-    
-
+{:else if field=="dateTimeStart" || field=="dateTimeEnd"}
+    <input
+        class="datetime"
+        on:input
+        type="datetime-local"
+        id={field} 
+        name={field} 
+        value={value}
+    />
 {:else if field=="program"}
     <select on:input name={field} id={field} class="border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
         {#each $CollegePrograms as program}
@@ -36,8 +86,9 @@
     </select>
 
 {:else}
-    <input type="text" id={field} name={field} value={value} on:input>
+    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} required on:input>
 {/if}
+</div>
 
 <style lang="postcss">
     @tailwind components;
@@ -53,6 +104,10 @@
         
         input.error {
             @apply border-pink-600 text-pink-600; 
+        }
+
+        input.datetime {
+            @apply border border-gray-300 text-gray-900 block w-full text-[14px] px-2.5 py-1.5 h-1/2 rounded max-w-[230px];
         }
 
         input.error:focus{

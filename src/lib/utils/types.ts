@@ -9,3 +9,13 @@ export type StudentProcessed = {
 	program: string;
 	isEnrolled: boolean;
 };
+
+export type UsageLogProcessed = {
+	usageLogID: number;
+	serviceID: number;
+	serviceType: string;
+	studentNumber: number;
+	adminID: number;
+	dateTimeStart: string;
+	dateTimeEnd: string;
+};

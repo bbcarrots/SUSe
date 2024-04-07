@@ -4,20 +4,20 @@
     import { Icon, CheckCircle, BookOpen, UserGroup, WrenchScrewdriver, ShieldCheck} from 'svelte-hero-icons';
     let spanClass = 'flex-1 ms-3 text-[14px] whitespace-nowrap';
     
-    let activeClass = 'flex items-center p-2 text-base font-normal text-white bg-[#3D6765] dark:hover:bg-[#3D6765] rounded-md';
-    let nonActiveClass = 'flex items-center p-2 text-base font-normal text-green-900 rounded-lg dark:text-white hover:bg-[#F1F1F1] dark:hover:bg-[#3D6765]';
+    let activeClass = 'flex items-center p-2 text-base font-normal text-white bg-suse-green rounded-md';
+    let nonActiveClass = 'flex items-center p-2 text-base font-normal text-green-900 rounded-lg hover:bg-suse-white';
 
     $: activeUrl = $page.url.pathname;
 
 </script>
 
 <Sidebar {activeUrl} {nonActiveClass} {activeClass}>
-    <SidebarWrapper class="h-screen">
+    <SidebarWrapper class="h-screen max-w-[230px]">
         <SidebarGroup>
-            <SidebarItem label="Usage Logs" href="/dashboard/usage-logs" {spanClass}>
+            <SidebarItem label="Usage Logs" href="/dashboard/usagelogs" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/usage-logs"}
+                        {#if activeUrl == "/dashboard/usagelogs"}
                             <Icon src="{BookOpen}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{BookOpen}" outline size="20"/>
@@ -50,7 +50,7 @@
             <SidebarItem label="Admins" href="/dashboard/admins" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/admin"}
+                        {#if activeUrl == "/dashboard/admins"}
                             <Icon src="{ShieldCheck}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{ShieldCheck}" outline size="20"/>

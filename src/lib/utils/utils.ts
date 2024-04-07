@@ -9,3 +9,17 @@ export function camelize(str: String) {
 export function getKey(info: any, primaryKey: string) {
 	return info[primaryKey];
 }
+
+export function formatDateTime(datetimeString: string): string {
+	const date = new Date(datetimeString);
+	// Example format: "January 1, 2022 12:00 PM"
+	const formattedDate = date.toLocaleDateString('en-US', {
+		month: 'long',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+		hour12: true
+	});
+	return formattedDate;
+}
