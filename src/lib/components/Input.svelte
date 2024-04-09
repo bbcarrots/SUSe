@@ -12,9 +12,9 @@
 
     let patterns: Patterns = {
         firstName: "[A-Za-z Ññ-]+", 
-        middleInitial:"[A-Za-z]{1,2}",
+        middleInitial:"[A-Z]{1,2}",
         lastName: "[A-Za-z Ññ-]+",
-        email: "[A-Za-z\s]+",
+        email: "[A-Za-z0-9]+",
         studentNumber: "[0-9]{9}",
         phoneNumber: "[0-9]{11}",
     }
