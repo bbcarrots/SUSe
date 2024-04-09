@@ -18,6 +18,15 @@
         studentNumber: "[0-9]{9}",
         phoneNumber: "[0-9]{11}",
     }
+
+    let titles: Patterns = {
+        firstName: "Please input alphabets, spaces, dashes and special characters only.", 
+        middleInitial:"Please input 1-2 uppercase letters.",
+        lastName: "Please input alphabets, spaces, dashes and special characters only.",
+        email: "Accepted letters: a-z, 0-9",
+        studentNumber: "Please input a 9 digit number.",
+        phoneNumber: "Please input an 11 digit number.",
+    }
     
     onMount(() => {
         let inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
@@ -86,7 +95,7 @@
     </select>
 
 {:else}
-    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} required on:input>
+    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} title={titles[field]} required on:input>
 {/if}
 </div>
 
