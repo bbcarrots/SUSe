@@ -128,6 +128,7 @@
 		payload[primaryKey] = primaryKeyDelete;
 
 		dispatch('delete', payload);
+		popupModal = false;
 	}
 </script>
 
