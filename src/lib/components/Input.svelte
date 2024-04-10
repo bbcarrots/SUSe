@@ -20,9 +20,9 @@
     }
 
     let titles: Patterns = {
-        firstName: "Please input alphabets, spaces, dashes and special characters only.", 
+        firstName: "Please input alphabets, spaces, dashes, apostrophes and special characters only.", 
         middleInitial:"Please input 1-2 uppercase letters.",
-        lastName: "Please input alphabets, spaces, dashes and special characters only.",
+        lastName: "Please input alphabets, spaces, dashes, apostrophes and special characters only.",
         email: "Accepted letters: a-z, 0-9",
         studentNumber: "Please input a 9 digit number.",
         phoneNumber: "Please input an 11 digit number.",
