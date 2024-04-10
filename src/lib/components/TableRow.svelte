@@ -157,7 +157,7 @@
 
 		<!-- generate the action buttons -->
 		<div
-			class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible"
+			class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible"
 		>
 			<!-- save button-->
 			<button on:click={() => submitForm()} class="font-medium text-green-800">
@@ -179,7 +179,7 @@
 		{/each}
 
 		<!-- action buttons -->
-		<div class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible">
+		<div class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible">
 			<!-- delete button -->
 			<button on:click={() => (popupModal = true)} class="font-medium text-red-600">
 				<Icon src={Trash} micro size="20" />
