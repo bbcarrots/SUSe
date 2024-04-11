@@ -128,6 +128,7 @@
 		payload[primaryKey] = primaryKeyDelete;
 
 		dispatch('delete', payload);
+		popupModal = false;
 	}
 </script>
 
@@ -138,6 +139,7 @@
 	<!-- If it's for editing, display a form -->
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
 		{#each Object.entries(info) as [field, value]}
+
 			<!-- generate the primary key col (uneditable) -->
 			{#if disableEdit.includes(field) && !hide.includes(field)}
 				<TableCell {field} {value} {info} {primaryKey} />
@@ -155,19 +157,19 @@
 
 		<!-- generate the action buttons -->
 		<div
-			class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible"
+			class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible"
 		>
-			<!-- save -->
+			<!-- save button-->
 			<button on:click={() => submitForm()} class="font-medium text-green-800">
 				<Icon src={Check} micro size="20" />
 			</button>
-			<!-- cancel -->
+			<!-- cancel button-->
 			<button on:click={() => cancelEdit()} class="font-medium text-red-600">
 				<Icon src={XMark} micro size="20" />
 			</button>
 		</div>
 
-		<!-- If not for editing, display the information -->
+	<!-- If not for editing, display the information -->
 	{:else}
 		<!-- generate information for each column -->
 		{#each Object.entries(info) as [field, value]}
@@ -177,14 +179,13 @@
 		{/each}
 
 		<!-- action buttons -->
-		<div
-			class="invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[50px] group-hover:visible"
-		>
-			<!-- generate the action buttons -->
+		<div class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible">
+			<!-- delete button -->
 			<button on:click={() => (popupModal = true)} class="font-medium text-red-600">
 				<Icon src={Trash} micro size="20" />
 			</button>
 			{#if info.hasOwnProperty('isEnrolled') && info.isEnrolled == '0'}
+				<!-- approve enrollment button -->
 				<button
 					on:click={() => approveEnrollment(getKey(info, primaryKey), info)}
 					class="font-medium text-green-800"
@@ -192,6 +193,7 @@
 					<Icon src={Check} micro size="20" />
 				</button>
 			{/if}
+			<!-- edit button -->
 			<button
 				on:click={() => triggerEdit(getKey(info, primaryKey))}
 				class="font-medium text-green-800"
@@ -202,6 +204,7 @@
 	{/if}
 </TableBodyRow>
 
+<!-- Modal for deleting confirmation -->
 <Modal bind:open={popupModal} size="xs" autoclose>
 	<div class="text-center">
 		<p class="font-bold text-suse-black">Are you sure you want to delete this entry?</p>

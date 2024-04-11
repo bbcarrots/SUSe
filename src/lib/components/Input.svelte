@@ -11,12 +11,21 @@
     }
 
     let patterns: Patterns = {
-        firstName: "[A-Za-z\s]+", 
-        middleInitial:"[A-Za-z\s]+",
-        lastName: "[A-Za-z\s]+",
-        email: "[A-Za-z\s]+",
+        firstName: "[A-Za-zÑñ\\-\\' ]+", 
+        middleInitial:"[A-Z]{1,2}",
+        lastName: "[A-Za-zÑñ\\-\\' ]+",
+        email: "[A-Za-z0-9]+",
         studentNumber: "[0-9]{9}",
         phoneNumber: "[0-9]{11}",
+    }
+
+    let titles: Patterns = {
+        firstName: "Please input alphabets, spaces, dashes, apostrophes and special characters only.", 
+        middleInitial:"Please input 1-2 uppercase letters.",
+        lastName: "Please input alphabets, spaces, dashes, apostrophes and special characters only.",
+        email: "Accepted letters: a-z, 0-9",
+        studentNumber: "Please input a 9 digit number.",
+        phoneNumber: "Please input an 11 digit number.",
     }
     
     onMount(() => {
@@ -86,7 +95,7 @@
     </select>
 
 {:else}
-    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} required on:input>
+    <input class:error={false} type="text" id={field} name={field} value={value} pattern={patterns[field]} title={titles[field]} required on:input>
 {/if}
 </div>
 
