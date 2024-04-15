@@ -13,9 +13,9 @@
 	export let hide: Array<string>;
 	export let disableEdit: Array<string>;
 
-	// Pagination
+    /* activePage is binded to the value from Pagination.svelte */
 	let activePage = 1
-	const rowsPerPage = 2;
+	const rowsPerPage = 10;
 	const totalRows = info.length;
 	const totalPages = Math.ceil(totalRows / rowsPerPage);
 
@@ -93,22 +93,24 @@
 	}
 </script>
 
-<Table hoverable={true} divClass="overflow-x-auto">
-	<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
-	<TableBody>
-		{#each $sortedItems as info}
-			<TableRow
-				on:approve={forwardApprove}
-				on:delete={forwardDelete}
-				on:update={forwardUpdate}
-				{info}
-				{primaryKey}
-				bind:isEditing
-				{hide}
-				{disableEdit}
-			/>
-		{/each}
-	</TableBody>
-</Table>
-
-<Pagination {totalPages} {rowsPerPage} {totalRows} bind:activePage></Pagination>
+<div class="grid justify-items">
+	<Table hoverable={true} divClass="overflow-x-auto">
+		<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
+		<TableBody>
+			{#each $sortedItems as info}
+				<TableRow
+					on:approve={forwardApprove}
+					on:delete={forwardDelete}
+					on:update={forwardUpdate}
+					{info}
+					{primaryKey}
+					bind:isEditing
+					{hide}
+					{disableEdit}
+				/>
+			{/each}
+		</TableBody>
+	</Table>
+	
+	<Pagination {totalPages} bind:activePage></Pagination>
+</div>
