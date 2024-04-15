@@ -5,6 +5,7 @@
 
 	import TableHeader from './TableHeader.svelte';
 	import TableRow from './TableRow.svelte';
+	import Pagination from './Pagination.svelte';
 
 	export let info: Array<Object>;
 	export let headers: Array<String>;
@@ -100,3 +101,5 @@
 		{/each}
 	</TableBody>
 </Table>
+
+<Pagination total_rows={1000}></Pagination>
