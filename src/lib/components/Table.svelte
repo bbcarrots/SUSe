@@ -13,6 +13,14 @@
 	export let hide: Array<string>;
 	export let disableEdit: Array<string>;
 
+	// Pagination
+	let activePage = 1
+	const rowsPerPage = 2;
+	const totalRows = info.length;
+	const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+	console.log(totalPages)
+
     /* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
 	let sortDirection: number;
@@ -25,10 +33,11 @@
     /* The sorting will be disabled if isEditing is true. */
 
 	$: {
+		const calculatedRows = info.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
 		const disableSort: boolean = isEditing;
 		const key: string = sortKey;
 		const direction: number = sortDirection;
-		const items: Array<any> = [...info];
+		const items: Array<any> = [...calculatedRows];
 
 		if (!disableSort) {
 			items.sort((a, b) => {
@@ -102,4 +111,4 @@
 	</TableBody>
 </Table>
 
-<Pagination total_rows={1000}></Pagination>
+<Pagination {totalPages} {rowsPerPage} {totalRows} bind:activePage></Pagination>
