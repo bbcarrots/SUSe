@@ -36,6 +36,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	import type { RFIDLoginResponse } from '$lib/utils/types.js';
+	import type { StudentResponse } from '$lib/classes/Student.js';
 
 	let loginResponse: RFIDLoginResponse;
 
@@ -51,7 +52,21 @@
 			}
 		});
 
-		loginResponse = await response.json();
+        const studentResponse: StudentResponse = await response.json();
+
+		if (studentResponse.success && studentResponse.studentRaws?.length == 1) {
+            loginResponse = {
+                success: true,
+                id: studentResponse.studentRaws[0].sn_id,
+                error: null
+            }
+        } else {
+            loginResponse = {
+                success: studentResponse.success,
+                id: null,
+                error: studentResponse.error
+            }
+        }
 	}
 </script>
 
