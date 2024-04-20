@@ -4,7 +4,26 @@
     import Hero from "$lib/components/Hero.svelte";
 
     export let form;
+
+    async function getPorts() {
+        const filters = [{ usbVendorId: 0x0C45, usbProductId: 0x671B}, { usbVendorId: 0x04E8, usbProductId: 0xA051}, { usbVendorId: 0x046D, usbProductId: 0xC52F}]
+        const ports = await navigator.serial.requestPort({ filters })
+        console.log("calls getPorts")
+    }
+
+    import { onMount } from "svelte";
+    onMount(() => {
+        const button = document.querySelector('button');
+        button?.addEventListener('click', async function() {
+            if ("serial" in navigator) {
+                getPorts()
+            }
+        } )
+        
+    })
 </script>
+
+<button>Request Serial Port</button>
 
 <section class="flex justify-center items-center lg:h-screen">
     <div 
