@@ -7,7 +7,9 @@
 
     async function getPorts() {
         const filters = [{ usbVendorId: 0x0C45, usbProductId: 0x671B}, { usbVendorId: 0x04E8, usbProductId: 0xA051}, { usbVendorId: 0x046D, usbProductId: 0xC52F}]
-        const ports = await navigator.serial.requestPort({ filters })
+        const device = await navigator.usb.requestDevice({ filters})
+        console.log(device.configuration.interfaces[0].alternate.endpoints) // finds the endpoints of a device
+        // look for "in" endpoint and do a device.controlTransferIn(<in endpoint>, <legnth of msg in bytes)
         console.log("calls getPorts")
     }
 
