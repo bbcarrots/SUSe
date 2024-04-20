@@ -19,3 +19,9 @@ export type UsageLogProcessed = {
 	dateTimeStart: string;
 	dateTimeEnd: string;
 };
+
+export type RFIDLoginResponse = {
+    success: boolean;
+	id: number | null;
+	error: string | null;
+}
