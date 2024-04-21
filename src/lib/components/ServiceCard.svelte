@@ -17,15 +17,14 @@
     function startService(){
         started = true;
         timeStarted = timeNow;
+        countdown = formatTime(0); 
 
         //todo: add the usage log entry
     }
 
     function endService(){
         started = false;
-        timeEnded = timeNow;
-        countdown = formatTime(0);
-
+        timeEnded = timeNow;        
         //todo: edit the usage log entry
     }
 
