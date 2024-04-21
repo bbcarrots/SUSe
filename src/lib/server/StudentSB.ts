@@ -53,11 +53,14 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 		.select('*')
 		.gte('sn_id', minSN) // student number should be between an inclusive range
 		.lte('sn_id', maxSN)
-		.like('username', '%' + filter.username + '%'); // username can be found in any position
 
 	if (filter.rfid) {
 		query = query.eq('rfid', filter.rfid); // if there is a valid rfid (!= 0), add a filter
 	}
+
+    if (filter.username) {
+        query = query.like('username', '%' + filter.username + '%'); // username can be found in any position
+    }
 
 	const { data, error } = await query;
 
