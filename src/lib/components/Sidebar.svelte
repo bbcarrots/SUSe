@@ -14,10 +14,12 @@
 <Sidebar {activeUrl} {nonActiveClass} {activeClass}>
     <SidebarWrapper class="h-screen max-w-[230px]">
         <SidebarGroup>
-            <SidebarItem label="Usage Logs" href="/dashboard/usagelogs" {spanClass}>
+            <!-- show the nav buttons for admin -->
+            {#if activeUrl.includes('/dashboard/admin')}
+            <SidebarItem label="Usage Logs" href="/dashboard/admin/usagelogs" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/usagelogs"}
+                        {#if activeUrl == "/dashboard/admin/usagelogs"}
                             <Icon src="{BookOpen}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{BookOpen}" outline size="20"/>
@@ -25,10 +27,10 @@
                     </span>
                 </svelte:fragment>
             </SidebarItem>
-            <SidebarItem label="Students" href="/dashboard/students" {spanClass}>
+            <SidebarItem label="Students" href="/dashboard/admin/students" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-white dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/students"}
+                        {#if activeUrl == "/dashboard/admin/students"}
                             <Icon src="{UserGroup}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{UserGroup}" outline size="20"/>
@@ -36,10 +38,10 @@
                     </span>
                 </svelte:fragment>
             </SidebarItem>
-            <SidebarItem label="Services" href="/dashboard/services" {spanClass}>
+            <SidebarItem label="Services" href="/dashboard/admin/services" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/services"}
+                        {#if activeUrl == "/dashboard/admin/services"}
                             <Icon src="{WrenchScrewdriver}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{WrenchScrewdriver}" outline size="20"/>
@@ -47,17 +49,18 @@
                     </span>
                 </svelte:fragment>
             </SidebarItem>
-            <SidebarItem label="Admins" href="/dashboard/admins" {spanClass}>
+            <SidebarItem label="Admins" href="/dashboard/admin/admins" {spanClass}>
                 <svelte:fragment slot="icon">
                     <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                        {#if activeUrl == "/dashboard/admins"}
+                        {#if activeUrl == "/dashboard/admin/admins"}
                             <Icon src="{ShieldCheck}" class="text-white" solid size="20"/>
                         {:else}
                             <Icon src="{ShieldCheck}" outline size="20"/>
                         {/if} 
                     </span>
                 </svelte:fragment>
-            </SidebarItem>`
+            </SidebarItem>
+            {/if}
         </SidebarGroup>
     </SidebarWrapper>
 </Sidebar>
