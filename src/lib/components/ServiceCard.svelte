@@ -2,10 +2,11 @@
     import { onMount, onDestroy } from "svelte";
     import { formatTime } from "$lib/utils/utils";
 	import { Modal } from 'flowbite-svelte';
-
     import Button from "./Button.svelte";
+
     export let serviceName: string;
     export let available: number;
+    export let src: string;
 
     let timeStarted: string;
     let timeEnded: string;
@@ -15,8 +16,6 @@
 
     let popupModalStart = false;
     let popupModalEnd = false;
-
-    let src = '/service-card-images/extension-cord.svg'
 
     function startService(){
         started = true;
@@ -69,7 +68,7 @@
             <Button on:click={() => popupModalEnd = true}>End</Button>
         {/if}
     </div>
-    <div class="absolute w-[160px] h-[160px] -bottom-[50px] -left-[30px] flex justify-end items-end w-full h-full">
+    <div class="absolute w-[150px] h-[150px] -bottom-[40px] -left-[30px] flex justify-end items-end w-full h-full">
         <img {src} alt="Icon of the service">
     </div>
 </div>

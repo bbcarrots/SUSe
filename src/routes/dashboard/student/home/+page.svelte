@@ -6,5 +6,6 @@
     <ServiceCard
         serviceName = {"Calculator"}
         available = {1}
+        src = {'/service-card-images/calculator.svg'}
     />
 </div>
