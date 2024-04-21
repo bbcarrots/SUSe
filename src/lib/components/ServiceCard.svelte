@@ -1,5 +1,6 @@
 <script lang="ts">    
     import { onMount, onDestroy } from "svelte";
+    import { formatTime } from "$lib/utils/utils";
 
     import Button from "./Button.svelte";
     export let serviceName: string;
@@ -9,6 +10,7 @@
     let timeEnded: string;
     let timeNow: string;
     let started = false;
+    let countdown: string = formatTime(0);
 
     let src = '/service-card-images/extension-cord.svg'
 
@@ -22,13 +24,16 @@
     function endService(){
         started = false;
         timeEnded = timeNow;
+        countdown = formatTime(0);
 
         //todo: edit the usage log entry
     }
 
     // function to update the current time for the count
     function updateTimeNow() {
-        timeNow = new Date().toLocaleString('en-US', {dateStyle: 'short', timeStyle: 'medium'});
+        const currentTime = new Date(); // Get the current time as a Date object
+        timeNow = currentTime.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'medium' });
+        countdown = formatTime(currentTime.getTime() - new Date(timeStarted).getTime());
     }
 
     let intervalId: ReturnType<typeof setTimeout>;
@@ -46,9 +51,10 @@
 <div class="relative w-[200px] h-[200px] bg-gray-200 overflow-hidden">
     <h4 class="top-0 left-0">{serviceName}</h4>
     {#if started == false}
-        <p>{available}</p>
+        <p>Available: {available}</p>
     {:else}
-        <p>{timeNow}</p>
+        <p>Time Started: {timeStarted}</p>
+        <p>{countdown}</p>
     {/if}
     <div class="absolute bottom-0 right-0 flex justify-end items-end w-full h-full">
         {#if started == false}
