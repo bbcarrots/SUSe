@@ -5,5 +5,6 @@
 <div class="flex">
     <ServiceCard
         serviceName = {"Calculator"}
+        available = {1}
     />
 </div>
