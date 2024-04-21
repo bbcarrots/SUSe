@@ -1,6 +1,7 @@
 <script lang="ts">    
     import { onMount, onDestroy } from "svelte";
     import { formatTime } from "$lib/utils/utils";
+	import { Modal } from 'flowbite-svelte';
 
     import Button from "./Button.svelte";
     export let serviceName: string;
@@ -12,12 +13,16 @@
     let started = false;
     let countdown: string = formatTime(0);
 
+    let popupModalStart = false;
+    let popupModalEnd = false;
+
     let src = '/service-card-images/extension-cord.svg'
 
     function startService(){
         started = true;
         timeStarted = timeNow;
         countdown = formatTime(0); 
+        popupModalStart = false;
 
         //todo: add the usage log entry
     }
@@ -25,19 +30,21 @@
     function endService(){
         started = false;
         timeEnded = timeNow;        
+        popupModalEnd = false;
+
         //todo: edit the usage log entry
     }
 
     // function to update the current time for the count
     function updateTimeNow() {
-        const currentTime = new Date(); // Get the current time as a Date object
+        const currentTime = new Date();
         timeNow = currentTime.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'medium' });
         countdown = formatTime(currentTime.getTime() - new Date(timeStarted).getTime());
     }
 
     let intervalId: ReturnType<typeof setTimeout>;
     onMount(() => {
-        updateTimeNow(); // Update timeNow immediately
+        updateTimeNow(); 
         intervalId = setInterval(updateTimeNow, 1000);
     });
 
@@ -57,12 +64,36 @@
     {/if}
     <div class="absolute bottom-0 right-0 flex justify-end items-end w-full h-full">
         {#if started == false}
-            <Button on:click={startService}>Start</Button>
+            <Button on:click={() => popupModalStart = true}>Start</Button>
         {:else}
-            <Button on:click={endService}>End</Button>
+            <Button on:click={() => popupModalEnd = true}>End</Button>
         {/if}
     </div>
     <div class="absolute w-[160px] h-[160px] -bottom-[50px] -left-[30px] flex justify-end items-end w-full h-full">
         <img {src} alt="Icon of the service">
     </div>
 </div>
+
+<!-- Modal for start service confirmation -->
+<Modal bind:open={popupModalStart} size="xs" autoclose>
+	<div class="text-center">
+	</div>
+
+	<!-- Action buttons -->
+	<div class="flex justify-center gap-4">
+		<Button on:click={() => popupModalStart = false} inverse={true}>Cancel</Button>
+        <Button on:click={startService}> Start </Button>
+	</div>
+</Modal>
+
+<!-- Modal for end service confirmation -->
+<Modal bind:open={popupModalEnd} size="xs" autoclose>
+	<div class="text-center">
+	</div>
+
+	<!-- Action buttons -->
+	<div class="flex justify-center gap-4">
+		<Button on:click={() => popupModalEnd = false} inverse={true}>Cancel</Button>
+        <Button on:click={endService}> End </Button>
+	</div>
+</Modal>
