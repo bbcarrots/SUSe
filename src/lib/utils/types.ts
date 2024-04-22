@@ -19,3 +19,15 @@ export type UsageLogProcessed = {
 	dateTimeStart: string;
 	dateTimeEnd: string;
 };
+
+export type ServiceProcessed = {
+	serviceID: number;
+	serviceType: string;
+};
+
+export type AdminProcessed = {
+	firstName: string;
+	middleInitial: string;
+	lastName: string;
+	adminID: number;
+};
