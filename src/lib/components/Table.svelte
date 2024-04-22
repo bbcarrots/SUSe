@@ -5,12 +5,21 @@
 
 	import TableHeader from './TableHeader.svelte';
 	import TableRow from './TableRow.svelte';
+	import Pagination from './Pagination.svelte';
 
 	export let info: Array<Object>;
 	export let headers: Array<String>;
 	export let primaryKey: string;
 	export let hide: Array<string>;
 	export let disableEdit: Array<string>;
+
+    /* activePage is binded to the value from Pagination.svelte */
+	let activePage = 1
+	const rowsPerPage = 10;
+	const totalRows = info.length;
+	const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+	console.log(totalPages)
 
     /* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
@@ -24,10 +33,11 @@
     /* The sorting will be disabled if isEditing is true. */
 
 	$: {
+		const calculatedRows = info.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
 		const disableSort: boolean = isEditing;
 		const key: string = sortKey;
 		const direction: number = sortDirection;
-		const items: Array<any> = [...info];
+		const items: Array<any> = [...calculatedRows];
 
 		if (!disableSort) {
 			items.sort((a, b) => {
@@ -83,20 +93,24 @@
 	}
 </script>
 
-<Table hoverable={true} divClass="overflow-x-auto">
-	<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
-	<TableBody>
-		{#each $sortedItems as info}
-			<TableRow
-				on:approve={forwardApprove}
-				on:delete={forwardDelete}
-				on:update={forwardUpdate}
-				{info}
-				{primaryKey}
-				bind:isEditing
-				{hide}
-				{disableEdit}
-			/>
-		{/each}
-	</TableBody>
-</Table>
+<div class="grid justify-items">
+	<Table hoverable={true} divClass="overflow-x-auto">
+		<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
+		<TableBody>
+			{#each $sortedItems as info}
+				<TableRow
+					on:approve={forwardApprove}
+					on:delete={forwardDelete}
+					on:update={forwardUpdate}
+					{info}
+					{primaryKey}
+					bind:isEditing
+					{hide}
+					{disableEdit}
+				/>
+			{/each}
+		</TableBody>
+	</Table>
+	
+	<Pagination {totalPages} bind:activePage></Pagination>
+</div>
