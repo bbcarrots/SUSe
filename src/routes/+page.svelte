@@ -9,18 +9,23 @@
 
 	async function getPorts() {
 		const filters = [
-			{ usbVendorId: 0x0c45, usbProductId: 0x671b },
-			{ usbVendorId: 0x04e8, usbProductId: 0xa051 },
-			{ usbVendorId: 0x046d, usbProductId: 0xc52f }
+			// { usbVendorId: 0x0c45, usbProductId: 0x671b },
+			// { usbVendorId: 0x04e8, usbProductId: 0xa051 },
+			// { usbVendorId: 0x046d, usbProductId: 0xc52f }
 		];
-		const device = await navigator.usb.requestDevice({ filters });
-		console.log(device.configuration.interfaces[0].alternate.endpoints); // finds the endpoints of a device (.find(obj => obj.direction === 'out').endpointNumber)
-		// look for "in" endpoint and do a device.controlTransferIn(<in endpoint>, <legnth of msg in bytes)
-		await device.open();
-		// await device.selectConfiguration(1) // why is this 1?
-		// await device.claimInterface(0) // search for the correct interface to claim
-		// device.transferIn(3, 4).then((result) => (console.log(result.data))) // once we have an "in"
-		console.log('calls getPorts');
+        // const device = await navigator.hid.requestDevice({ filters: [] })
+        let devices = await navigator.hid.getDevices();
+        const d = devices[0]
+        if (!d.opened) {
+            await d.open()
+            console.log(d.opened)
+        }
+
+        d.oninputreport = (event) => {console.log(event)};
+        // d.close()
+
+        console.log(d)
+        console.log("end")
 	}
 
 	import { onMount } from 'svelte';
