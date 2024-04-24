@@ -2,11 +2,46 @@
     import Button from "$lib/components/Button.svelte";
     import LoginForm from "$lib/components/LoginForm.svelte";
     import Hero from "$lib/components/Hero.svelte";
+	import { onMount } from "svelte";
 
     export let form;
+
+    onMount(() => {
+
+        const handleClickOutside = (e: any) => {
+            let rfidInput = document.getElementById('rfidInput'); //take the rfid input
+            const target = e.target;    //take the target of the event
+            const focusedElement = document.activeElement;  //this is the active element being focused
+            
+            // if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
+            if (focusedElement === rfidInput && !(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)) {
+                e.preventDefault();
+            }
+
+            // if the current element is not the rfidInput and you click anything else, it should focus the rfid input
+            else if(focusedElement !== rfidInput && !(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)) {
+
+                //need to add a delay because of svelte
+                setTimeout(() => {
+                    rfidInput?.focus()
+                }, 1)
+            }  
+        };
+        
+        // when mouse is clicked, call handle click outside
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        };
+    });
+
 </script>
 
 <section class="flex justify-center items-center lg:h-screen">
+    
+    <input id="rfidInput" autofocus/>
+
     <div 
         class="content grid 
                 lg:grid-cols-12 lg:grid-rows-1 lg:gap-20
