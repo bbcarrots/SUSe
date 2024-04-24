@@ -26,3 +26,7 @@ export type ServiceProcessed = {
 	serviceType: string;
 	inUse: boolean;
 };
+
+export type AdminProcessed = {
+	adminID: number;
+	nickname: string;

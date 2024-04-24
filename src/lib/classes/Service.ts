@@ -18,7 +18,7 @@ export type ServiceDBObj = {
 export type ServiceResponse = {
 	success: boolean;
 	serviceRaws: ServiceDBObj[] | null;
-    availableServices: { [key: string]: number } | null;
+  availableServices: { [key: string]: number } | null;
 	error: string | null;
 };
 
@@ -50,7 +50,7 @@ export class Service {
             serviceName: "",
             serviceType: "",
             inUse: true,
-			isAdmin: false
+			      isAdmin: false
 		}
 	): Promise<ServiceResponse> {
 		/* Selects all service records in database using the default or given filter. */
