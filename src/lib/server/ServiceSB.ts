@@ -19,12 +19,11 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	/* Selects the service record/s from the database using a filter.
     Filter contains option for service ID, type, name, and if in use. */
 	let query = supabase
-			.from('service')
-			.select('service_id, service_name, in_use, service_type (service_type)')
-
+		.from('service')
+		.select('service_id, service_name, in_use, service_type (service_type)');
+	/* If user is an admin, selects service_id, service_name, service_type, in_use */
 	if (filter.isAdmin) {
-		query = query
-			.eq('in_use', filter.inUse);
+		query = query.eq('in_use', filter.inUse);
 		if (filter.serviceID) {
 			query = query.eq('service_id', filter.serviceID);
 		}
@@ -36,12 +35,12 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		if (filter.serviceType) {
 			query = query.eq('service_type', filter.serviceType);
 		}
-	}
-	else {
-		query = query.eq('in_use', false)
+	} else {
+		/* If user is a student, selects all services which are not in_use */
+		query = query.eq('in_use', false);
 	}
 
-	const { data, error } = await query
+	const { data, error } = await query;
 
 	if (error) {
 		return {
@@ -52,8 +51,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		};
 	}
 
-	console.log(data)
-
+	/* Handles formatting of data if admin */
 	if (filter.isAdmin) {
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
@@ -74,28 +72,26 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		}
 	}
 
-	const serviceTypeCount: { [key: string]: number } = {}
+	/* Handles formatting of data if user */
+	const serviceTypeCount: { [key: string]: number } = {};
 
 	if (data != null) {
+		/* Counts number of times a particular service_type appears */
 		for (let row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
-				serviceTypeCount[row.service_type.service_type] += 1
+				serviceTypeCount[row.service_type.service_type] += 1;
 			} else {
-			serviceTypeCount[row.service_type.service_type] = 1
+				serviceTypeCount[row.service_type.service_type] = 1;
 			}
 		}
 	}
 
-	console.log(serviceTypeCount)
-	
 	return {
-		//FIX HOW DATA IS SENT IF STUDENT IS THE ONE WHO QUERIES
-		//only needs count of available service_type
-			success: true,
-			serviceRaws: null,
-			availableServices: serviceTypeCount,
-			error: null
-		};
+		success: true,
+		serviceRaws: null,
+		availableServices: serviceTypeCount,
+		error: null
+	};
 }
 
 export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceResponse> {
