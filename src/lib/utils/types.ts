@@ -28,8 +28,6 @@ export type ServiceProcessed = {
 };
 
 export type AdminProcessed = {
-	firstName: string;
-	middleInitial: string;
-	lastName: string;
 	adminID: number;
+  nickname: string;
 };
