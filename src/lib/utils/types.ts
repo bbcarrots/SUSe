@@ -22,7 +22,9 @@ export type UsageLogProcessed = {
 
 export type ServiceProcessed = {
 	serviceID: number;
+	serviceName: string;
 	serviceType: string;
+	inUse: boolean;
 };
 
 export type AdminProcessed = {
