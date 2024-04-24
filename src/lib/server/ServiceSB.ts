@@ -18,25 +18,30 @@ const success: ServiceResponse = {
 export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Selects the service record/s from the database using a filter.
     Filter contains option for service ID, type, name, and if in use. */
-
 	let query = supabase
-		.from('service')
-		.select('service_id, service_name, in_use, service_type (service_type)')
-		.eq('in_use', filter.inUse);
+			.from('service')
+			.select('service_id, service_name, in_use, service_type (service_type)')
 
-	if (filter.serviceID) {
-		query = query.eq('service_id', filter.serviceID);
+	if (filter.isAdmin) {
+		query = query
+			.eq('in_use', filter.inUse);
+		if (filter.serviceID) {
+			query = query.eq('service_id', filter.serviceID);
+		}
+
+		if (filter.serviceName) {
+			query = query.like('service_name', '%' + filter.serviceName + '%');
+		}
+
+		if (filter.serviceType) {
+			query = query.eq('service_type', filter.serviceType);
+		}
+	}
+	else {
+		query = query.eq('in_use', false)
 	}
 
-	if (filter.serviceName) {
-		query = query.like('service_name', '%' + filter.serviceName + '%');
-	}
-
-	if (filter.serviceType) {
-		query = query.eq('service_type', filter.serviceType);
-	}
-
-	const { data, error } = await query;
+	const { data, error } = await query
 
 	if (error) {
 		return {
@@ -47,22 +52,50 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		};
 	}
 
-	const formattedData: ServiceDBObj[] = [];
-	for (const row of data) {
-		formattedData.push({
-			service_id: row.service_id,
-			service_name: row.service_name,
-			service_type: row.service_type.service_type.service_type, // we assume each service only has one service_type
-			in_use: row.in_use
-		});
+	console.log(data)
+
+	if (filter.isAdmin) {
+		const formattedData: ServiceDBObj[] = [];
+		if (data != null) {
+			for (const row of data) {
+				formattedData.push({
+					service_id: row.service_id,
+					service_name: row.service_name,
+					service_type: row.service_type.service_type, // we assume each service only has one service_type
+					in_use: row.in_use
+				});
+			}
+			return {
+				success: true,
+				serviceRaws: formattedData,
+				availableServices: null,
+				error: null
+			};
+		}
 	}
 
+	const serviceTypeCount: { [key: string]: number } = {}
+
+	if (data != null) {
+		for (let row of data) {
+			if (row.service_type.service_type in serviceTypeCount) {
+				serviceTypeCount[row.service_type.service_type] += 1
+			} else {
+			serviceTypeCount[row.service_type.service_type] = 1
+			}
+		}
+	}
+
+	console.log(serviceTypeCount)
+	
 	return {
-		success: true,
-		serviceRaws: formattedData,
-		availableServices: null,
-		error: null
-	};
+		//FIX HOW DATA IS SENT IF STUDENT IS THE ONE WHO QUERIES
+		//only needs count of available service_type
+			success: true,
+			serviceRaws: null,
+			availableServices: serviceTypeCount,
+			error: null
+		};
 }
 
 export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceResponse> {
