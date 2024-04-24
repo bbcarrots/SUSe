@@ -1,3 +1,5 @@
+import type { NumberInputSlots } from 'flowbite-svelte/NumberInput.svelte';
+
 export function camelize(str: String) {
 	return str
 		.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
@@ -22,4 +24,21 @@ export function formatDateTime(datetimeString: string): string {
 		hour12: true
 	});
 	return formattedDate;
+}
+
+export function formatTime(milliseconds: number) {
+	// Example input: milliseconds = 3661000 (represents 1 hour, 1 minute, 1 second)
+	// Example output: formattedTime = '01:01:01'
+
+	const totalSeconds = Math.floor(milliseconds / 1000);
+	const hours = Math.floor(totalSeconds / 3600);
+	const minutes = Math.floor((totalSeconds % 3600) / 60);
+	const seconds = totalSeconds % 60;
+
+	const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+		2,
+		'0'
+	)}:${String(seconds).padStart(2, '0')}`;
+
+	return formattedTime;
 }

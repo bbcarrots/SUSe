@@ -1,0 +1,11 @@
+<script>
+    import ServiceCard from "$lib/components/ServiceCard.svelte";
+</script>
+
+<div class="flex">
+    <ServiceCard
+        serviceName = {"Calculator"}
+        available = {1}
+        src = {'/service-card-images/calculator.svg'}
+    />
+</div>

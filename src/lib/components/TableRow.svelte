@@ -218,7 +218,7 @@
 
 	<!-- Action buttons -->
 	<div class="flex justify-center gap-4">
-		<Button inverse={true}>Cancel</Button>
+		<Button on:click={() => popupModal = false} inverse={true}>Cancel</Button>
 		<Button on:click={() => deleteEntry(getKey(info, primaryKey))} icon="delete">Delete</Button>
 	</div>
 </Modal>
