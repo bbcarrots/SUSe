@@ -49,8 +49,6 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 
 export async function insertAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 	/* Inserts a non-existing admin record into the database. */
-	delete (admin as { admin_type?: string }).admin_type; // deletes the admin_type property to properly insert a admin
-
 	const { error } = await supabase.from('admin').insert(admin);
 
 	if (error) {
