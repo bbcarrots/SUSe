@@ -2,9 +2,7 @@
 	export let data;
 	let headers: string[] = [
         'Admin Number',
-		'First Name',
-		'Middle Initial',
-		'Last Name',
+		'Nickname',
 	];
 
 	let hide: string[] = [];
@@ -19,9 +17,7 @@
 	const admins: AdminProcessed[] = [
         {
         adminID: 12345,
-        firstName: "Gab",
-	    middleInitial: "P",
-	    lastName: "Ogi",
+        nickname: "Gab"
         }
     ];
 
