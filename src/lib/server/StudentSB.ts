@@ -48,12 +48,21 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 		};
 	}
 
-	const { data, error } = await supabase
+	let query = supabase
 		.from('student')
 		.select('*')
 		.gte('sn_id', minSN) // student number should be between an inclusive range
 		.lte('sn_id', maxSN)
-		.like('username', '%' + filter.username + '%'); // username can be found in any position
+
+	if (filter.rfid) {
+		query = query.eq('rfid', filter.rfid); // if there is a valid rfid (!= 0), add a filter
+	}
+
+    if (filter.username) {
+        query = query.like('username', '%' + filter.username + '%'); // username can be found in any position
+    }
+
+	const { data, error } = await query;
 
 	if (error) {
 		return {
@@ -106,7 +115,8 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: student.sn_id,
 		maxStudentNumber: student.sn_id,
-		username: ''
+		username: '',
+		rfid: 0
 	});
 
 	if (!studentCheck.success) {
@@ -146,7 +156,8 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 	const studentCheck = await checkStudentExistsDB({
 		minStudentNumber: studentNumber,
 		maxStudentNumber: studentNumber,
-		username: ''
+		username: '',
+		rfid: 0
 	});
 
 	if (!studentCheck.success) {
