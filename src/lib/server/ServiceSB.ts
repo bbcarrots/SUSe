@@ -18,22 +18,26 @@ const success: ServiceResponse = {
 export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Selects the service record/s from the database using a filter.
     Filter contains option for service ID, type, name, and if in use. */
-
 	let query = supabase
 		.from('service')
-		.select('service_id, service_name, in_use, service_type (service_type)')
-		.eq('in_use', filter.inUse);
+		.select('service_id, service_name, in_use, service_type (service_type)');
+	/* If user is an admin, selects service_id, service_name, service_type, in_use */
+	if (filter.isAdmin) {
+		query = query.eq('in_use', filter.inUse);
+		if (filter.serviceID) {
+			query = query.eq('service_id', filter.serviceID);
+		}
 
-	if (filter.serviceID) {
-		query = query.eq('service_id', filter.serviceID);
-	}
+		if (filter.serviceName) {
+			query = query.like('service_name', '%' + filter.serviceName + '%');
+		}
 
-	if (filter.serviceName) {
-		query = query.like('service_name', '%' + filter.serviceName + '%');
-	}
-
-	if (filter.serviceType) {
-		query = query.eq('service_type', filter.serviceType);
+		if (filter.serviceType) {
+			query = query.eq('service_type', filter.serviceType);
+		}
+	} else {
+		/* If user is a student, selects all services which are not in_use */
+		query = query.eq('in_use', false);
 	}
 
 	const { data, error } = await query;
@@ -47,20 +51,45 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		};
 	}
 
-	const formattedData: ServiceDBObj[] = [];
-	for (const row of data) {
-		formattedData.push({
-			service_id: row.service_id,
-			service_name: row.service_name,
-			service_type: row.service_type.service_type.service_type, // we assume each service only has one service_type
-			in_use: row.in_use
-		});
+	/* Handles formatting of data if admin */
+	if (filter.isAdmin) {
+		const formattedData: ServiceDBObj[] = [];
+		if (data != null) {
+			for (const row of data) {
+				formattedData.push({
+					service_id: row.service_id,
+					service_name: row.service_name,
+					service_type: row.service_type.service_type, // we assume each service only has one service_type
+					in_use: row.in_use
+				});
+			}
+			return {
+				success: true,
+				serviceRaws: formattedData,
+				availableServices: null,
+				error: null
+			};
+		}
+	}
+
+	/* Handles formatting of data if user */
+	const serviceTypeCount: { [key: string]: number } = {};
+
+	if (data != null) {
+		/* Counts number of times a particular service_type appears */
+		for (let row of data) {
+			if (row.service_type.service_type in serviceTypeCount) {
+				serviceTypeCount[row.service_type.service_type] += 1;
+			} else {
+				serviceTypeCount[row.service_type.service_type] = 1;
+			}
+		}
 	}
 
 	return {
 		success: true,
-		serviceRaws: formattedData,
-		availableServices: null,
+		serviceRaws: null,
+		availableServices: serviceTypeCount,
 		error: null
 	};
 }
