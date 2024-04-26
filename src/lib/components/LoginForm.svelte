@@ -59,64 +59,76 @@
     }
 </script>
 
-<section class="grid gap-y-8">
+<section class="grid gap-y-8 h-full w-full items-center justify-center">
 
     {#if rfidLogin == true}
-    <!-- HEADER -->
-    <div class="grid text-center gap-4">
-        <h1>Tap your UP ID to log in or register</h1>
-        <p>Avail Engglib services using SUSê by tapping your RFID!</p>    
-    </div>
-    
-    <div class="relative flex items-center">
-        <div class="flex-grow border-t bg-suse-black/50"></div>
-        <!-- <span class="flex-shrink mx-2 text-suse-black/50"><p>or view available services by logging in via username</p></span> -->
-            <button on:click={handleChangeToUsername} class="text-blue-600">Login using username and password to view available services</button>
-        <div class="flex-grow border-t bg-suse-black/50"></div>
-    </div>
 
-    <input id="rfidInput" autofocus/>
+    <!-- HEADER -->
+     <div class="grid text-center gap-6">
+        <div class="grid gap-4">
+            <h1>Tap your UP ID to log in or register</h1>
+            <h4>Avail Engglib services using SUSê by tapping your RFID!</h4>         
+        </div>
+
+        <button on:click={handleChangeToUsername} class="text-blue-600"><p>Login using username</p></button>
+
+        <input id="rfidInput" autofocus/>
+    </div>  
+
 
     {:else}
 
     <!-- FORM -->
-    <form class="grid gap-y-4" method="POST">
-
-           <!-- email section -->
-           <div class="grid gap-y-2">
-            <div class="flex">
-                <input 
-                    name="username"
-                    type="text" 
-                    id="email" 
-                    placeholder="Username"
-                    pattern="[A-Za-z0-9]+" 
-                    title="Please only enter alphabets"
-                    required
-                />
-            </div>
+    <div class="grid text-center gap-6">
+        <div class="grid gap-4">
+            <h1>Log in using username</h1>
+            <h4>to view all available services</h4> 
         </div>
+   
+        <div class="relative flex">
+            <form class="grid gap-y-4 flex-grow" method="POST">
 
-        <!-- password section-->
-        <div class="grid gap-y-2">
-            <input 
-                name="password"
-                type="password" 
-                id="password" 
-                title="Please enter at least one lowercase letter, uppercase letter, and number."
-                placeholder="Password" 
-                required 
-            />
-            <span>
+                <!-- email section -->
+                <div class="grid gap-y-2">
+                    <div class="flex">
+                        <input 
+                            name="username"
+                            type="text" 
+                            id="email" 
+                            placeholder="Username"
+                            pattern="[A-Za-z0-9]+" 
+                            title="Please only enter alphabets"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <!-- password section-->
+                <div class="grid gap-y-2">
+                    <input 
+                        name="password"
+                        type="password" 
+                        id="password" 
+                        title="Please enter at least one lowercase letter, uppercase letter, and number."
+                        placeholder="Password" 
+                        required 
+                    />
+                    <span>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="inline-flex gap-4">
+                    <div class="flex-grow">
+                        <Button submit={true}> Login </Button>
+
+                    </div>
+                </div>
+                <button on:click={handleChangeToRFID} class="text-blue-600"><p>Login using RFID</p></button>
+
+            </form>
         </div>
+    </div>
 
-        <!-- ACTION BUTTONS -->
-        <div class="inline-flex gap-4">
-            <Button submit={true}> Login </Button>
-        </div>
-        <button on:click={handleChangeToRFID} class="text-blue-600">Login using RFID to avail services</button>
-
-    </form>
     {/if}
 </section>
 
