@@ -1,6 +1,54 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import Button from "./Button.svelte";    
+
+    //to determine which login to display
     let rfidLogin = true;
+
+    onMount(() => {
+
+        const handleClickOutside = (e: any) => {
+            const rfidInput = document.getElementById('rfidInput'); //take the rfid input
+            const target = e.target;    //take the target of the event
+            const focusedElement = document.activeElement;  //this is the active element being focused
+            console.log(rfidInput, focusedElement)
+
+            // if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
+            if (focusedElement === rfidInput && !(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)) {
+                e.preventDefault();
+            }
+
+            // if the current element is not the rfidInput and you click anything else, it should focus the rfid input
+            else if(focusedElement !== rfidInput && !(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)) {
+
+                //need to add a delay because of svelte
+                setTimeout(() => {
+                    rfidInput?.focus()
+                }, 10)
+            }  
+        };
+        
+        const handleKeyDown = (e: any) => {
+            const rfidInput = document.getElementById('rfidInput'); //take the rfid input
+            const focusedElement = document.activeElement;  //this is the active element being focused
+
+            if (rfidInput === focusedElement){
+                console.log()
+                e.preventDefault();
+            }
+        }
+
+        // when mouse is clicked, call handle click outside
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // when keyboard is pressed, call handle key down
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    });
 
     function handleChangeToUsername() {
         rfidLogin = false;
@@ -26,6 +74,9 @@
             <button on:click={handleChangeToUsername} class="text-blue-600">Login using username and password to view available services</button>
         <div class="flex-grow border-t bg-suse-black/50"></div>
     </div>
+
+    <input id="rfidInput" autofocus/>
+
     {:else}
 
     <!-- FORM -->
