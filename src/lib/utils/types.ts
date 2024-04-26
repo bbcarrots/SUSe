@@ -1,12 +1,12 @@
 export type StudentProcessed = {
+	studentNumber: number;
+	email: string;
 	firstName: string;
 	middleInitial: string;
 	lastName: string;
-	studentNumber: number;
-	email: string;
-	phoneNumber: string;
 	college: string;
 	program: string;
+	phoneNumber: string;
 	isEnrolled: boolean;
 };
 
