@@ -3,10 +3,16 @@
     import { formatTime } from "$lib/utils/utils";
 	import { Modal } from 'flowbite-svelte';
     import Button from "./Button.svelte";
+    import ServiceForm from "./ServiceForm.svelte";
 
     export let serviceName: string;
     export let available: number;
     export let src: string;
+
+    let formData:any = {
+        consented: false,
+        data: null
+    };
 
     let timeStarted: string;
     let timeEnded: string;
@@ -68,21 +74,20 @@
             <Button small={true} on:click={() => popupModalEnd = true}>End</Button>
         {/if}
     </div>
-    <div class="z-5 absolute w-[170px] -bottom-[30px] -left-[30px] flex justify-end items-end w-full h-full">
+    <div class="z-5 absolute w-[175px] -bottom-[30px] -left-[20px] flex justify-end items-end w-full h-full">
         <img {src} alt="Service icon" class="z-5">
     </div>
 </div>
 
 
 <!-- Modal for start service confirmation -->
-<Modal bind:open={popupModalStart} size="xs" autoclose>
-	<div class="text-center">
-	</div>
+<Modal bind:open={popupModalStart} size="xs">
+    <ServiceForm {serviceName} bind:formData/>
 
 	<!-- Action buttons -->
 	<div class="flex justify-center gap-4">
 		<Button on:click={() => popupModalStart = false} inverse={true}>Cancel</Button>
-        <Button on:click={startService}> Start </Button>
+        <Button disabled={formData.consented == false} on:click={startService}> Start </Button>
 	</div>
 </Modal>
 
