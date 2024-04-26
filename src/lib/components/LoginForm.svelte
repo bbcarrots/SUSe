@@ -1,20 +1,32 @@
 <script lang="ts">
     import Button from "./Button.svelte";    
+    let rfidLogin = true;
+
+    function handleChangeToUsername() {
+        rfidLogin = false;
+    }
+
+    function handleChangeToRFID() {
+        rfidLogin = true;
+    }
 </script>
 
 <section class="grid gap-y-8">
 
+    {#if rfidLogin == true}
     <!-- HEADER -->
     <div class="grid text-center gap-4">
-        <h1>Tap your UP ID to log in/register</h1>
+        <h1>Tap your UP ID to log in or register</h1>
         <p>Avail Engglib services using SUSê by tapping your RFID!</p>    
     </div>
     
     <div class="relative flex items-center">
         <div class="flex-grow border-t bg-suse-black/50"></div>
-        <span class="flex-shrink mx-2 text-suse-black/50"><p>or view available services by logging in via username</p></span>
+        <!-- <span class="flex-shrink mx-2 text-suse-black/50"><p>or view available services by logging in via username</p></span> -->
+            <button on:click={handleChangeToUsername} class="text-blue-600">Login using username and password to view available services</button>
         <div class="flex-grow border-t bg-suse-black/50"></div>
     </div>
+    {:else}
 
     <!-- FORM -->
     <form class="grid gap-y-4" method="POST">
@@ -51,9 +63,10 @@
         <div class="inline-flex gap-4">
             <Button submit={true}> Login </Button>
         </div>
-  
-    </form>
+        <button on:click={handleChangeToRFID} class="text-blue-600">Login using RFID to avail services</button>
 
+    </form>
+    {/if}
 </section>
 
 <style lang="postcss">
