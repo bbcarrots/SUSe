@@ -12,10 +12,10 @@ export type StudentProcessed = {
 
 export type UsageLogProcessed = {
 	usageLogID: number;
-	serviceID: number;
-	serviceType: string;
 	studentNumber: number;
 	adminID: number;
+	serviceID: number;
+	serviceType: string;
 	dateTimeStart: string;
 	dateTimeEnd: string;
 };
