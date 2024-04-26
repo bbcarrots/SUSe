@@ -126,13 +126,14 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(student)) {
-		// updates every property except for sn_id, rfid, and username
+		// updates every property except for sn_id, rfid, username, and pw
 		if (
 			value &&
 			(typeof value == 'string' || typeof value == 'boolean') &&
 			key != 'sn_id' &&
 			key != 'rfid' &&
-			key != 'username'
+			key != 'username' &&
+            key != 'pw'
 		) {
 			updateObj[key] = value;
 		}
