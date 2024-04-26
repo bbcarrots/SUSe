@@ -53,25 +53,26 @@
 
 </script>
 
-<div class="relative w-[200px] h-[200px] bg-gray-200 overflow-hidden">
-    <h4 class="top-0 left-0">{serviceName}</h4>
+<div class="relative max-w-full h-[250px] bg-white rounded-[20px] overflow-hidden p-6 m-4 drop-shadow-[4px_4px_10px_rgba(17,51,17,0.05)]">
+    <h4 class="z-10 top-0 left-0 relative">{serviceName}</h4>
     {#if started == false}
         <p>Available: {available}</p>
     {:else}
         <p>Time Started: {timeStarted}</p>
         <p>{countdown}</p>
     {/if}
-    <div class="absolute bottom-0 right-0 flex justify-end items-end w-full h-full">
+    <div class="z-20 absolute bottom-2 right-2 flex justify-end items-end w-[100px]">
         {#if started == false}
-            <Button on:click={() => popupModalStart = true}>Start</Button>
+            <Button small={true} on:click={() => popupModalStart = true}>Start</Button>
         {:else}
-            <Button on:click={() => popupModalEnd = true}>End</Button>
+            <Button small={true} on:click={() => popupModalEnd = true}>End</Button>
         {/if}
     </div>
-    <div class="absolute w-[150px] h-[150px] -bottom-[40px] -left-[30px] flex justify-end items-end w-full h-full">
-        <img {src} alt="Icon of the service">
+    <div class="z-5 absolute w-[170px] -bottom-[30px] -left-[30px] flex justify-end items-end w-full h-full">
+        <img {src} alt="Service icon" class="z-5">
     </div>
 </div>
+
 
 <!-- Modal for start service confirmation -->
 <Modal bind:open={popupModalStart} size="xs" autoclose>
