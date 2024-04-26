@@ -16,11 +16,9 @@ const success: AdminResponse = {
 
 export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse> {
 	/* Selects the admin record/s from the database using a filter.
-    Filter contains option for admin ID, type, name, and if in use. */
+    Filter contains option for admin ID and nickname. */
 
-	let query = supabase
-		.from('admin')
-		.select('*')
+	let query = supabase.from('admin').select('*');
 
 	if (filter.adminID) {
 		query = query.eq('admin_id', filter.adminID);
@@ -82,7 +80,7 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
     NOTE: Cannot update the admin id. Need to delete and insert again. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: admin.admin_id,
-        nickname: ''
+		nickname: ''
 	});
 
 	if (!adminCheck.success) {
@@ -98,10 +96,7 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 		}
 	}
 
-	const { error } = await supabase
-		.from('admin')
-		.update(updateObj)
-		.eq('admin_id', admin.admin_id);
+	const { error } = await supabase.from('admin').update(updateObj).eq('admin_id', admin.admin_id);
 
 	if (error) {
 		return {
@@ -118,7 +113,7 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
 	/* Deletes an existing admin record. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: adminID,
-        nickname: ''
+		nickname: ''
 	});
 
 	if (!adminCheck.success) {
