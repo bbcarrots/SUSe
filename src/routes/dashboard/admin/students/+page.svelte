@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Table from '$lib/components/Table.svelte';
+	import { type StudentProcessed } from '$lib/utils/types.js';
+
 	export let data;
 	let headers: string[] = [
 		'Student Number',
@@ -11,16 +14,9 @@
 		'Program',
 		'Is Enrolled'
 	];
-
 	let hide: string[] = ['isEnrolled'];
-
 	let disableEdit: string[] = ['email', 'studentNumber'];
-
-	import Table from '$lib/components/Table.svelte';
-	import { type StudentProcessed } from '$lib/utils/types.js';
-
 	let studentObjects = data.studentRaws;
-
 	let students: StudentProcessed[] = [];
 
 	if (studentObjects !== null && studentObjects !== undefined) {
@@ -52,7 +48,7 @@
 
 		const payload = { isEnrolled: true, ...event.detail };
 
-		const response = await fetch('../api/student', {
+		const response = await fetch('../../api/student', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
 			headers: {
@@ -67,7 +63,7 @@
 		/* Handles Delete event from TableRow by sending a DELETE request 
         with payload requirement: studentNumber. */
 
-		const response = await fetch('../api/student', {
+		const response = await fetch('../../api/student', {
 			method: 'DELETE',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -83,7 +79,7 @@
         payload requirement: studentNumber, 
         optional: firstName, middleInitial, lastName, college, program, phoneNumber. */
 
-		const response = await fetch('../api/student', {
+		const response = await fetch('../../api/student', {
 			method: 'PATCH',
 			body: JSON.stringify(event.detail),
 			headers: {
