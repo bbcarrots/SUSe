@@ -2,8 +2,10 @@ import { Service } from '$lib/classes/Service';
 import { UsageLog } from '$lib/classes/UsageLog';
 
 export async function load() {
+// export async function load({ params }) {  
 	/* Loads student records from the DB when page is created. */
 	const studentNumber = 202021211; // placeholder
+    // const studentNumber = params.sn
 	const today = new Date();
 	const dayStart = today.getMonth() + 1 + ' ' + today.getDate() + ' ' + today.getFullYear();
 
