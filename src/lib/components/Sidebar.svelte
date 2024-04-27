@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { userID } from '$lib/stores/User';
     import { page } from '$app/stores';
     import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from 'flowbite-svelte';
     import { Icon, CheckCircle, Home, BookOpen, UserGroup, WrenchScrewdriver, ShieldCheck} from 'svelte-hero-icons';
@@ -15,10 +16,10 @@
     <SidebarWrapper class="h-screen max-w-[230px]">
         <SidebarGroup>
             {#if activeUrl.includes('/dashboard/student')}
-                <SidebarItem label="Home" href="/dashboard/student/home" {spanClass}>
+                <SidebarItem label="Home" href="/dashboard/student/home/{$userID}" {spanClass}>
                     <svelte:fragment slot="icon">
                         <span class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white">
-                            {#if activeUrl == "/dashboard/student/home"}
+                            {#if activeUrl === `/dashboard/student/home/${$userID}`}
                                 <Icon src="{Home}" class="text-white" solid size="20"/>
                             {:else}
                                 <Icon src="{Home}" outline size="20"/>
