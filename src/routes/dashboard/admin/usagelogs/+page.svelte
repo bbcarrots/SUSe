@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Table from '$lib/components/Table.svelte';
+	import { type UsageLogProcessed } from '$lib/utils/types.js';
+
 	export let data;
 	let headers: string[] = [
 		'Usage Log ID',
@@ -9,9 +12,7 @@
 		'Date Time Start',
 		'Date Time End'
 	];
-
 	let hide: string[] = [];
-
 	let disableEdit: string[] = [
 		'usageLogID',
 		'serviceID',
@@ -19,12 +20,7 @@
 		'serviceType',
 		'adminID'
 	];
-
-	import Table from '$lib/components/Table.svelte';
-	import { type UsageLogProcessed } from '$lib/utils/types.js';
-
 	let usageLogObjects = data.usageLogRaws;
-
 	let usageLogs: UsageLogProcessed[] = [];
 
 	if (usageLogObjects !== null && usageLogObjects !== undefined) {
@@ -51,7 +47,7 @@
 		/* Handles Delete event from UsageLogResponse by sending a DELETE request 
         with payload requirement: usageLogID. */
 
-		const response = await fetch('../api/usagelog', {
+		const response = await fetch('../../api/usagelog', {
 			method: 'DELETE',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -67,7 +63,7 @@
         payload requirement: usageLogID, 
         optional: dateTimeStart, dateTimeEnd. */
 
-		const response = await fetch('../api/usagelog', {
+		const response = await fetch('../../api/usagelog', {
 			method: 'PATCH',
 			body: JSON.stringify(event.detail),
 			headers: {
