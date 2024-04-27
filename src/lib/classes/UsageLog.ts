@@ -35,7 +35,7 @@ export class UsageLog {
 	/* Contains all usage log methods for conversion and DB communication. */
 
 	public static toUsageLogDBObj(log: UsageLogProcessed): UsageLogDBObj {
-		/* Converts a UsageLogProcessed to a UsageLogUIObj. */
+		/* Converts a UsageLogProcessed to a UsageLogDBObj. */
 		return {
 			ul_id: log.usageLogID,
 			sn_id: 'studentNumber' in log ? log.studentNumber : 0,

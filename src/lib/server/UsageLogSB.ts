@@ -47,6 +47,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	const formattedData: UsageLogDBObj[] = [];
 
 	for (const row of data) {
+		// reformats supabase return values to conform to UsageLogDBObj
 		formattedData.push({
 			ul_id: row.ul_id,
 			sn_id: row.sn_id,
@@ -67,6 +68,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 export async function insertUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResponse> {
 	/* Inserts a non-existing usage log record into the database. */
+	delete (log as { service_type?: string }).service_type; // deletes the service_type property to properly insert a usage log
+
 	const { error } = await supabase.from('usage_log').insert(log);
 
 	if (error) {
@@ -111,7 +114,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	const updateObj: { [key: string]: string | number } = {};
 
 	for (const [key, value] of Object.entries(log)) {
-		if (value && (typeof value == 'string' || typeof value == 'number')) {
+		if (value && typeof value == 'string') {
 			updateObj[key] = value;
 		}
 	}
