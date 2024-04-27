@@ -74,7 +74,7 @@
             <Button small={true} on:click={() => popupModalEnd = true}>End</Button>
         {/if}
     </div>
-    <div class="z-5 absolute w-[70%] -bottom-[30px] -left-[20px] flex justify-end items-end w-full h-full">
+    <div class="z-5 absolute w-[70%] -bottom-[30px] -left-[20px] flex justify-end items-end">
         <img {src} alt="Service icon" class="z-5">
     </div>
 </div>
