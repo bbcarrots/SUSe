@@ -1,11 +1,9 @@
 import { Service } from '$lib/classes/Service';
-import { UsageLog } from '$lib/classes/UsageLog';
+import { UsageLog, type UsageLogDBObj } from '$lib/classes/UsageLog';
 
-// export async function load() {
-export async function load({ params }) {  
+export async function load({ params }) {
 	/* Loads student records from the DB when page is created. */
-	// const studentNumber = 202021211; // placeholder
-    const studentNumber = Number(params.studentNumber)
+	const studentNumber = Number(params.studentNumber);
 	const today = new Date();
 	const dayStart = today.getMonth() + 1 + ' ' + today.getDate() + ' ' + today.getFullYear();
 
@@ -13,7 +11,7 @@ export async function load({ params }) {
 		usageLogID: 0,
 		studentNumber: studentNumber,
 		minDate: new Date(dayStart).toISOString(), // need to convert to ISOString to filter DB
-		maxDate: new Date().toISOString() // gets date today
+		maxDate: ''
 	});
 
 	const serviceResponse = await Service.selectServices({
@@ -30,9 +28,17 @@ export async function load({ params }) {
 		return usageLogResponse;
 	}
 
+    const activeUsageLogs: { [key: string]: UsageLogDBObj } = {};
+
+    if (usageLogResponse.usageLogRaws != null) {
+        for (const usageLog of usageLogResponse.usageLogRaws) {
+            activeUsageLogs[usageLog.service_type] = usageLog
+        }
+    }
+
 	return {
 		success: true,
-		activeUsageLogs: usageLogResponse.usageLogRaws,
+		activeUsageLogs: activeUsageLogs,
 		availableServices: serviceResponse.availableServices,
 		error: ''
 	};

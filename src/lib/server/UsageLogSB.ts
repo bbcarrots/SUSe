@@ -35,10 +35,17 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 		query = query.eq('sn_id', filter.studentNumber);
 	}
 
-	if (filter.minDate && filter.maxDate) {
+	if (filter.minDate) {
 		// if there is a given start and end date range, search for that
-		query = query.gte('datetime_start', filter.minDate).lte('datetime_end', filter.maxDate);
+		query = query.gte('datetime_start', filter.minDate);
 	}
+
+	if (filter.maxDate) {
+		// if there is a given start and end date range, search for that
+		query = query.lte('datetime_end', filter.maxDate);
+	} else {
+        query = query.is('datetime_end', null);
+    }
 
 	const { data, error } = await query;
 
