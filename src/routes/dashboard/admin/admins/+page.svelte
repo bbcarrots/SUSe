@@ -3,13 +3,14 @@
 	import { type AdminProcessed } from '$lib/utils/types.js';
 
 	export let data;
-	let headers: string[] = ['Admin Number', 'Nickname'];
-	let hide: string[] = [];
+	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
+	let hide: string[] = ['isActive'];
 	let disableEdit: string[] = ['adminID'];
 	const admins: AdminProcessed[] = [
 		{
 			adminID: 12345,
-			nickname: 'Gab'
+			nickname: 'Gab',
+			isActive: false
 		}
 	];
 
