@@ -49,8 +49,8 @@ export class Service {
 			serviceID: 0,
 			serviceName: '',
 			serviceType: '',
-			inUse: true,
-			isAdmin: false
+			inUse: false,
+			isAdmin: true
 		}
 	): Promise<ServiceResponse> {
 		/* Selects all service records in database using the default or given filter. */
