@@ -29,10 +29,23 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 		// if there is a given usageLogID, search for that
 		query = query.eq('ul_id', filter.usageLogID);
 	}
-	if (filter.minDate && filter.maxDate) {
-		// if there is a given start and end date range, search for that
-		query = query.gte('datetime_start', filter.minDate).lte('datetime_end', filter.maxDate);
+
+	if (filter.studentNumber) {
+		// if there is a given usageLogID, search for that
+		query = query.eq('sn_id', filter.studentNumber);
 	}
+
+	if (filter.minDate) {
+		// if there is a given start and end date range, search for that
+		query = query.gte('datetime_start', filter.minDate);
+	}
+
+	if (filter.maxDate) {
+		// if there is a given start and end date range, search for that
+		query = query.lte('datetime_end', filter.maxDate);
+	} else {
+        query = query.is('datetime_end', null);
+    }
 
 	const { data, error } = await query;
 
@@ -103,6 +116,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
     NOTE: We can only update date start and end for now. */
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: log.ul_id,
+		studentNumber: 0,
 		minDate: '',
 		maxDate: ''
 	});
@@ -136,6 +150,7 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
 	/* Deletes an existing usage log record. */
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: usageLogID,
+		studentNumber: 0,
 		minDate: '',
 		maxDate: ''
 	});
