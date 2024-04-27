@@ -29,7 +29,7 @@ export async function POST({ request }) {
     })
 
     if (!serviceUpdateResponse.success) {
-        return json(serviceSelectResponse)
+        return json(serviceUpdateResponse)
     }
 
     const adminSelectResponse = await Admin.selectAdmins({
@@ -117,10 +117,10 @@ export async function PATCH({ request }) {
     delete (usageLog as { service_type?: string }).service_type
     delete (usageLog as { datetime_start?: string }).datetime_start
 
-    const usageLogInsertResponse = await UsageLog.updateUsageLog(usageLog)
+    const usageLogUpdateResponse = await UsageLog.updateUsageLog(usageLog)
     
-    if (!usageLogInsertResponse.success) {
-        return json(usageLogInsertResponse)
+    if (!usageLogUpdateResponse.success) {
+        return json(usageLogUpdateResponse)
     }
 
     const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id
@@ -132,10 +132,38 @@ export async function PATCH({ request }) {
 		inUse: true,
 		isAdmin: true
     })
-    
+
     if (!serviceSelectAdminResponse.success) {
         return json(serviceSelectAdminResponse)
     }
 
-	// return json(await Service.deleteService(service.serviceID));
+    const serviceUpdateResponse = await Service.updateService({
+        service_id: serviceID != undefined ? serviceID : 0,
+        service_name: '',
+        service_type: '',
+        in_use: false
+    })
+
+    if (!serviceUpdateResponse.success) {
+        return json(serviceUpdateResponse)
+    }
+
+    const serviceSelectStudentResponse = await Service.selectServices({
+        serviceID: serviceID != undefined ? serviceID : 0,
+		serviceName: '',
+		serviceType: '',
+		inUse: false,
+		isAdmin: false
+    })
+
+    if (!serviceSelectStudentResponse.success) {
+        return json(serviceSelectStudentResponse)
+    }
+
+    return json({
+        success: true,
+        activeUsageLogs: {},
+        availableServices: serviceSelectStudentResponse.availableServices,
+        error: ''
+    });
 }
