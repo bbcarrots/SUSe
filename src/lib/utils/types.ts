@@ -30,4 +30,5 @@ export type ServiceProcessed = {
 export type AdminProcessed = {
 	adminID: number;
 	nickname: string;
+	isActive: boolean;
 };

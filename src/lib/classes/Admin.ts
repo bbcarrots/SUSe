@@ -7,6 +7,7 @@ export type AdminDBObj = {
 	rfid: number;
 	pw: string;
 	nickname: string;
+	is_active: boolean;
 };
 
 // return value of admin DB functions
@@ -20,25 +21,28 @@ export type AdminResponse = {
 export type AdminFilter = {
 	adminID: number;
 	nickname: string;
+	isActive: boolean;
 };
 
 export class Admin {
 	/* Contains all admin methods for conversion and DB communication. */
 
 	public static toAdminDBObj(admin: AdminProcessed): AdminDBObj {
-		/* Converts aa AdminProcessed to aa AdminDBObj. */
+		/* Converts an AdminProcessed to an AdminDBObj. */
 		return {
 			admin_id: admin.adminID,
 			rfid: 0,
 			pw: '',
-			nickname: 'nickname' in admin ? admin.nickname : ''
+			nickname: 'nickname' in admin ? admin.nickname : '',
+			is_active: admin.isActive
 		};
 	}
 
 	public static async selectAdmins(
 		filter: AdminFilter = {
 			adminID: 0,
-			nickname: ''
+			nickname: '',
+			isActive: true
 		}
 	): Promise<AdminResponse> {
 		/* Selects all admin records in database using the default or given filter. */
