@@ -1,9 +1,8 @@
 <script>
     import ServiceCard from "$lib/components/ServiceCard.svelte";
-
+    import { userID } from "$lib/stores/User";
     export let data;
-    console.log("from server", data.studentNumber)
-
+    userID.set(+data.studentNumber) 
 
 </script>
 
