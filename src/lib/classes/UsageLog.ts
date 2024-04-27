@@ -27,6 +27,7 @@ export type UsageLogResponse = {
 // filters for selecting usage log records
 export type UsageLogFilter = {
 	usageLogID: number;
+	studentNumber: number;
 	minDate: string;
 	maxDate: string;
 };
@@ -50,6 +51,7 @@ export class UsageLog {
 	public static async selectUsageLogs(
 		filter: UsageLogFilter = {
 			usageLogID: 0,
+			studentNumber: 0,
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
 			maxDate: new Date().toISOString() // gets date today
 		}
