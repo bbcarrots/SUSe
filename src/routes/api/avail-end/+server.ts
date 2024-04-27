@@ -1,0 +1,141 @@
+import { Admin } from '$lib/classes/Admin.js';
+import { Service } from '$lib/classes/Service.js';
+import { UsageLog } from '$lib/classes/UsageLog.js';
+import { json } from '@sveltejs/kit';
+
+export async function POST({ request }) {
+	/* Handles Avail Service requests for service and usage log records. */
+    const { studentNumber, serviceType } = await request.json()
+
+	const serviceSelectResponse = await Service.selectServices({
+        serviceID: 0,
+		serviceName: '',
+		serviceType: serviceType,
+		inUse: false,
+		isAdmin: true
+    })
+    
+    if (!serviceSelectResponse.success) {
+        return json(serviceSelectResponse)
+    }
+
+    const service = serviceSelectResponse.serviceRaws?.[0]
+
+    const serviceUpdateResponse = await Service.updateService({
+        service_id: service!.service_id,
+        service_name: '',
+        service_type: '',
+        in_use: true
+    })
+
+    if (!serviceUpdateResponse.success) {
+        return json(serviceSelectResponse)
+    }
+
+    const adminSelectResponse = await Admin.selectAdmins({
+        adminID: 0,
+        nickname: '',
+        isActive: true
+    })
+
+    if (!adminSelectResponse.success) {
+        return json(adminSelectResponse)
+    }
+
+    const admin = adminSelectResponse.adminRaws?.[0]
+
+    const dateToday = new Date().toISOString();
+
+    const usageLog = {
+        ul_id: 0,
+        sn_id: studentNumber,
+        admin_id: admin!.admin_id,
+        service_id: service!.service_id,
+        service_type: service!.service_type,
+        datetime_start: dateToday,
+        datetime_end: '',
+    }
+
+    delete (usageLog as { ul_id?: number }).ul_id
+    delete (usageLog as { datetime_end?: string }).datetime_end
+
+    const usageLogInsertResponse = await UsageLog.insertUsageLog(usageLog)
+    
+    if (!usageLogInsertResponse.success) {
+        return json(usageLogInsertResponse)
+    }
+
+    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+        usageLogID: 0,
+		studentNumber: studentNumber,
+		minDate: dateToday,
+		maxDate: ''
+    })
+
+    if (!usageLogSelectResponse.success) {
+        return json(usageLogSelectResponse)
+    }
+
+	return json({
+        success: true,
+        activeUsageLogs: { serviceType: usageLogSelectResponse.usageLogRaws?.[0] },
+        availableServices: {},
+        error: ''
+    });
+}
+
+export async function PATCH({ request }) {
+	/* Handles End Service requests for service and usage log records. */
+	const { usageLogID } = await request.json();
+
+    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+        usageLogID: usageLogID,
+		studentNumber: 0,
+		minDate: '',
+		maxDate: ''
+    })
+
+    if (!usageLogSelectResponse.success) {
+        return json(usageLogSelectResponse)
+    }
+
+    const dateToday = new Date().toISOString();
+
+    const usageLog = {
+        ul_id: usageLogID,
+        sn_id: 0,
+        admin_id: 0,
+        service_id: 0,
+        service_type: '',
+        datetime_start: '',
+        datetime_end: dateToday,
+    }
+
+    delete (usageLog as { sn_id?: number }).sn_id
+    delete (usageLog as { admin_id?: number }).admin_id
+    delete (usageLog as { service_id?: number }).service_id
+    delete (usageLog as { service_type?: string }).service_type
+    delete (usageLog as { datetime_start?: string }).datetime_start
+
+    const usageLogInsertResponse = await UsageLog.updateUsageLog(usageLog)
+    
+    if (!usageLogInsertResponse.success) {
+        return json(usageLogInsertResponse)
+    }
+
+    const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id
+
+    const serviceSelectAdminResponse = await Service.selectServices({
+        serviceID: serviceID != undefined ? serviceID : 0,
+		serviceName: '',
+		serviceType: '',
+		inUse: true,
+		isAdmin: true
+    })
+    
+    if (!serviceSelectAdminResponse.success) {
+        return json(serviceSelectAdminResponse)
+    }
+
+	// return json(await Service.deleteService(service.serviceID));
+}
