@@ -1,5 +1,8 @@
 <script>
     import ServiceCard from "$lib/components/ServiceCard.svelte";
+    
+    export let data;
+    console.log(data)
 </script>
 
 <div class="flex">
