@@ -37,4 +37,16 @@
         src = {'/service-card-images/laptop.svg'}
     />
 
+    <ServiceCard
+        serviceName = {"Adapter"}
+        available = {1}
+        src = {'/service-card-images/adapter.svg'}
+    />
+
+    <ServiceCard
+        serviceName = {"Reading Glasses"}
+        available = {1}
+        src = {'/service-card-images/reading-glasses.svg'}
+    />
+
 </div>
