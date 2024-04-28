@@ -58,7 +58,7 @@
 	});
 </script>
 
-<div id={field} class="dropdown-menu max-w-[250px]">
+<div id={field} class="dropdown-menu relative w-full">
 	<div class="border-1 relative rounded-md border p-3">
 		<button
 			class="btn btn-primary dropdown-toggle w-full"
@@ -73,7 +73,7 @@
 				{:else}
 					<!-- load pills -->
 					<h6 class="absolute top-0 -m-[10px] ml-[1px] flex bg-white p-[5px]">{field}</h6>
-					<div class="z-50 flex flex-wrap justify-start gap-1 text-start">
+					<div class="z-10 flex flex-wrap justify-start gap-1 text-start">
 						{#each value as item}
 							<Pill value={item} on:click={() => handleRemove(item)} />
 						{/each}
@@ -87,12 +87,11 @@
 	</div>
 
 	<div
-		class="border-1 dropdown-menu mt-2 rounded-md border p-5"
+		class="border-1 dropdown-menu fixed z-20 mt-2 rounded-md border bg-white p-5"
 		style="display: {showOptions ? 'block' : 'none'};"
 	>
 		<!-- search input -->
-		<!-- search input -->
-		<div class="relative text-gray-300">
+		<div class="relative w-full text-gray-300">
 			<input
 				class="w-full rounded-lg border border-gray-300 pr-10 text-suse-black"
 				bind:value={filter}
