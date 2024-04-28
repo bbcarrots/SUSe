@@ -4,14 +4,6 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { type StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { insertStudentDB, deleteStudentDB, updateStudentDB, selectStudentDB } from '$lib/server/StudentSB';
 
-// admins
-import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
-import { insertAdminDB, deleteAdminDB, updateAdminDB, selectAdminDB } from '$lib/server/AdminSB';
-
-// usage logs
-import { type UsageLogDBObj, type UsageLogFilter, type UsageLogResponse } from '$lib/classes/UsageLog';
-import { insertUsageLogDB, deleteUsageLogDB, updateUsageLogDB, selectUsageLogDB } from '$lib/server/UsageLogSB';
-
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   it('adds 1 + 2 to equal 3', () => {
     expect(1 + 2).toBe(3);
