@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { type StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { insertStudentDB, deleteStudentDB, updateStudentDB, selectStudentDB } from '$lib/server/StudentSB';
 import { Service, type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
-import { insertServiceDB, deleteServiceDB } from '$lib/server/ServiceSB';
+import { insertServiceDB, selectServiceDB, deleteServiceDB } from '$lib/server/ServiceSB';
 
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
