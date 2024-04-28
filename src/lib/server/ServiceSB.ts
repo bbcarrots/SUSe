@@ -24,7 +24,9 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 
 	// if user is an admin, selects service_id, service_name, service_type, in_use
 	if (filter.isAdmin) {
-		query = query.eq('in_use', filter.inUse);
+		if (filter.inUse != null) {
+            query = query.eq('in_use', filter.inUse);
+        }
 
 		if (filter.serviceID) {
 			query = query.eq('service_id', filter.serviceID);
@@ -119,6 +121,15 @@ async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceRespo
 	const serviceDB = await selectServiceDB(filter);
 
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
+        if (serviceDB.serviceRaws[0].in_use) {
+            return {
+                success: false,
+                serviceRaws: null,
+                availableServices: null,
+                error: 'Error: Service is in use.'
+            };
+        }
+
 		return success;
 	}
 
@@ -176,7 +187,7 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		serviceID: serviceID,
 		serviceName: '',
 		serviceType: '',
-		inUse: false, // service has to be not in use to be deleted
+		inUse: null, // service has to be not in use to be deleted
 		isAdmin: true
 	});
 

@@ -28,7 +28,7 @@ export type ServiceFilter = {
 	serviceID: number;
 	serviceName: string;
 	serviceType: string;
-	inUse: boolean;
+	inUse: boolean | null;
 	isAdmin: boolean;
 };
 
@@ -51,7 +51,7 @@ export class Service {
 			serviceID: 0,
 			serviceName: '',
 			serviceType: '',
-			inUse: false,
+			inUse: null,
 			isAdmin: true
 		}
 	): Promise<ServiceResponse> {
