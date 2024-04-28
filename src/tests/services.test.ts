@@ -196,6 +196,7 @@ describe('deleteServiceDB()', () => {
 describe('selectServiceDB', () => {
   const newServiceNumber = 100004;
   const newServiceName = "Acer Nitro 5 AN515-58-50YE";
+  const glassesServiceNumber = 100020;
 
   let serviceInstanceList: ServiceDBObj[] = [];
 
@@ -216,7 +217,7 @@ describe('selectServiceDB', () => {
     }
 
     const glassesInstance: ServiceDBObj = {
-      service_id: 100020,
+      service_id: glassesServiceNumber,
       service_type_id: 4, // service type number of reading glasses
       service_name: "Ray-Ban RB3183 (Black)",
       service_type: "Reading Glasses",
@@ -287,7 +288,7 @@ describe('selectServiceDB', () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100004, 100006, 100008]; // all laptops, not including glasses
+      const expectedServiceNumbers = [100004, 100006, 100008]; // all even (not in use) laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
@@ -295,19 +296,20 @@ describe('selectServiceDB', () => {
 
   });
 
-  it.todo('success: selected single student in database using rfid', async () => {
-    const oneStudentFilter: StudentFilter = {
-      minStudentNumber: 0,
-      maxStudentNumber: 0,
-      username: "",
-      rfid: newRFID
+  it('success: selected single student in database using serviceName', async () => {
+    const glassesStudentFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "Ray-Ban RB3183 (Black)",
+      serviceType: "",
+      inUse: false,
+      isAdmin: true // so services even in use are shown
     }
-    const selectOutput = await selectStudentDB(oneStudentFilter);
+    const selectOutput = await selectServiceDB(glassesStudentFilter);
 
-    if(selectOutput.studentRaws !== null){
-      const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
-      // compare selected student number with inserted student number
-      expect(selectOutputSN).toStrictEqual(studentInstanceList[0].sn_id);
+    if(selectOutput.serviceRaws !== null){
+      const selectOutputSN = selectOutput.serviceRaws[0].service_id; // extract student number from selected student record
+      // compare selected service number with inserted service number
+      expect(selectOutputSN).toStrictEqual(glassesServiceNumber);
     }
   });
 
