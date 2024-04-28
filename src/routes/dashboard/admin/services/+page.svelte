@@ -1,8 +1,14 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
+	import Multiselect from '$lib/components/Multiselect.svelte';
+	import { serviceTypes } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
 
 	export let data;
+	//for filters
+	let serviceTypesValue: string[] = [];
+
+	//for table
 	let headers: string[] = ['Service ID', 'Service Type'];
 	let hide: string[] = [];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
@@ -48,4 +54,10 @@
 	}
 </script>
 
-<Table {headers} info={services} primaryKey="serviceID" {hide} {disableEdit} />
+<div class="grid gap-2">
+	<h3 class="pt-4">Services</h3>
+	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
+	</div>
+	<Table {headers} info={services} primaryKey="serviceID" {hide} {disableEdit} />
+</div>
