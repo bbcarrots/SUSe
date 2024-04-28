@@ -431,8 +431,6 @@ describe.todo('Service.insertService', () => {
   });
 });
 
-// implement the ff tests for insertService
-
 describe('fail: Service.insertService with same Service ID', () => { // service names are not unique
   // create dummy serviceInstance for insertion
   const newServiceNumber = 100003;
@@ -473,6 +471,77 @@ describe('fail: Service.insertService with same Service ID', () => { // service 
 
     // insert serviceSameID, should error
     await expect(insertServiceDB(serviceSameID)).resolves.toStrictEqual(expectedState)
+  });
+
+});
+
+describe('updateServiceDB()', () => {
+  const newServiceNumber = 100004;
+  const newServiceName = "Extension cord (5 meters)";
+  const serviceInstance: ServiceDBObj = {
+    service_id: newServiceNumber,
+    service_type_id: 3, // service type number of extension cord
+    service_name: newServiceName,
+    service_type: "Extension Cord",
+    in_use: false
+  };
+
+  beforeEach(async () => {
+    await insertServiceDB(serviceInstance); // insert serviceInstance first
+  });
+
+  afterEach(async () => {
+    await deleteServiceDB(newServiceNumber); // clean up serviceInstance
+  });
+
+  it('success: inserted service correctly updated in database', async () => {
+    // instance that updates service name only
+    
+    const updatedServiceInstance: ServiceDBObj = {
+      service_id: newServiceNumber,
+      service_type_id: 3, // service type number of extension cord
+      service_name: "Extension Cord (4.5 meters)",
+      service_type: "Extension Cord",
+      in_use: false
+    };
+
+    // update the service
+    await updateServiceDB(updatedServiceInstance);
+
+    // select the updated service for crosschecking
+    const updatedServiceFilter: ServiceFilter = {
+      serviceID: newServiceNumber,
+      serviceName: "Extension Cord (4.5 meters)",
+      serviceType: "Extension Cord",
+      inUse: false,
+      isAdmin: false
+    }
+    const updatedServiceOutput = await selectServiceDB(updatedServiceFilter);
+    if (updatedServiceOutput.serviceRaws !== null){
+      // selected service from DB should be same with our updatedServiceInstance
+      expect(updatedServiceOutput.serviceRaws[0]).toStrictEqual(updatedServiceInstance);
+    }
+  });
+
+  it('error: updating with wrong service number', async () => {
+    // returned ServiceResponse upon failed insert into database
+    const expectedState: ServiceResponse = {
+      success: false,
+      serviceRaws: null,
+      availableServices: null,
+      error: 'Error: Service does not exist'
+    }
+    const wrongServiceNumber: number = 300004;
+
+    const updatedServiceInstance: ServiceDBObj = {
+      service_id: wrongServiceNumber,
+      service_type_id: 3, // service type number of extension cord
+      service_name: "Extension Cord (4.5 meters)",
+      service_type: "Extension Cord",
+      in_use: false
+    };
+
+    await expect(updateServiceDB(updatedServiceInstance)).resolves.toStrictEqual(expectedState);
   });
 
 });
