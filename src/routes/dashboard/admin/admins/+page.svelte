@@ -54,12 +54,16 @@
 	}
 </script>
 
-<Table
-	on:delete={handleDelete}
-	on:update={handleUpdate}
-	{headers}
-	info={admins}
-	primaryKey="adminID"
-	{hide}
-	{disableEdit}
-/>
+<div class="grid gap-2">
+	<h3 class="pt-4">Admins</h3>
+	<!-- <div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"></div> -->
+	<Table
+		on:delete={handleDelete}
+		on:update={handleUpdate}
+		{headers}
+		info={admins}
+		primaryKey="adminID"
+		{hide}
+		{disableEdit}
+	/>
+</div>
