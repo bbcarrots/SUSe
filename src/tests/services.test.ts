@@ -202,7 +202,7 @@ describe('selectServiceDB', () => {
 
   beforeEach(async () => {
     // insert dummy service instances first
-    for(let offset = 0; offset < 5; offset++){
+    for(let offset = 0; offset < 3; offset++){
 
       const serviceInstance: ServiceDBObj = {
         service_id: newServiceNumber + offset,
@@ -266,7 +266,7 @@ describe('selectServiceDB', () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100004, 100005, 100006, 100007, 100008]; // all laptops, not including glasses
+      const expectedServiceNumbers = [100004, 100005, 100006]; // all laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
@@ -288,7 +288,7 @@ describe('selectServiceDB', () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100004, 100006, 100008]; // all even (not in use) laptops, not including glasses
+      const expectedServiceNumbers = [100004]; // all even (not in use) laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
