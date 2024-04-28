@@ -20,7 +20,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
     Filter contains option for service ID, type, name, if in use, and if is admin. */
 	let query = supabase
 		.from('service')
-		.select('service_id, service_name, in_use, service_type (service_type)');
+		.select('service_id, service_type_id, service_name, in_use, service_type (service_type)');
 
 	// if user is an admin, selects service_id, service_name, service_type, in_use
 	if (filter.isAdmin) {
@@ -60,6 +60,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 			for (const row of data) {
 				formattedData.push({
 					service_id: row.service_id,
+                    service_type_id: row.service_type_id,
 					service_name: row.service_name,
 					service_type: row.service_type.service_type, // we assume each service only has one service_type
 					in_use: row.in_use

@@ -22,6 +22,7 @@ export type UsageLogProcessed = {
 
 export type ServiceProcessed = {
 	serviceID: number;
+    serviceTypeID: number;
 	serviceName: string;
 	serviceType: string;
 	inUse: boolean;
