@@ -208,7 +208,7 @@ describe('selectServiceDB', () => {
         service_type_id: 5, // service type number of laptop
         service_name: newServiceName + offset.toString(),
         service_type: "Laptop",
-        in_use: false
+        in_use: offset % 2 == 0 ? false : true // odd laptops are in use
       };
 
       serviceInstanceList.push(serviceInstance);
@@ -251,7 +251,7 @@ describe('selectServiceDB', () => {
     }
   });
 
-  it('success: entries within a certain service type', async () => {
+  it('success: entries within a certain service type, admin', async () => {
     // insert multiple student entries first
 
     const multipleStudentFilter: ServiceFilter = {
@@ -259,13 +259,35 @@ describe('selectServiceDB', () => {
       serviceName: "",
       serviceType: "Laptop",
       inUse: false,
-      isAdmin: false
+      isAdmin: true // so services even in use are shown
     }
 
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
       const expectedServiceNumbers = [100004, 100005, 100006, 100007, 100008]; // all laptops, not including glasses
+
+      // compare selected student number with inserted student number
+      expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
+    }
+
+  });
+
+  it('success: entries within a certain service type, student (only inUse == false)', async () => {
+    // insert multiple student entries first
+
+    const multipleStudentFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "",
+      serviceType: "Laptop",
+      inUse: false,
+      isAdmin: false // so only services not in use are shown
+    }
+
+    const selectOutput = await selectServiceDB(multipleStudentFilter);
+    if(selectOutput.serviceRaws !== null){
+      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
+      const expectedServiceNumbers = [100004, 100006, 100008]; // all laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
