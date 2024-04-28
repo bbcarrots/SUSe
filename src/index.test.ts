@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
+import { type StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { insertStudentDB, deleteStudentDB, updateStudentDB, selectStudentDB } from '$lib/server/StudentSB';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
@@ -164,7 +164,8 @@ describe('updateStudentDB()', () => {
     const updatedStudentFilter: StudentFilter = {
       minStudentNumber: newStudentNumber,
       maxStudentNumber: newStudentNumber,
-      username: newUsername
+      username: newUsername,
+      rfid: 1004
     }
     const updatedStudentOutput = await selectStudentDB(updatedStudentFilter);
     if (updatedStudentOutput.studentRaws !== null){
@@ -271,7 +272,7 @@ describe('Student.selectStudentDB', () => {
         college: "College of Dummy", 
         program: "BS Dummy", 
         phone_number: "09123456789", 
-        is_enrolled: false
+        is_enrolled: false,
       };
 
         studentInstanceList.push(dummyStudent);
@@ -290,7 +291,8 @@ describe('Student.selectStudentDB', () => {
     const oneStudentFilter: StudentFilter = {
       minStudentNumber: newStudentNumber,
       maxStudentNumber: newStudentNumber,
-      username: newUsername
+      username: newUsername,
+      rfid: newRFID
     }
     const selectOutput = await selectStudentDB(oneStudentFilter);
 
@@ -307,7 +309,8 @@ describe('Student.selectStudentDB', () => {
     const multipleStudentFilter: StudentFilter = {
       minStudentNumber: 2030,
       maxStudentNumber: 2030,
-      username: ""
+      username: "",
+      rfid: 0
     }
     const selectOutput = await selectStudentDB(multipleStudentFilter);
     if(selectOutput.studentRaws !== null){
@@ -320,11 +323,28 @@ describe('Student.selectStudentDB', () => {
 
   });
 
+  it('success: selected single student in database using rfid', async () => {
+    const oneStudentFilter: StudentFilter = {
+      minStudentNumber: 0,
+      maxStudentNumber: 0,
+      username: "",
+      rfid: newRFID
+    }
+    const selectOutput = await selectStudentDB(oneStudentFilter);
+
+    if(selectOutput.studentRaws !== null){
+      const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
+      // compare selected student number with inserted student number
+      expect(selectOutputSN).toStrictEqual(studentInstanceList[0].sn_id);
+    }
+  });
+
   it('error: selecting single nonexistent student record', async () => {
     const nonexistentStudentFilter: StudentFilter = {
       minStudentNumber: 200000000,
       maxStudentNumber: 200000000,
-      username: "dummyfiltertest"
+      username: "dummyfiltertest",
+      rfid: 90210,
     }
 
     const selectOutput = await selectStudentDB(nonexistentStudentFilter);
@@ -342,7 +362,8 @@ describe('error: Student.selectStudentDB wrong input', () => {
     const invalidFourDigitFilter: StudentFilter = {
       minStudentNumber: 1945,
       maxStudentNumber: 1989,
-      username: "dummyfiltertest"
+      username: "dummyfiltertest",
+      rfid: 0
     }
 
     const expectedError: StudentResponse = {
@@ -358,7 +379,8 @@ describe('error: Student.selectStudentDB wrong input', () => {
     const invalidFourDigitFilter: StudentFilter = {
       minStudentNumber: 194512345,
       maxStudentNumber: 198954321,
-      username: "dummyfiltertest"
+      username: "dummyfiltertest",
+      rfid: 90210
     }
 
     const expectedError: StudentResponse = {
