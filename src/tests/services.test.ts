@@ -150,3 +150,45 @@ describe('updateServiceDB()', () => {
   });
 
 });
+
+
+describe('deleteServiceDB()', () => {
+  const newServiceNumber = 100004;
+  const newServiceName = "Lenovo Ideapad Slim 3";
+  
+  const serviceInstance: ServiceDBObj = {
+    service_id: newServiceNumber,
+    service_type_id: 5, // service type number of laptop
+    service_name: newServiceName,
+    service_type: "Extension Cord",
+    in_use: false
+  };
+
+  beforeEach(async () => {
+    await insertServiceDB(serviceInstance); // insert serviceInstance first
+  });
+
+  it('success: deleted student in database', async () => {
+    // returned ServiceResponse upon successful deletion from database
+    const expectedState: ServiceResponse = {
+      success: true,
+      serviceRaws: null,
+      availableServices: null,
+      error: null
+    }
+    await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
+  });
+
+  it('error: deleting nonexistent student in database', async () => {
+    // returned ServiceResponse upon failed deletion from database
+    const expectedState: ServiceResponse = {
+      success: false,
+      serviceRaws: null,
+      availableServices: null,
+      error: "Error: Service does not exist"
+    }
+
+    await expect(deleteServiceDB(900000000)).resolves.toStrictEqual(expectedState);
+  });
+
+});
