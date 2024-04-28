@@ -107,3 +107,13 @@ for (let year = 2010; year <= currentYear; year++) {
 studentNumberYear.sort((a, b) => b.value - a.value);
 
 export { studentNumberYear };
+
+export const serviceTypes = [
+	{ name: 'Calculator', value: 1 },
+	{ name: 'Extension Cord', value: 2 },
+	{ name: 'Discussion Room', value: 3 },
+	{ name: 'Umbrella', value: 4 },
+	{ name: 'Laptop', value: 5 },
+	{ name: 'Adapter', value: 6 },
+	{ name: 'Reading Glasses', value: 7 }
+];
