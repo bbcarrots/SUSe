@@ -160,7 +160,7 @@ describe('deleteServiceDB()', () => {
     service_id: newServiceNumber,
     service_type_id: 5, // service type number of laptop
     service_name: newServiceName,
-    service_type: "Extension Cord",
+    service_type: "Laptop",
     in_use: false
   };
 
@@ -189,6 +189,120 @@ describe('deleteServiceDB()', () => {
     }
 
     await expect(deleteServiceDB(900000000)).resolves.toStrictEqual(expectedState);
+  });
+
+});
+
+describe('selectServiceDB', () => {
+  const newServiceNumber = 100004;
+  const newServiceName = "Acer Nitro 5 AN515-58-50YE";
+
+  let serviceInstanceList: ServiceDBObj[] = [];
+
+  beforeEach(async () => {
+    // insert dummy service instances first
+    for(let offset = 0; offset < 5; offset++){
+
+      const serviceInstance: ServiceDBObj = {
+        service_id: newServiceNumber + offset,
+        service_type_id: 5, // service type number of laptop
+        service_name: newServiceName + offset.toString(),
+        service_type: "Laptop",
+        in_use: false
+      };
+
+      serviceInstanceList.push(serviceInstance);
+      await insertServiceDB(serviceInstance);
+    }
+
+    const glassesInstance: ServiceDBObj = {
+      service_id: 100020,
+      service_type_id: 4, // service type number of reading glasses
+      service_name: "Ray-Ban RB3183 (Black)",
+      service_type: "Reading Glasses",
+      in_use: false
+    };
+    serviceInstanceList.push(glassesInstance);
+    await insertServiceDB(glassesInstance);
+
+  });
+
+  afterEach(async () => {
+    // clean up dummy entries
+    for(var service of serviceInstanceList){
+      await deleteServiceDB(service.service_id);
+    }
+  });
+
+  it('success: selected single service in database', async () => {
+    const oneServiceFilter: ServiceFilter = {
+      serviceID: 100007,
+      serviceName: "ACER Predator Helios 16 PH16-71-72VB GeForce RTX™ 4060 Intel® Core™ i7 Laptop (Abyssal Black)",
+      serviceType: "Laptop",
+      inUse: false,
+      isAdmin: false
+    }
+    const selectOutput = await selectServiceDB(oneServiceFilter);
+
+    if(selectOutput.serviceRaws !== null){
+      const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
+      // compare selected student number with inserted student number
+      expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
+    }
+  });
+
+  it('success: entries within a certain service type', async () => {
+    // insert multiple student entries first
+
+    const multipleStudentFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "",
+      serviceType: "Laptop",
+      inUse: false,
+      isAdmin: false
+    }
+
+    const selectOutput = await selectServiceDB(multipleStudentFilter);
+    if(selectOutput.serviceRaws !== null){
+      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
+      const expectedServiceNumbers = [100004, 100005, 100006, 100007, 100008]; // all laptops, not including glasses
+
+      // compare selected student number with inserted student number
+      expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
+    }
+
+  });
+
+  it.todo('success: selected single student in database using rfid', async () => {
+    const oneStudentFilter: StudentFilter = {
+      minStudentNumber: 0,
+      maxStudentNumber: 0,
+      username: "",
+      rfid: newRFID
+    }
+    const selectOutput = await selectStudentDB(oneStudentFilter);
+
+    if(selectOutput.studentRaws !== null){
+      const selectOutputSN = selectOutput.studentRaws[0].sn_id; // extract student number from selected student record
+      // compare selected student number with inserted student number
+      expect(selectOutputSN).toStrictEqual(studentInstanceList[0].sn_id);
+    }
+  });
+
+  it.todo('error: selecting single nonexistent student record', async () => {
+    const nonexistentStudentFilter: StudentFilter = {
+      minStudentNumber: 200000000,
+      maxStudentNumber: 200000000,
+      username: "dummyfiltertest",
+      rfid: 90210,
+    }
+
+    const selectOutput = await selectStudentDB(nonexistentStudentFilter);
+    const selectOutputArray = selectOutput.studentRaws;
+
+    const expectedArray: StudentDBObj[] = []; // studentRaws array filed should be empty since record does not exist
+
+    expect(selectOutputArray).toStrictEqual(expectedArray);
   });
 
 });
