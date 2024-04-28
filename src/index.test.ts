@@ -1,9 +1,20 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+
+// students
 import { type StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { insertStudentDB, deleteStudentDB, updateStudentDB, selectStudentDB } from '$lib/server/StudentSB';
-import { Service, type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
-import { insertServiceDB, selectServiceDB, deleteServiceDB } from '$lib/server/ServiceSB';
 
+// services
+import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { insertServiceDB, deleteServiceDB, updateServiceDB, selectServiceDB } from '$lib/server/ServiceSB';
+
+// admins
+import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
+import { insertAdminDB, deleteAdminDB, updateAdminDB, selectAdminDB } from '$lib/server/AdminSB';
+
+// usage logs
+import { type UsageLogDBObj, type UsageLogFilter, type UsageLogResponse } from '$lib/classes/UsageLog';
+import { insertUsageLogDB, deleteUsageLogDB, updateUsageLogDB, selectUsageLogDB } from '$lib/server/UsageLogSB';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   it('adds 1 + 2 to equal 3', () => {
@@ -418,3 +429,85 @@ describe('Service.insertService', () => {
     await deleteServiceDB(newServiceID); // clean up dummy entry
   });
 });
+
+// implement the ff tests for insertService
+
+// describe('fail: Student.insertStudent with same SN or same username', () => {
+//   // create dummy studentInstance for insertion
+//   const newStudentNumber = 202100002;
+//   const newUsername = "dummyfailinsert";
+//   const studentInstance: StudentDBObj = {sn_id: newStudentNumber, 
+//     rfid: 1001, 
+//     username: newUsername, 
+//     pw: "Password1234", 
+//     first_name: "Dummy", 
+//     middle_initial: "D", 
+//     last_name: "Dumdum", 
+//     college: "College of Dummy", 
+//     program: "BS Dummy", 
+//     phone_number: "09123456789", 
+//     is_enrolled: false
+//   };
+
+//   beforeEach(async () => {
+//     await insertStudentDB(studentInstance); // insert studentInstance first
+//   });
+
+//   afterEach(async () => {
+//     await deleteStudentDB(newStudentNumber); // clean up studentInstance
+//   });
+
+//   it('error: inserting with student number already in use', async () => {
+//     // returned StudentResponse upon failed insert with existing sn_id
+//     const expectedState: StudentResponse = {
+//       success: false,
+//       studentRaws: null,
+//       error: 'duplicate key value violates unique constraint "student_sn_id_key"' // error message from supabase with existing SN
+//     }
+
+//     // create 2nd dummy studentSameSN with same SN
+
+//     const studentSameSN: StudentDBObj = {sn_id: newStudentNumber, 
+//       rfid: 1002, 
+//       username: "dummy", 
+//       pw: "1234Password", 
+//       first_name: "DummyJr", 
+//       middle_initial: "D", 
+//       last_name: "Dumdum", 
+//       college: "College of Not Dumm", 
+//       program: "BS Not Dummy", 
+//       phone_number: "09123456789", 
+//       is_enrolled: false
+//     };
+
+//     // insert studentSameSN, should error
+//     await expect(insertStudentDB(studentSameSN)).resolves.toStrictEqual(expectedState)
+//   });
+
+//   it('error: inserting with username already in use', async () => {
+//     // returned StudentResponse upon failed insert with existing username
+//     const expectedState: StudentResponse = {
+//       success: false,
+//       studentRaws: null,
+//       error: 'duplicate key value violates unique constraint "student_username_key"' // error message from supabase with existing username
+//     }
+
+//     // create 2nd dummy studentSameUsername with same username
+//     const studentSameUsername: StudentDBObj = {sn_id: 202101013, 
+//       rfid: 1003, 
+//       username: newUsername, 
+//       pw: "1234Password", 
+//       first_name: "DummyJr", 
+//       middle_initial: "D", 
+//       last_name: "Dumdum", 
+//       college: "College of Not Dumm", 
+//       program: "BS Not Dummy", 
+//       phone_number: "09123456789", 
+//       is_enrolled: false
+//     };
+
+//     // insert studentSameUsername, should error
+//     await expect(insertStudentDB(studentSameUsername)).resolves.toStrictEqual(expectedState)
+//   });
+
+// });
