@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { type StudentDBObj, type StudentFilter, type StudentResponse} from '$lib/classes/Student';
 import { insertStudentDB, deleteStudentDB, updateStudentDB, selectStudentDB } from '$lib/server/StudentSB';
+import { Service, type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
+import { insertServiceDB, deleteServiceDB } from '$lib/server/ServiceSB';
+
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   it('adds 1 + 2 to equal 3', () => {
@@ -392,3 +395,26 @@ describe('error: Student.selectStudentDB wrong input', () => {
     expect(selectStudentDB(invalidFourDigitFilter)).resolves.toStrictEqual(expectedError);
   });
 })
+
+describe('Service.insertService', () => {
+  const newServiceID = 100002;
+  const newServiceName = "Red automatic umbrella";
+  const serviceInstance: ServiceDBObj = {
+    service_id: newServiceID,
+    service_name: newServiceName,
+    service_type: "Umbrella",
+    in_use: false
+  };
+
+  it('success: inserted service in database', async () => {
+    // returned StudentResponse upon successful insert into database
+    const expectedState: ServiceResponse = { // defined "success" state in ServiceSB.ts
+      success: true,
+      serviceRaws: null,
+      availableServices: null,
+      error: null
+    }
+    await expect(insertServiceDB(serviceInstance)).resolves.toStrictEqual(expectedState);
+    await deleteServiceDB(newServiceID); // clean up dummy entry
+  });
+});
