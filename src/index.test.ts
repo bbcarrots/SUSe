@@ -433,28 +433,28 @@ describe.todo('Service.insertService', () => {
 
 // implement the ff tests for insertService
 
-describe('fail: Service.insertService with same Service ID and Service Name', () => {
-  // create dummy studentInstance for insertion
+describe('fail: Service.insertService with same Service ID', () => { // service names are not unique
+  // create dummy serviceInstance for insertion
   const newServiceNumber = 100003;
   const newServiceName = "fx-991EX Classwiz";
   const serviceInstance: ServiceDBObj = {
     service_id: newServiceNumber,
-    service_type_id: 1, // service type number of umbrella
+    service_type_id: 1, // service type number of calculator
     service_name: newServiceName,
     service_type: "Calculator",
     in_use: false
   };
 
   beforeEach(async () => {
-    await insertServiceDB(serviceInstance); // insert studentInstance first
+    await insertServiceDB(serviceInstance); // insert serviceInstance first
   });
 
   afterEach(async () => {
-    await deleteServiceDB(newServiceNumber); // clean up studentInstance
+    await deleteServiceDB(newServiceNumber); // clean up serviceInstance
   });
 
-  it('error: inserting with student number already in use', async () => {
-    // returned StudentResponse upon failed insert with existing sn_id
+  it('error: inserting service with service number already in use', async () => {
+    // returned ServiceResponse upon failed insert with existing service_id
     const expectedState: ServiceResponse = {
       success: false,
       serviceRaws: null,
@@ -462,44 +462,17 @@ describe('fail: Service.insertService with same Service ID and Service Name', ()
       error: 'duplicate key value violates unique constraint "service_pkey"' // error message from supabase with existing service ID
     }
 
-    // create 2nd dummy studentSameSN with same SN
-
+    // create 2nd dummy serviceSameID with same service number
     const serviceSameID: ServiceDBObj = {
       service_id: newServiceNumber,
-      service_type_id: 1, // service type number of umbrella
+      service_type_id: 1, // service type number of calculator
       service_name: "another fx-991EX Classwiz",
       service_type: "Calculator",
       in_use: false
     };
 
-    // insert studentSameSN, should error
+    // insert serviceSameID, should error
     await expect(insertServiceDB(serviceSameID)).resolves.toStrictEqual(expectedState)
-  });
-
-  it.todo('error: inserting with username already in use', async () => {
-    // returned StudentResponse upon failed insert with existing username
-    const expectedState: StudentResponse = {
-      success: false,
-      studentRaws: null,
-      error: 'duplicate key value violates unique constraint "student_username_key"' // error message from supabase with existing username
-    }
-
-    // create 2nd dummy studentSameUsername with same username
-    const studentSameUsername: StudentDBObj = {sn_id: 202101013, 
-      rfid: 1003, 
-      username: newUsername, 
-      pw: "1234Password", 
-      first_name: "DummyJr", 
-      middle_initial: "D", 
-      last_name: "Dumdum", 
-      college: "College of Not Dumm", 
-      program: "BS Not Dummy", 
-      phone_number: "09123456789", 
-      is_enrolled: false
-    };
-
-    // insert studentSameUsername, should error
-    await expect(insertStudentDB(studentSameUsername)).resolves.toStrictEqual(expectedState)
   });
 
 });
