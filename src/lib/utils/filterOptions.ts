@@ -1,3 +1,8 @@
+interface FilterObject {
+	name: string;
+	value: number;
+}
+
 export const collegePrograms = [
 	{ name: 'Architecture', value: 1 },
 	{ name: 'Landscape Architecture', value: 2 },
@@ -92,3 +97,13 @@ export const colleges = [
 	{ name: 'College of Social Work and Community Development', value: 17 },
 	{ name: 'College of Statistics', value: 18 }
 ];
+
+const currentYear = new Date().getFullYear();
+
+const studentNumberYear: FilterObject[] = [];
+for (let year = 2010; year <= currentYear; year++) {
+	studentNumberYear.push({ name: String(year), value: year });
+}
+studentNumberYear.sort((a, b) => b.value - a.value);
+
+export { studentNumberYear };
