@@ -117,3 +117,19 @@ export const serviceTypes = [
 	{ name: 'Adapter', value: 6 },
 	{ name: 'Reading Glasses', value: 7 }
 ];
+
+export const userStatus = [
+	{ name: 'Not active', value: 1 },
+	{ name: 'Is active', value: 2 }
+];
+
+export const serviceStatus = [
+	{ name: 'Not in use', value: 1 },
+	{ name: 'In Use', value: 2 }
+];
+
+export const adminNicknames = [
+	{ name: 'Eloi', value: 1 },
+	{ name: 'Mark', value: 2 },
+	{ name: 'Tala', value: 3 }
+];
