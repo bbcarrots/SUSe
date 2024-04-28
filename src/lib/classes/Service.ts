@@ -9,6 +9,7 @@ import type { ServiceProcessed } from '$lib/utils/types';
 // parameter type for insert and update service DB functions
 export type ServiceDBObj = {
 	service_id: number;
+    service_type_id: number,
 	service_name: string;
 	service_type: string;
 	in_use: boolean;
@@ -38,6 +39,7 @@ export class Service {
 		/* Converts a ServiceProcessed to a ServiceDBObj. */
 		return {
 			service_id: service.serviceID,
+            service_type_id: service.serviceTypeID,
 			service_name: service.serviceName,
 			service_type: service.serviceType,
 			in_use: service.inUse
