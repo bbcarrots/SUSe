@@ -296,7 +296,7 @@ describe('selectServiceDB', () => {
 
   });
 
-  it('success: selected single student in database using serviceName', async () => {
+  it('success: selected single service using serviceName', async () => {
     const glassesStudentFilter: ServiceFilter = {
       serviceID: 0,
       serviceName: "Ray-Ban RB3183 (Black)",
@@ -313,18 +313,19 @@ describe('selectServiceDB', () => {
     }
   });
 
-  it.todo('error: selecting single nonexistent student record', async () => {
-    const nonexistentStudentFilter: StudentFilter = {
-      minStudentNumber: 200000000,
-      maxStudentNumber: 200000000,
-      username: "dummyfiltertest",
-      rfid: 90210,
+  it('error: selecting single nonexistent service name', async () => {
+    const nonexistentServiceFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "Nike LeBron 20 EP",
+      serviceType: "",
+      inUse: false,
+      isAdmin: true // so services even in use are shown
     }
 
-    const selectOutput = await selectStudentDB(nonexistentStudentFilter);
-    const selectOutputArray = selectOutput.studentRaws;
+    const selectOutput = await selectServiceDB(nonexistentServiceFilter);
+    const selectOutputArray = selectOutput.serviceRaws;
 
-    const expectedArray: StudentDBObj[] = []; // studentRaws array filed should be empty since record does not exist
+    const expectedArray: ServiceDBObj[] = []; // studentRaws array filed should be empty since record does not exist
 
     expect(selectOutputArray).toStrictEqual(expectedArray);
   });
