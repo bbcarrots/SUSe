@@ -237,9 +237,9 @@ describe('selectServiceDB', () => {
 
   it('success: selected single service in database', async () => {
     const oneServiceFilter: ServiceFilter = {
-      serviceID: 100007,
-      serviceName: "ACER Predator Helios 16 PH16-71-72VB GeForce RTX™ 4060 Intel® Core™ i7 Laptop (Abyssal Black)",
-      serviceType: "Laptop",
+      serviceID: 100004,
+      serviceName: "",
+      serviceType: "",
       inUse: false,
       isAdmin: false
     }
@@ -248,7 +248,7 @@ describe('selectServiceDB', () => {
     if(selectOutput.serviceRaws !== null){
       const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
       // compare selected student number with inserted student number
-      expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
+      expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[1].service_id);
     }
   });
 
