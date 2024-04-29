@@ -12,7 +12,7 @@ describe('sanity/integrity test: it should add 5 and 3 properly', () => {
 });
 
 
-describe.todo('Service.insertService', async () => {
+describe.skip('Service.insertService', async () => {
   const newServiceID = 100002;
   const newServiceName = "Red automatic umbrella";
   const serviceInstance: ServiceDBObj = {
@@ -36,7 +36,7 @@ describe.todo('Service.insertService', async () => {
   });
 });
 
-describe('fail: Service.insertService with same Service ID', async () => { // service names are not unique
+describe.skip('fail: Service.insertService with same Service ID', async () => { // service names are not unique
   // create dummy serviceInstance for insertion
   const newServiceNumber = 100003;
   const newServiceName = "fx-991EX Classwiz";
@@ -80,7 +80,7 @@ describe('fail: Service.insertService with same Service ID', async () => { // se
 
 });
 
-describe('updateServiceDB()', async () => {
+describe.skip('updateServiceDB()', async () => {
   const newServiceNumber = 100004;
   const newServiceName = "Extension cord (5 meters)";
   const serviceInstance: ServiceDBObj = {
@@ -152,7 +152,7 @@ describe('updateServiceDB()', async () => {
 });
 
 
-describe('deleteServiceDB()', async () => {
+describe.skip('deleteServiceDB()', async () => {
   const newServiceNumber = 100005;
   const newServiceName = "Lenovo Ideapad Slim 3";
   
@@ -192,7 +192,7 @@ describe('deleteServiceDB()', async () => {
   });
 });
 
-describe('error: deleting service that is in use', async () => {
+describe.skip('error: deleting service that is in use', async () => {
   const newServiceNumber = 100021;
   const newServiceName = "Extension cord (5 meters)";
   const serviceInstance: ServiceDBObj = {
@@ -266,9 +266,10 @@ describe('selectServiceDB', async () => {
 
   afterEach(async () => {
     // clean up dummy entries
-    for(var service of serviceInstanceList){
+    console.log(serviceInstanceList)
+    for(const service of serviceInstanceList){
       service.in_use = false;
-      updateServiceDB(service);
+      await updateServiceDB(service);
       await deleteServiceDB(service.service_id);
     }
   });

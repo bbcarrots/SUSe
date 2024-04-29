@@ -11,7 +11,7 @@ describe('sanity/integrity test: it should add properly', () => {
   });
 
 describe('insertUsageLogDB()', () => {
-  const newULID = 9;
+  const newULID = 10;
   const newSN = 205100001;
   const newAdminID = 212300001;
   const service_id = 100020;

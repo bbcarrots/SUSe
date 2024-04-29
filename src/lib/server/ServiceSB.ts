@@ -148,7 +148,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 		serviceID: service.service_id,
 		serviceName: '',
 		serviceType: '',
-		inUse: typeof service.in_use == 'boolean' ? service.in_use : false,
+		inUse: null,
 		isAdmin: true
 	});
 
