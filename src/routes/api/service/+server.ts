@@ -10,5 +10,5 @@ export async function PATCH({ request }) {
 export async function DELETE({ request }) {
 	/* Handles Delete requests for service records. */
 	const service = await request.json();
-	return json(await Service.deleteService(service.serviceNumber));
+	return json(await Service.deleteService(service.serviceID));
 }

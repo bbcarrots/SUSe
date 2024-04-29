@@ -10,7 +10,7 @@ import type { ServiceProcessed } from '$lib/utils/types';
 export type ServiceDBObj = {
 	service_id: number;
 	service_name: string;
-    service_type: string;
+	service_type: string;
 	in_use: boolean;
 };
 
@@ -18,14 +18,14 @@ export type ServiceDBObj = {
 export type ServiceResponse = {
 	success: boolean;
 	serviceRaws: ServiceDBObj[] | null;
-  availableServices: { [key: string]: number } | null;
+	availableServices: { [key: string]: number } | null;
 	error: string | null;
 };
 
 // filters for selecting service records
 export type ServiceFilter = {
 	serviceID: number;
-    serviceName: string;
+	serviceName: string;
 	serviceType: string;
 	inUse: boolean;
 	isAdmin: boolean;
@@ -38,19 +38,19 @@ export class Service {
 		/* Converts a ServiceProcessed to a ServiceDBObj. */
 		return {
 			service_id: service.serviceID,
-            service_name: service.serviceName,
-            service_type: service.serviceType,
-            in_use: service.inUse,
+			service_name: service.serviceName,
+			service_type: service.serviceType,
+			in_use: service.inUse
 		};
 	}
 
 	public static async selectServices(
 		filter: ServiceFilter = {
 			serviceID: 0,
-            serviceName: "",
-            serviceType: "",
-            inUse: true,
-			      isAdmin: false
+			serviceName: '',
+			serviceType: '',
+			inUse: false,
+			isAdmin: true
 		}
 	): Promise<ServiceResponse> {
 		/* Selects all service records in database using the default or given filter. */
