@@ -27,7 +27,7 @@ describe('insertUsageLogDB()', () => {
     datetime_end: "2027-04-05 11:06:59+00"
   };
 
-  it('success: inserted student in database', async () => {
+  it('success: inserted usage log in database', async () => {
     // returned StudentResponse upon successful insert into database
     const expectedState: UsageLogResponse = {
       success: true,
@@ -39,32 +39,32 @@ describe('insertUsageLogDB()', () => {
   });
 });
 
-describe.todo('fail: Student.insertStudent with same SN or same username', () => {
+describe.todo('fail: insertUsageLog with same ULID', () => {
   // create dummy studentInstance for insertion
-  const newStudentNumber = 202100002;
-  const newUsername = "dummyfailinsert";
-  const studentInstance: StudentDBObj = {sn_id: newStudentNumber, 
-    rfid: 1001, 
-    username: newUsername, 
-    pw: "Password1234", 
-    first_name: "Dummy", 
-    middle_initial: "D", 
-    last_name: "Dumdum", 
-    college: "College of Dummy", 
-    program: "BS Dummy", 
-    phone_number: "09123456789", 
-    is_enrolled: false
+  const newULID = 9;
+  const newSN = 205100001;
+  const newAdminID = 212300001;
+  const service_id = 100020;
+
+  const usageLogInstance: UsageLogDBObj = {
+    ul_id: newULID,
+    sn_id: newSN,
+    admin_id: newAdminID,
+    service_id: service_id,
+    service_type: "Laptop", 
+    datetime_start: "2027-04-05 11:06:00+00",
+    datetime_end: "2027-04-05 11:06:59+00"
   };
 
   beforeEach(async () => {
-    await insertStudentDB(studentInstance); // insert studentInstance first
+    await insertUsageLogDB(usageLogInstance); // insert studentInstance first
   });
 
   afterEach(async () => {
     await deleteStudentDB(newStudentNumber); // clean up studentInstance
   });
 
-  it('error: inserting with student number already in use', async () => {
+  it('error: inserting with usage log ID already in use', async () => {
     // returned StudentResponse upon failed insert with existing sn_id
     const expectedState: StudentResponse = {
       success: false,
@@ -89,32 +89,6 @@ describe.todo('fail: Student.insertStudent with same SN or same username', () =>
 
     // insert studentSameSN, should error
     await expect(insertStudentDB(studentSameSN)).resolves.toStrictEqual(expectedState)
-  });
-
-  it('error: inserting with username already in use', async () => {
-    // returned StudentResponse upon failed insert with existing username
-    const expectedState: StudentResponse = {
-      success: false,
-      studentRaws: null,
-      error: 'duplicate key value violates unique constraint "student_username_key"' // error message from supabase with existing username
-    }
-
-    // create 2nd dummy studentSameUsername with same username
-    const studentSameUsername: StudentDBObj = {sn_id: 202101013, 
-      rfid: 1003, 
-      username: newUsername, 
-      pw: "1234Password", 
-      first_name: "DummyJr", 
-      middle_initial: "D", 
-      last_name: "Dumdum", 
-      college: "College of Not Dumm", 
-      program: "BS Not Dummy", 
-      phone_number: "09123456789", 
-      is_enrolled: false
-    };
-
-    // insert studentSameUsername, should error
-    await expect(insertStudentDB(studentSameUsername)).resolves.toStrictEqual(expectedState)
   });
 
 });
