@@ -10,7 +10,6 @@ describe('sanity/integrity test: it should add 2 and 3 properly', () => {
   });
 });
 
-
 describe('insertStudentDB()', () => {
   const newStudentNumber = 202100001;
   const newUsername = "dummyinsert";

@@ -12,7 +12,7 @@ describe('sanity/integrity test: it should add 5 and 3 properly', () => {
 });
 
 
-describe.todo('Service.insertService', () => {
+describe.todo('Service.insertService', async () => {
   const newServiceID = 100002;
   const newServiceName = "Red automatic umbrella";
   const serviceInstance: ServiceDBObj = {
@@ -36,7 +36,7 @@ describe.todo('Service.insertService', () => {
   });
 });
 
-describe('fail: Service.insertService with same Service ID', () => { // service names are not unique
+describe('fail: Service.insertService with same Service ID', async () => { // service names are not unique
   // create dummy serviceInstance for insertion
   const newServiceNumber = 100003;
   const newServiceName = "fx-991EX Classwiz";
@@ -80,7 +80,7 @@ describe('fail: Service.insertService with same Service ID', () => { // service 
 
 });
 
-describe('updateServiceDB()', () => {
+describe('updateServiceDB()', async () => {
   const newServiceNumber = 100004;
   const newServiceName = "Extension cord (5 meters)";
   const serviceInstance: ServiceDBObj = {
@@ -152,8 +152,8 @@ describe('updateServiceDB()', () => {
 });
 
 
-describe('deleteServiceDB()', () => {
-  const newServiceNumber = 100004;
+describe('deleteServiceDB()', async () => {
+  const newServiceNumber = 100005;
   const newServiceName = "Lenovo Ideapad Slim 3";
   
   const serviceInstance: ServiceDBObj = {
@@ -168,7 +168,7 @@ describe('deleteServiceDB()', () => {
     await insertServiceDB(serviceInstance); // insert serviceInstance first
   });
 
-  it('success: deleted student in database', async () => {
+  it('success: deleted service in database', async () => {
     // returned ServiceResponse upon successful deletion from database
     const expectedState: ServiceResponse = {
       success: true,
@@ -179,7 +179,7 @@ describe('deleteServiceDB()', () => {
     await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
   });
 
-  it('error: deleting nonexistent student in database', async () => {
+  it('error: deleting nonexistent service in database', async () => {
     // returned ServiceResponse upon failed deletion from database
     const expectedState: ServiceResponse = {
       success: false,
@@ -191,10 +191,35 @@ describe('deleteServiceDB()', () => {
     await expect(deleteServiceDB(900000000)).resolves.toStrictEqual(expectedState);
   });
 
+  it('error: deleting service that is in use', async () => {
+    let serviceInstanceInUse: ServiceDBObj = {
+      service_id: newServiceNumber,
+      service_type_id: 5, // service type number of laptop
+      service_name: newServiceName,
+      service_type: "Laptop",
+      in_use: true
+    };
+    updateServiceDB(serviceInstanceInUse);
+
+    // returned ServiceResponse upon failed deletion from database
+    const expectedState: ServiceResponse = {
+      success: false,
+      serviceRaws: null,
+      availableServices: null,
+      error: "Error: Service is in use."
+    }
+  
+    await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
+
+    serviceInstanceInUse.in_use = false;
+
+    updateServiceDB(serviceInstanceInUse);
+    deleteServiceDB(newServiceNumber);
+  });
 });
 
-describe('selectServiceDB', () => {
-  const newServiceNumber = 100004;
+describe('selectServiceDB', async () => {
+  const newServiceNumber = 100006;
   const newServiceName = "Acer Nitro 5 AN515-58-50YE";
   const glassesServiceNumber = 100020;
 
@@ -202,8 +227,7 @@ describe('selectServiceDB', () => {
 
   beforeEach(async () => {
     // insert dummy service instances first
-    for(let offset = 0; offset < 3; offset++){
-
+    for(let offset = 0; offset < 5; offset++){
       const serviceInstance: ServiceDBObj = {
         service_id: newServiceNumber + offset,
         service_type_id: 5, // service type number of laptop
@@ -231,13 +255,15 @@ describe('selectServiceDB', () => {
   afterEach(async () => {
     // clean up dummy entries
     for(var service of serviceInstanceList){
+      service.in_use = false;
+      updateServiceDB(service);
       await deleteServiceDB(service.service_id);
     }
   });
 
   it('success: selected single service in database', async () => {
     const oneServiceFilter: ServiceFilter = {
-      serviceID: 100004,
+      serviceID: 100006,
       serviceName: "",
       serviceType: "",
       inUse: false,
@@ -248,7 +274,7 @@ describe('selectServiceDB', () => {
     if(selectOutput.serviceRaws !== null){
       const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
       // compare selected student number with inserted student number
-      expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[1].service_id);
+      expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
     }
   });
 
@@ -266,7 +292,7 @@ describe('selectServiceDB', () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100004, 100005, 100006]; // all laptops, not including glasses
+      const expectedServiceNumbers = [100006, 100007, 100008, 100000, 100010]; // all laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
@@ -288,7 +314,7 @@ describe('selectServiceDB', () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100004]; // all even (not in use) laptops, not including glasses
+      const expectedServiceNumbers = [100006, 100008, 100010]; // all even (not in use) laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
