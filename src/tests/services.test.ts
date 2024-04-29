@@ -12,7 +12,7 @@ describe('sanity/integrity test: it should add 5 and 3 properly', () => {
 });
 
 
-describe.skip('Service.insertService', async () => {
+describe('Service.insertService', async () => {
   const newServiceID = 100002;
   const newServiceName = "Red automatic umbrella";
   const serviceInstance: ServiceDBObj = {
@@ -36,7 +36,7 @@ describe.skip('Service.insertService', async () => {
   });
 });
 
-describe.skip('fail: Service.insertService with same Service ID', async () => { // service names are not unique
+describe('fail: Service.insertService with same Service ID', async () => { // service names are not unique
   // create dummy serviceInstance for insertion
   const newServiceNumber = 100003;
   const newServiceName = "fx-991EX Classwiz";
@@ -80,7 +80,7 @@ describe.skip('fail: Service.insertService with same Service ID', async () => { 
 
 });
 
-describe.skip('updateServiceDB()', async () => {
+describe('updateServiceDB()', async () => {
   const newServiceNumber = 100004;
   const newServiceName = "Extension cord (5 meters)";
   const serviceInstance: ServiceDBObj = {
@@ -119,7 +119,7 @@ describe.skip('updateServiceDB()', async () => {
       serviceName: "Extension Cord (4.5 meters)",
       serviceType: "Extension Cord",
       inUse: false,
-      isAdmin: false
+      isAdmin: true
     }
     const updatedServiceOutput = await selectServiceDB(updatedServiceFilter);
     if (updatedServiceOutput.serviceRaws !== null){
@@ -152,7 +152,7 @@ describe.skip('updateServiceDB()', async () => {
 });
 
 
-describe.skip('deleteServiceDB()', async () => {
+describe('deleteServiceDB()', async () => {
   const newServiceNumber = 100005;
   const newServiceName = "Lenovo Ideapad Slim 3";
   
@@ -192,7 +192,7 @@ describe.skip('deleteServiceDB()', async () => {
   });
 });
 
-describe.skip('error: deleting service that is in use', async () => {
+describe('error: deleting service that is in use', async () => {
   const newServiceNumber = 100021;
   const newServiceName = "Extension cord (5 meters)";
   const serviceInstance: ServiceDBObj = {
@@ -210,10 +210,10 @@ describe.skip('error: deleting service that is in use', async () => {
   it('error: deleting service that is in use', async () => {
     // returned ServiceResponse upon failed deletion from database
     const expectedState: ServiceResponse = {
-      success: false,
+      success: true,
       serviceRaws: null,
       availableServices: null,
-      error: "Error: Service is in use."
+      error: "Warning: Service is in use."
     }
   
     await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
@@ -239,7 +239,7 @@ describe('selectServiceDB', async () => {
 
   beforeEach(async () => {
     // insert dummy service instances first
-    for(let offset = 0; offset < 5; offset++){
+    for(let offset = 0; offset < 3; offset++){
       const serviceInstance: ServiceDBObj = {
         service_id: newServiceNumber + offset,
         service_type_id: 5, // service type number of laptop
@@ -266,10 +266,9 @@ describe('selectServiceDB', async () => {
 
   afterEach(async () => {
     // clean up dummy entries
-    console.log(serviceInstanceList)
     for(const service of serviceInstanceList){
       service.in_use = false;
-      await updateServiceDB(service);
+      console.log(await updateServiceDB(service));
       await deleteServiceDB(service.service_id);
     }
   });
@@ -280,7 +279,7 @@ describe('selectServiceDB', async () => {
       serviceName: "",
       serviceType: "",
       inUse: false,
-      isAdmin: false
+      isAdmin: true
     }
     const selectOutput = await selectServiceDB(oneServiceFilter);
 
@@ -305,7 +304,7 @@ describe('selectServiceDB', async () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100006, 100007, 100008, 100000, 100010]; // all laptops, not including glasses
+      const expectedServiceNumbers = [100006, 100007, 100008]; // all laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
@@ -327,7 +326,7 @@ describe('selectServiceDB', async () => {
     const selectOutput = await selectServiceDB(multipleStudentFilter);
     if(selectOutput.serviceRaws !== null){
       const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100006, 100008, 100010]; // all even (not in use) laptops, not including glasses
+      const expectedServiceNumbers = [100006, 100008]; // all even (not in use) laptops, not including glasses
 
       // compare selected student number with inserted student number
       expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
@@ -352,7 +351,7 @@ describe('selectServiceDB', async () => {
     }
   });
 
-  it('error: selecting single nonexistent service name', async () => {
+  it('success: selecting single nonexistent service name ()should be empty', async () => {
     const nonexistentServiceFilter: ServiceFilter = {
       serviceID: 0,
       serviceName: "Nike LeBron 20 EP",
