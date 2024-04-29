@@ -1,7 +1,15 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
+	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
+	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
 
+	// for filters
+	let collegeValue: string[] = [];
+	let collegeProgramValue: string[] = [];
+	let studentNumberYearValue: string[] = [];
+
+	//for table
 	export let data;
 	let headers: string[] = [
 		'Student Number',
@@ -91,13 +99,29 @@
 	}
 </script>
 
-<Table
-	on:approve={handleApprove}
-	on:delete={handleDelete}
-	on:update={handleUpdate}
-	{headers}
-	info={students}
-	primaryKey="studentNumber"
-	{hide}
-	{disableEdit}
-/>
+<div class="grid gap-2">
+	<h3 class="pt-4">Students</h3>
+	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+		<Multiselect
+			field={'College Programs'}
+			options={collegePrograms}
+			bind:value={collegeProgramValue}
+		/>
+		<Multiselect field={'Colleges'} options={colleges} bind:value={collegeValue} />
+		<Multiselect
+			field={'Student Number Year'}
+			options={studentNumberYear}
+			bind:value={studentNumberYearValue}
+		/>
+	</div>
+	<Table
+		on:approve={handleApprove}
+		on:delete={handleDelete}
+		on:update={handleUpdate}
+		{headers}
+		info={students}
+		primaryKey="studentNumber"
+		{hide}
+		{disableEdit}
+	/>
+</div>
