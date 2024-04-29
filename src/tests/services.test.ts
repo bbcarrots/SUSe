@@ -190,17 +190,24 @@ describe('deleteServiceDB()', async () => {
 
     await expect(deleteServiceDB(900000000)).resolves.toStrictEqual(expectedState);
   });
+});
+
+describe('error: deleting service that is in use', async () => {
+  const newServiceNumber = 100021;
+  const newServiceName = "Extension cord (5 meters)";
+  const serviceInstance: ServiceDBObj = {
+    service_id: newServiceNumber,
+    service_type_id: 3, // service type number of extension cord
+    service_name: newServiceName,
+    service_type: "Extension Cord",
+    in_use: true
+  };
+
+  beforeEach(async () => {
+    await insertServiceDB(serviceInstance); // insert serviceInstance first
+  });
 
   it('error: deleting service that is in use', async () => {
-    let serviceInstanceInUse: ServiceDBObj = {
-      service_id: newServiceNumber,
-      service_type_id: 5, // service type number of laptop
-      service_name: newServiceName,
-      service_type: "Laptop",
-      in_use: true
-    };
-    updateServiceDB(serviceInstanceInUse);
-
     // returned ServiceResponse upon failed deletion from database
     const expectedState: ServiceResponse = {
       success: false,
@@ -210,10 +217,15 @@ describe('deleteServiceDB()', async () => {
     }
   
     await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
-
-    serviceInstanceInUse.in_use = false;
-
-    updateServiceDB(serviceInstanceInUse);
+    
+    const serviceInstance: ServiceDBObj = {
+      service_id: newServiceNumber,
+      service_type_id: 3, // service type number of extension cord
+      service_name: newServiceName,
+      service_type: "Extension Cord",
+      in_use: false
+    };  
+    updateServiceDB(serviceInstance); // make it unused for deletion
     deleteServiceDB(newServiceNumber);
   });
 });
