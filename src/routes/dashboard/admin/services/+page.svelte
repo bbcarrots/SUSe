@@ -13,10 +13,20 @@
 	let headers: string[] = ['Service ID', 'Service Type'];
 	let hide: string[] = [];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
-	const services: ServiceProcessed[] = [];
+	let serviceObjects = data.serviceRaws;
+	let services: ServiceProcessed[] = [];
 
 	// TO DO: Implement ServiceDBObj map to ServiceProcessed
-
+	if (serviceObjects !== null && serviceObjects !== undefined) {
+		services = serviceObjects.map((service) => {
+			return {
+				serviceID: service.service_id,
+				serviceName: service.service_name,
+				serviceType: service.service_type,
+				inUse: service.in_use
+			};
+		});
+	}
 	// ----------------------------------------------------------------------------------
 	import type { ServiceResponse } from '$lib/classes/Service.js';
 
@@ -61,5 +71,12 @@
 		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
 		<Multiselect field={'Service Status'} options={serviceStatus} bind:value={serviceStatusValue} />
 	</div>
-	<Table {headers} info={services} primaryKey="serviceID" {hide} {disableEdit} />
+	<Table 
+		on:delete={handleDelete}
+		on:update={handleUpdate}
+		{headers} 
+		info={services} 
+		primaryKey="serviceID" 
+		{hide} {disableEdit} 
+	/>
 </div>

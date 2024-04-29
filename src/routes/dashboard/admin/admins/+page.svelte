@@ -13,15 +13,18 @@
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
 	let hide: string[] = ['isActive'];
 	let disableEdit: string[] = ['adminID'];
-	const admins: AdminProcessed[] = [
-		{
-			adminID: 12345,
-			nickname: 'Gab',
-			isActive: false
-		}
-	];
+	let adminObjects = data.adminRaws;
+	let admins: AdminProcessed[] = [];
 
-	// TO DO: Implement mapping of AdminDBObj to AdminProcessed
+	if (adminObjects !== null && adminObjects !== undefined) {
+		admins = adminObjects.map((admin) => {
+			return {
+				adminID: admin.admin_id,
+				nickname: admin.nickname,
+				isActive: admin.is_active
+			};
+		});
+	}
 
 	// ----------------------------------------------------------------------------------
 	import type { AdminResponse } from '$lib/classes/Admin.js';
