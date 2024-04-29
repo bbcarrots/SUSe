@@ -2,7 +2,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import LoginForm from '$lib/components/LoginForm.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-	import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
 	export let form;
 
@@ -24,6 +24,11 @@
 		});
 
 		rfidResponse = await response.json();
+
+        if (rfidResponse.success == true){
+            let rfidNumber = rfidResponse.studentRaws?.[0].sn_id;
+            goto(`/dashboard/student/home/${rfidNumber}`)
+        }
 	}
 </script>
 
