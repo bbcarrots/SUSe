@@ -123,10 +123,10 @@ async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceRespo
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
         if (serviceDB.serviceRaws[0].in_use) {
             return {
-                success: false,
+                success: true,
                 serviceRaws: null,
                 availableServices: null,
-                error: 'Error: Service is in use.'
+                error: 'Warning: Service is in use.'
             };
         }
 
@@ -191,7 +191,7 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		isAdmin: true
 	});
 
-	if (!serviceCheck.success) {
+	if (!serviceCheck.success || serviceCheck.error == 'Warning: Service is in use.') {
 		return serviceCheck;
 	}
 
