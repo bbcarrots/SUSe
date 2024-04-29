@@ -17,13 +17,15 @@ const success: ServiceResponse = {
 
 export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Selects the service record/s from the database using a filter.
-    Filter contains option for service ID, type, name, and if in use. */
+    Filter contains option for service ID, type, name, if in use, and if is admin. */
 	let query = supabase
 		.from('service')
 		.select('service_id, service_name, in_use, service_type (service_type)');
-	/* If user is an admin, selects service_id, service_name, service_type, in_use */
+
+	// if user is an admin, selects service_id, service_name, service_type, in_use
 	if (filter.isAdmin) {
 		query = query.eq('in_use', filter.inUse);
+
 		if (filter.serviceID) {
 			query = query.eq('service_id', filter.serviceID);
 		}
@@ -36,7 +38,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 			query = query.eq('service_type', filter.serviceType);
 		}
 	} else {
-		/* If user is a student, selects all services which are not in_use */
+		// if user is a student, selects all services which are not in_use
 		query = query.eq('in_use', false);
 	}
 
@@ -51,7 +53,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		};
 	}
 
-	/* Handles formatting of data if admin */
+	// formats query return value into ServiceDBObj
 	if (filter.isAdmin) {
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
@@ -72,12 +74,11 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		}
 	}
 
-	/* Handles formatting of data if user */
 	const serviceTypeCount: { [key: string]: number } = {};
 
 	if (data != null) {
-		/* Counts number of times a particular service_type appears */
-		for (let row of data) {
+		// counts number of times a particular service_type appears
+		for (const row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
 				serviceTypeCount[row.service_type.service_type] += 1;
 			} else {
@@ -135,7 +136,8 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 		serviceID: service.service_id,
 		serviceName: '',
 		serviceType: '',
-		inUse: service.in_use
+		inUse: typeof service.in_use == 'boolean' ? service.in_use : false,
+		isAdmin: true
 	});
 
 	if (!serviceCheck.success) {
@@ -145,8 +147,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(service)) {
-		// updates service name only
-		if (value && typeof value == 'string') {
+		if (value && (typeof value == 'string' || typeof value == 'boolean')) {
 			updateObj[key] = value;
 		}
 	}
@@ -154,7 +155,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const { error } = await supabase
 		.from('service')
 		.update(updateObj)
-		.eq('sn_id', service.service_id);
+		.eq('service_id', service.service_id);
 
 	if (error) {
 		return {
@@ -174,7 +175,8 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		serviceID: serviceID,
 		serviceName: '',
 		serviceType: '',
-		inUse: false // service has to be not in use to be deleted
+		inUse: false, // service has to be not in use to be deleted
+		isAdmin: true
 	});
 
 	if (!serviceCheck.success) {

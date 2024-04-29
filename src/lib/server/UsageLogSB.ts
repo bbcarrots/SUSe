@@ -29,10 +29,23 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 		// if there is a given usageLogID, search for that
 		query = query.eq('ul_id', filter.usageLogID);
 	}
-	if (filter.minDate && filter.maxDate) {
-		// if there is a given start and end date range, search for that
-		query = query.gte('datetime_start', filter.minDate).lte('datetime_end', filter.maxDate);
+
+	if (filter.studentNumber) {
+		// if there is a given usageLogID, search for that
+		query = query.eq('sn_id', filter.studentNumber);
 	}
+
+	if (filter.minDate) {
+		// if there is a given start and end date range, search for that
+		query = query.gte('datetime_start', filter.minDate);
+	}
+
+	if (filter.maxDate) {
+		// if there is a given start and end date range, search for that
+		query = query.lte('datetime_end', filter.maxDate);
+	} else {
+        query = query.is('datetime_end', null);
+    }
 
 	const { data, error } = await query;
 
@@ -47,6 +60,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	const formattedData: UsageLogDBObj[] = [];
 
 	for (const row of data) {
+		// reformats supabase return values to conform to UsageLogDBObj
 		formattedData.push({
 			ul_id: row.ul_id,
 			sn_id: row.sn_id,
@@ -67,6 +81,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 export async function insertUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResponse> {
 	/* Inserts a non-existing usage log record into the database. */
+	delete (log as { service_type?: string }).service_type; // deletes the service_type property to properly insert a usage log
+
 	const { error } = await supabase.from('usage_log').insert(log);
 
 	if (error) {
@@ -100,6 +116,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
     NOTE: We can only update date start and end for now. */
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: log.ul_id,
+		studentNumber: 0,
 		minDate: '',
 		maxDate: ''
 	});
@@ -111,7 +128,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	const updateObj: { [key: string]: string | number } = {};
 
 	for (const [key, value] of Object.entries(log)) {
-		if (value && (typeof value == 'string' || typeof value == 'number')) {
+		if (value && typeof value == 'string') {
 			updateObj[key] = value;
 		}
 	}
@@ -133,6 +150,7 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
 	/* Deletes an existing usage log record. */
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: usageLogID,
+		studentNumber: 0,
 		minDate: '',
 		maxDate: ''
 	});
