@@ -3,6 +3,7 @@
 	import LoginForm from '$lib/components/LoginForm.svelte';
 	import Hero from '$lib/components/Hero.svelte';
 	import { goto } from '$app/navigation';
+	import { userRFID, userID } from '$lib/stores/User.js';
 
 	export let form;
 
@@ -25,9 +26,18 @@
 
 		rfidResponse = await response.json();
 
-		if (rfidResponse.success == true) {
-			let rfidNumber = rfidResponse.studentRaws?.[0].sn_id;
-			goto(`/dashboard/student/home/${rfidNumber}`);
+		// if success but no returned students, redirect to register page
+		if (rfidResponse.success == true && rfidResponse.studentRaws?.length == 0) {
+			userRFID.set(event.detail);
+			goto(`/register`);
+		}
+
+		// if success, redirect to approprate student dashboard
+		else if (rfidResponse.success == true) {
+			if (rfidResponse.studentRaws?.[0].sn_id !== undefined) {
+				userID.set(rfidResponse.studentRaws?.[0].sn_id);
+				goto(`/dashboard/student/home/${$userID}`);
+			}
 		}
 	}
 </script>
