@@ -3,8 +3,10 @@
 	import { onMount } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { userRFID } from '$lib/stores/User';
+	import { CollegePrograms } from '$lib/stores/CollegePrograms';
 
 	let inputs: NodeListOf<HTMLInputElement | HTMLSelectElement>;
+	let college = 'College of Engineering';
 
 	onMount(() => {
 		inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
@@ -146,11 +148,11 @@
 						name="college"
 						id="college"
 						class="block w-full border border-gray-300 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+						bind:value={college}
 					>
-						<!-- TODO: make dynamic options from a database of colleges -->
-						<option>College of Engineering</option>
-						<option>College of Arts and Letters</option>
-						<option>College of Science</option>
+						{#each $CollegePrograms as program}
+							<option value={program.college}>{program.college}</option>
+						{/each}
 					</select>
 				</div>
 
@@ -163,9 +165,17 @@
 						id="program"
 						class="block w-full border border-gray-300 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 					>
-						<!-- TODO: make dynamic options from a database of programs -->
-						<option>Computer Science</option>
-						<option>Computer Engineering</option>
+						{#each $CollegePrograms as program}
+							{#if program.college == college}
+								{#each program.programs as department}
+									{#if department == college}
+										<option value={department} selected>{department}</option>
+									{:else}
+										<option value={department}>{department}</option>
+									{/if}
+								{/each}
+							{/if}
+						{/each}
 					</select>
 				</div>
 			</div>
