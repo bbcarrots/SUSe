@@ -1,8 +1,16 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
+	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
-
+	import { serviceTypes } from '$lib/utils/filterOptions.js';
 	export let data;
+
+	//for filters
+	let serviceTypesValue: string[] = [];
+	let dateTimeStart: string;
+	let dateTimeEnd: string;
+
+	//for table
 	let headers: string[] = [
 		'Usage Log ID',
 		'Service ID',
@@ -75,12 +83,42 @@
 	}
 </script>
 
-<Table
-	on:delete={handleDelete}
-	on:update={handleUpdate}
-	{headers}
-	info={usageLogs}
-	primaryKey="usageLogID"
-	{hide}
-	{disableEdit}
-/>
+<div class="grid gap-2">
+	<h3 class="pt-4">Usage Logs</h3>
+	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
+
+		<!-- date range pickers -->
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-3 flex bg-white p-[5px] text-gray-400">
+				Date Range Start
+			</h6>
+			<input
+				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
+				on:input
+				bind:value={dateTimeStart}
+				type="datetime-local"
+			/>
+		</div>
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-3 flex bg-white p-[5px] text-gray-400">
+				Date Range End
+			</h6>
+			<input
+				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
+				on:input
+				bind:value={dateTimeEnd}
+				type="datetime-local"
+			/>
+		</div>
+	</div>
+	<Table
+		on:delete={handleDelete}
+		on:update={handleUpdate}
+		{headers}
+		info={usageLogs}
+		primaryKey="usageLogID"
+		{hide}
+		{disableEdit}
+	/>
+</div>

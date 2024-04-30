@@ -11,7 +11,6 @@
             const rfidInput = document.getElementById('rfidInput'); //take the rfid input
             const target = e.target;    //take the target of the event
             const focusedElement = document.activeElement;  //this is the active element being focused
-            console.log(rfidInput, focusedElement)
 
             // if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
             if (focusedElement === rfidInput && !(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)) {
@@ -33,9 +32,11 @@
             const focusedElement = document.activeElement;  //this is the active element being focused
 
             if (rfidInput === focusedElement){
-                console.log()
-                e.preventDefault();
+                if (e.key == "Enter"){
+                    console.log("Put dispatch command here")
+                }
             }
+         
         }
 
         // when mouse is clicked, call handle click outside
@@ -70,9 +71,9 @@
             <h4>Avail Engglib services using SUSê by tapping your RFID!</h4>         
         </div>
 
+        <input type="password" id="rfidInput" autofocus/>
         <button on:click={handleChangeToUsername} class="text-blue-600"><p>Login using username</p></button>
 
-        <input id="rfidInput" autofocus/>
     </div>  
 
 

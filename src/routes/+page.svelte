@@ -15,7 +15,7 @@
 		/* Handles RFID validation event from LoginForm by sending a POST request 
         with payload requirement: rfid. */
 
-		const response = await fetch('api/student', {
+		const response = await fetch('api/rfid', {
 			method: 'POST',
 			body: JSON.stringify(event.detail),
 			headers: {
