@@ -34,7 +34,13 @@
 
 		// if success, redirect to approprate student dashboard
 		else if (rfidResponse.success == true) {
+			// if there is a student ID,
 			if (rfidResponse.studentRaws?.[0].sn_id !== undefined) {
+				// if the user is not enrolled, redirect to form 5 notice
+				if (rfidResponse.studentRaws?.[0].is_enrolled == false) {
+					goto(`/register/form5`);
+				}
+				// if the user is enrolled
 				userID.set(rfidResponse.studentRaws?.[0].sn_id);
 				goto(`/dashboard/student/home/${$userID}`);
 			}
