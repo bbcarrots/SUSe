@@ -52,18 +52,9 @@
 			class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
                     lg:col-start-2 lg:col-end-7 lg:row-start-1"
 		>
-			{#if form == null || form.success == false}
-				<LoginForm on:inputRFID={handleRFID} />
-				{#if form != null && form.error != null}
-					<p class="text-red-600">{form.error}</p>
-				{/if}
-			{:else if form.success == true}
-				<h1>Present your Form 5 to the admin for approval.</h1>
-				<h4>
-					Please prepare your Form 5 and present it to the admin to get your UP ID registered in
-					SUSe!
-				</h4>
-				<Button>Return to Login</Button>
+			<LoginForm on:inputRFID={handleRFID} />
+			{#if form != null && form.error != null}
+				<p class="text-red-600">{form.error}</p>
 			{/if}
 		</div>
 		<div
