@@ -2,12 +2,18 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
-	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
+	import {
+		collegePrograms,
+		colleges,
+		studentNumberYear,
+		userStatus
+	} from '$lib/utils/filterOptions.js';
 
 	// for filters
 	let collegeValue: string[] = [];
 	let collegeProgramValue: string[] = [];
 	let studentNumberYearValue: string[] = [];
+	let userStatusValue: string[] = [];
 
 	//for table
 	export let data;
@@ -103,6 +109,7 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Students</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+		<Multiselect field={'User Status'} options={userStatus} bind:value={userStatusValue} />
 		<Multiselect
 			field={'College Programs'}
 			options={collegePrograms}
