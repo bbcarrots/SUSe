@@ -316,7 +316,7 @@ describe('deleteUsageLogDB()', async () => {
   });
 });
 
-describe.only('selectUsageLogDB()', async () => {
+describe('selectUsageLogDB()', async () => {
 	const newULID = 1020306;
 	const newSN = 205100001;
 	const newAdminID = 212300001;
