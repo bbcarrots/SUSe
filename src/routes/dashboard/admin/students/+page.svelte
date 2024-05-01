@@ -8,15 +8,19 @@
 		studentNumberYear,
 		userStatus
 	} from '$lib/utils/filterOptions.js';
+	import { type StudentFilter } from '$lib/utils/types.js';
 
-	// for filters
-	let collegeValue: string[] = [];
-	let collegeProgramValue: string[] = [];
-	let studentNumberYearValue: string[] = [];
-	let userStatusValue: string[] = [];
+	export let data;
+
+	//for filters
+	let studentFilter: StudentFilter = {
+		studentNumberYear: [],
+		isActive: [],
+		college: [],
+		program: []
+	};
 
 	//for table
-	export let data;
 	let headers: string[] = [
 		'Student Number',
 		'First Name',
@@ -51,7 +55,7 @@
 	}
 
 	// ----------------------------------------------------------------------------------
-	import type { StudentResponse } from '$lib/classes/Student.js';
+	import type { Student, StudentResponse } from '$lib/classes/Student.js';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -109,17 +113,17 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Students</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'User Status'} options={userStatus} bind:value={userStatusValue} />
+		<Multiselect field={'User Status'} options={userStatus} bind:value={studentFilter.isActive} />
 		<Multiselect
 			field={'College Programs'}
 			options={collegePrograms}
-			bind:value={collegeProgramValue}
+			bind:value={studentFilter.program}
 		/>
-		<Multiselect field={'Colleges'} options={colleges} bind:value={collegeValue} />
+		<Multiselect field={'Colleges'} options={colleges} bind:value={studentFilter.college} />
 		<Multiselect
 			field={'Student Number Year'}
 			options={studentNumberYear}
-			bind:value={studentNumberYearValue}
+			bind:value={studentFilter.studentNumberYear}
 		/>
 	</div>
 	<Table
