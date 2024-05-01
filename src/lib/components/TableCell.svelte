@@ -17,10 +17,10 @@
 		<span class="flex items-center">
 			<span class="pr-2">
 				{#if info.isEnrolled === true && info.isActive == false}
-					<Indicator size="md" color="gray" />
+					<Indicator size="sm" color="gray" class="mr-[2px]" />
 					<Tooltip>Student is not using a service.</Tooltip>
 				{:else if info.isEnrolled === true && info.isActive == true}
-					<Indicator size="md" color="green" />
+					<Indicator size="sm" color="green" class="mr-[2px]" />
 					<Tooltip>Student is using a service.</Tooltip>
 				{:else if info.isEnrolled === false}
 					<span class="text-yellow-400"><Icon src={ExclamationCircle} micro size="12" /></span>
