@@ -2,16 +2,17 @@
 	import ServiceCard from '$lib/components/ServiceCard.svelte';
 	import { userID } from '$lib/stores/User';
 	import { page } from '$app/stores';
+	import { camelize } from '$lib/utils/utils.js';
 
 	export let data;
+
 	userID.set(Number($page.params.studentNumber));
 
-	// console.log($page.params.studentNumber);
-	// console.log(data);
+	let availableServices = data.availableServices;
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
-    
+
 	type StudentServicesResponse = {
 		success: boolean;
 		activeUsageLogs: { [key: string]: UsageLogDBObj };
@@ -56,33 +57,15 @@
 </script>
 
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-	<ServiceCard
-		serviceName={'Calculator'}
-		available={1}
-		src={'/service-card-images/calculator.svg'}
-	/>
-
-	<ServiceCard
-		serviceName={'Extension Cord'}
-		available={1}
-		src={'/service-card-images/extension-cord.svg'}
-	/>
-
-	<ServiceCard
-		serviceName={'Discussion Room'}
-		available={1}
-		src={'/service-card-images/discussion-room.svg'}
-	/>
-
-	<ServiceCard serviceName={'Umbrella'} available={1} src={'/service-card-images/umbrella.svg'} />
-
-	<ServiceCard serviceName={'Laptop'} available={1} src={'/service-card-images/laptop.svg'} />
-
-	<ServiceCard serviceName={'Adapter'} available={1} src={'/service-card-images/adapter.svg'} />
-
-	<ServiceCard
-		serviceName={'Reading Glasses'}
-		available={1}
-		src={'/service-card-images/reading-glasses.svg'}
-	/>
+	{#if availableServices}
+		{#each Object.entries(availableServices) as [service, count]}
+			<ServiceCard
+				serviceName={service}
+				available={count}
+				src={`/service-card-images/${camelize(service)}.svg`}
+			/>
+		{/each}
+	{:else}
+		<p>No available services</p>
+	{/if}
 </div>
