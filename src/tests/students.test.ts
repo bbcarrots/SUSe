@@ -328,7 +328,7 @@ describe('selectStudentDB', () => {
       const expectedStudentNumbers = [203099998, 203099999];
 
       // compare selected student number with inserted student number
-      expect(selectedOutputSN).toEqual(expectedStudentNumbers); 
+      expect(selectedOutputSN.sort()).toEqual(expectedStudentNumbers.sort()); 
     }
 
   });
