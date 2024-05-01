@@ -134,7 +134,7 @@ export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceRes
 async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Checks if there is a single existing record of a service with the given service number and username. */
 	const serviceDB = await selectServiceDB(filter);
-
+    
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
         if (serviceDB.serviceRaws[0].in_use) {
             return {
@@ -174,7 +174,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(service)) {
-		if (value && (typeof value == 'string' || typeof value == 'boolean')) {
+		if ((value && typeof value == 'string') || typeof value == 'boolean') {
 			updateObj[key] = value;
 		}
 	}

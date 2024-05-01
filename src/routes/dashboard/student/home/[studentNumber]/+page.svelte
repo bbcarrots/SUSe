@@ -46,11 +46,11 @@
 
 	async function handleEndService(event: CustomEvent) {
 		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
-        with payload requirement: usageLogID. */
+        with payload requirement: usageLogID, serviceType. */
 
 		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
-			body: JSON.stringify({ usageLogID: availServiceResponse.activeUsageLogs.usageLogID }),
+			body: JSON.stringify({ usageLogID: availServiceResponse.activeUsageLogs['Calculator'].ul_id }),
 			headers: {
 				'content-type': 'application/json'
 			}
