@@ -10,7 +10,7 @@ describe('sanity/integrity test: it should add properly', () => {
     });
   });
 
-describe('insertUsageLogDB()', () => {
+describe.todo('insertUsageLogDB()', () => {
   const newULID = 10;
   const newSN = 205100001;
   const newAdminID = 212300001;

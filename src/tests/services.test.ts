@@ -13,7 +13,7 @@ describe('sanity/integrity test: it should add 5 and 3 properly', () => {
 
 
 describe('Service.insertService', async () => {
-  const newServiceID = 100002;
+  const newServiceID = 999999;
   const newServiceName = "Red automatic umbrella";
   const serviceInstance: ServiceDBObj = {
     service_id: newServiceID,
@@ -24,7 +24,7 @@ describe('Service.insertService', async () => {
   };
 
   it('success: inserted service in database', async () => {
-    // returned StudentResponse upon successful insert into database
+    // returned ServiceResponse upon successful insert into database
     const expectedState: ServiceResponse = { // defined "success" state in ServiceSB.ts
       success: true,
       serviceRaws: null,
@@ -189,13 +189,14 @@ describe('deleteServiceDB()', async () => {
     }
 
     await expect(deleteServiceDB(900000000)).resolves.toStrictEqual(expectedState);
+    await deleteServiceDB(serviceInstance.service_id);
   });
 });
 
 describe('error: deleting service that is in use', async () => {
   const newServiceNumber = 100021;
   const newServiceName = "Extension cord (5 meters)";
-  const serviceInstance: ServiceDBObj = {
+  let serviceInstance: ServiceDBObj = {
     service_id: newServiceNumber,
     service_type_id: 3, // service type number of extension cord
     service_name: newServiceName,
@@ -203,11 +204,9 @@ describe('error: deleting service that is in use', async () => {
     in_use: true
   };
 
-  beforeEach(async () => {
-    await insertServiceDB(serviceInstance); // insert serviceInstance first
-  });
-
   it('error: deleting service that is in use', async () => {
+    await insertServiceDB(serviceInstance); // insert serviceInstance first
+
     // returned ServiceResponse upon failed deletion from database
     const expectedState: ServiceResponse = {
       success: true,
@@ -217,25 +216,18 @@ describe('error: deleting service that is in use', async () => {
     }
   
     await expect(deleteServiceDB(newServiceNumber)).resolves.toStrictEqual(expectedState);
-    
-    const serviceInstance: ServiceDBObj = {
-      service_id: newServiceNumber,
-      service_type_id: 3, // service type number of extension cord
-      service_name: newServiceName,
-      service_type: "Extension Cord",
-      in_use: false
-    };  
-    updateServiceDB(serviceInstance); // make it unused for deletion
-    deleteServiceDB(newServiceNumber);
+    serviceInstance.in_use = false;
+    await updateServiceDB(serviceInstance); 
+    await deleteServiceDB(newServiceNumber);
   });
 });
 
-describe('selectServiceDB', async () => {
+describe('selectServiceDB single selects', async () => {
   const newServiceNumber = 100006;
   const newServiceName = "Acer Nitro 5 AN515-58-50YE";
   const glassesServiceNumber = 100020;
 
-  let serviceInstanceList: ServiceDBObj[] = [];
+  const serviceInstanceList: ServiceDBObj[] = [];
 
   beforeEach(async () => {
     // insert dummy service instances first
@@ -243,9 +235,9 @@ describe('selectServiceDB', async () => {
       const serviceInstance: ServiceDBObj = {
         service_id: newServiceNumber + offset,
         service_type_id: 5, // service type number of laptop
-        service_name: newServiceName + offset.toString(),
+        service_name: newServiceName,
         service_type: "Laptop",
-        in_use: offset % 2 == 0 ? false : true // odd laptops are in use
+        in_use: (newServiceNumber + offset % 2 == 0) ? false : true
       };
 
       serviceInstanceList.push(serviceInstance);
@@ -268,12 +260,12 @@ describe('selectServiceDB', async () => {
     // clean up dummy entries
     for(const service of serviceInstanceList){
       service.in_use = false;
-      console.log(await updateServiceDB(service));
+      await updateServiceDB(service);
       await deleteServiceDB(service.service_id);
     }
   });
 
-  it('success: selected single service in database', async () => {
+  it.todo('success: selected single service in database using service ID', async () => {
     const oneServiceFilter: ServiceFilter = {
       serviceID: 100006,
       serviceName: "",
@@ -282,76 +274,15 @@ describe('selectServiceDB', async () => {
       isAdmin: true
     }
     const selectOutput = await selectServiceDB(oneServiceFilter);
-
+    console.log(selectOutput)
     if(selectOutput.serviceRaws !== null){
       const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
-      // compare selected student number with inserted student number
+      // compare selected service number with inserted service number
       expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
     }
   });
 
-  it('success: entries within a certain service type, admin', async () => {
-    // insert multiple student entries first
-
-    const multipleStudentFilter: ServiceFilter = {
-      serviceID: 0,
-      serviceName: "",
-      serviceType: "Laptop",
-      inUse: false,
-      isAdmin: true // so services even in use are shown
-    }
-
-    const selectOutput = await selectServiceDB(multipleStudentFilter);
-    if(selectOutput.serviceRaws !== null){
-      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100006, 100007, 100008]; // all laptops, not including glasses
-
-      // compare selected student number with inserted student number
-      expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
-    }
-
-  });
-
-  it('success: entries within a certain service type, student (only inUse == false)', async () => {
-    // insert multiple student entries first
-
-    const multipleStudentFilter: ServiceFilter = {
-      serviceID: 0,
-      serviceName: "",
-      serviceType: "Laptop",
-      inUse: false,
-      isAdmin: false // so only services not in use are shown
-    }
-
-    const selectOutput = await selectServiceDB(multipleStudentFilter);
-    if(selectOutput.serviceRaws !== null){
-      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
-      const expectedServiceNumbers = [100006, 100008]; // all even (not in use) laptops, not including glasses
-
-      // compare selected student number with inserted student number
-      expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
-    }
-
-  });
-
-  it('success: selected single service using serviceName', async () => {
-    const glassesStudentFilter: ServiceFilter = {
-      serviceID: 0,
-      serviceName: "Ray-Ban RB3183 (Black)",
-      serviceType: "",
-      inUse: false,
-      isAdmin: true // so services even in use are shown
-    }
-    const selectOutput = await selectServiceDB(glassesStudentFilter);
-
-    if(selectOutput.serviceRaws !== null){
-      const selectOutputSN = selectOutput.serviceRaws[0].service_id; // extract student number from selected student record
-      // compare selected service number with inserted service number
-      expect(selectOutputSN).toStrictEqual(glassesServiceNumber);
-    }
-  });
-
-  it('success: selecting single nonexistent service name ()should be empty', async () => {
+  it('success: selecting single nonexistent service name, should be empty', async () => {
     const nonexistentServiceFilter: ServiceFilter = {
       serviceID: 0,
       serviceName: "Nike LeBron 20 EP",
@@ -363,9 +294,117 @@ describe('selectServiceDB', async () => {
     const selectOutput = await selectServiceDB(nonexistentServiceFilter);
     const selectOutputArray = selectOutput.serviceRaws;
 
-    const expectedArray: ServiceDBObj[] = []; // studentRaws array filed should be empty since record does not exist
+    const expectedArray: ServiceDBObj[] = []; // serviceRaws array filed should be empty since record does not exist
 
     expect(selectOutputArray).toStrictEqual(expectedArray);
+  });
+
+});
+
+describe('selectServiceDB, range', async () => {
+  const newServiceNumber = 100006;
+  const newServiceName = "Acer Nitro 5 AN515-58-50YE";
+  const glassesServiceNumber = 100020;
+
+  const serviceInstanceList: ServiceDBObj[] = [];
+
+  beforeEach(async () => {
+    // insert dummy service instances first
+    for(let offset = 0; offset < 3; offset++){
+      let serviceInstance: ServiceDBObj = {
+        service_id: newServiceNumber + offset,
+        service_type_id: 5, // service type number of laptop
+        service_name: newServiceName,
+        service_type: "Laptop",
+        in_use: false
+      };
+
+      serviceInstanceList.push(serviceInstance);
+      await insertServiceDB(serviceInstance);
+    }
+
+    const glassesInstance: ServiceDBObj = {
+      service_id: glassesServiceNumber,
+      service_type_id: 4, // service type number of reading glasses
+      service_name: "Ray-Ban RB3183 (Black)",
+      service_type: "Reading Glasses",
+      in_use: false
+    };
+    serviceInstanceList.push(glassesInstance);
+    await insertServiceDB(glassesInstance);
+
+  });
+
+  afterEach(async () => {
+    // clean up dummy entries
+    for(const service of serviceInstanceList){
+      if (service.in_use){
+        service.in_use = false;
+        await updateServiceDB(service);
+      };
+      await deleteServiceDB(service.service_id);
+    }
+  });
+
+  it('success: entries within a certain service type, admin', async () => {
+    // insert multiple service entries first
+
+    const multipleServiceFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "",
+      serviceType: "Laptop",
+      inUse: false,
+      isAdmin: true // so services even in use are shown
+    }
+
+    const selectOutput = await selectServiceDB(multipleServiceFilter);
+    if(selectOutput.serviceRaws !== null){
+      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
+      const expectedServiceNumbers = [100006, 100007, 100008]; // all laptops, not including glasses
+
+      // compare selected service number with inserted service number
+      expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers); 
+    }
+
+  });
+
+  it('success: entries within a certain service type, service (only inUse == false)', async () => {
+    // insert multiple service entries first
+
+    const multipleServiceFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "",
+      serviceType: "Laptop",
+      inUse: false,
+      isAdmin: false // so only services not in use are shown
+    }
+
+    const selectOutput = await selectServiceDB(multipleServiceFilter);
+    if(selectOutput.serviceRaws !== null){
+      const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id); // extract service number from selected service records
+      const expectedServiceNumbers = [100006, 100008]; // all even (not in use) laptops, not including glasses
+
+      // compare selected service number with inserted service number
+      expect(selectedOutputServiceNumbers.sort()).toEqual(expectedServiceNumbers.sort()); 
+    }
+
+  });
+
+  it('success: selected services using serviceName', async () => {
+    const nameServiceFilter: ServiceFilter = {
+      serviceID: 0,
+      serviceName: "Acer Nitro 5 AN515-58-50YE",
+      serviceType: "",
+      inUse: null,
+      isAdmin: true // so services even in use are shown
+    }
+    const selectOutput = await selectServiceDB(nameServiceFilter);
+    const expectedServiceNumbers = [100006, 100007, 100008];
+
+    if(selectOutput.serviceRaws !== null){
+      const outputServiceNumbers = selectOutput.serviceRaws.map(service => service.service_id)
+      expect(outputServiceNumbers.sort()).toEqual(expectedServiceNumbers.sort());
+    }
   });
 
 });

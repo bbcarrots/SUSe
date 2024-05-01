@@ -23,7 +23,8 @@ describe('insertStudentDB()', () => {
     college: "College of Dummy", 
     program: "BS Dummy", 
     phone_number: "09123456789", 
-    is_enrolled: false
+    is_enrolled: false,
+    is_active: false
   };
 
   it('success: inserted student in database', async () => {
@@ -52,7 +53,8 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
     college: "College of Dummy", 
     program: "BS Dummy", 
     phone_number: "09123456789", 
-    is_enrolled: false
+    is_enrolled: false,
+    is_active: false,
   };
 
   beforeEach(async () => {
@@ -83,7 +85,8 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
       college: "College of Not Dumm", 
       program: "BS Not Dummy", 
       phone_number: "09123456789", 
-      is_enrolled: false
+      is_enrolled: false,
+      is_active: false,
     };
 
     // insert studentSameSN, should error
@@ -109,7 +112,8 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
       college: "College of Not Dumm", 
       program: "BS Not Dummy", 
       phone_number: "09123456789", 
-      is_enrolled: false
+      is_enrolled: false,
+      is_active: false
     };
 
     // insert studentSameUsername, should error
@@ -131,7 +135,8 @@ describe('updateStudentDB()', () => {
     college: "College of Dummy", 
     program: "BS Dummy", 
     phone_number: "09123456789", 
-    is_enrolled: false
+    is_enrolled: false,
+    is_active: false
   };
 
   beforeEach(async () => {
@@ -155,7 +160,8 @@ describe('updateStudentDB()', () => {
       college: "College of Mass Communication", 
       program: "BA Broadcast Communication", 
       phone_number: "09876543210", 
-      is_enrolled: false
+      is_enrolled: false,
+      is_active: false
     };
 
     // update the student
@@ -194,7 +200,8 @@ describe('updateStudentDB()', () => {
       college: "College of Social Sciences and Philosophy", 
       program: "BA Sociology", 
       phone_number: "09876543210", 
-      is_enrolled: false
+      is_enrolled: false,
+      is_active: false
     };
 
     await expect(updateStudentDB(updatedStudentInstance)).resolves.toStrictEqual(expectedState);
@@ -217,7 +224,8 @@ describe('deleteStudentDB()', () => {
     college: "College of Dummy", 
     program: "BS Dummy", 
     phone_number: "09123456789", 
-    is_enrolled: false
+    is_enrolled: false,
+    is_active: false
   };
 
   beforeEach(async () => {
@@ -274,6 +282,7 @@ describe('selectStudentDB', () => {
         program: "BS Dummy", 
         phone_number: "09123456789", 
         is_enrolled: false,
+        is_active: false
       };
 
         studentInstanceList.push(dummyStudent);
@@ -283,7 +292,7 @@ describe('selectStudentDB', () => {
 
   afterEach(async () => {
     // clean up dummy entries
-    for(var student of studentInstanceList){
+    for(const student of studentInstanceList){
       await deleteStudentDB(student.sn_id);
     }
   });
