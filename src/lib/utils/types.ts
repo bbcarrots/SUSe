@@ -8,6 +8,7 @@ export type StudentProcessed = {
 	program: string;
 	phoneNumber: string;
 	isEnrolled: boolean;
+    isActive: boolean;
 };
 
 export type UsageLogProcessed = {
