@@ -41,9 +41,7 @@
 		timeEnded = timeNow;
 		popupModalEnd = false;
 
-		//todo: edit the usage log entry
-        const usageLogID = 0
-        dispatch('endService', usageLogID)
+        dispatch('endService', { serviceType: serviceName })
 	}
 
 	// function to update the current time for the count

@@ -8,10 +8,10 @@
 
 	userID.set(Number($page.params.studentNumber));
 
-	let services: { [key: string]: number };
+	let availableServices: { [key: string]: number };
 
 	if (data.availableServices) {
-		services = data.availableServices;
+		availableServices = data.availableServices;
 	}
 
 	// ----------------------------------------------------------------------------------
@@ -27,11 +27,15 @@
 	let availServiceResponse: StudentServicesResponse;
 	let endServiceResponse: StudentServicesResponse;
 
+    let activeUsageLogs: { [key: string]: UsageLogDBObj } = {}
+
 	async function handleAvailService(event: CustomEvent) {
 		/* Handles Avail Service event from ServiceCardForm by sending a POST request 
         with payload requirements: studentNumber, serviceType. */
 
-		const payload = { studentNumber: $page.params.studentNumber, ...event.detail };
+        const { serviceType } = event.detail
+
+		const payload = { studentNumber: $page.params.studentNumber, serviceType: serviceType };
 
 		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
@@ -44,15 +48,21 @@
 		availServiceResponse = await response.json();
 
         console.log(availServiceResponse)   
+
+        activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs)
+
+        console.log(activeUsageLogs)   
 	}
 
 	async function handleEndService(event: CustomEvent) {
 		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
         with payload requirement: usageLogID, serviceType. */
 
+        const { serviceType } = event.detail
+
 		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
-			body: JSON.stringify({ usageLogID: availServiceResponse.activeUsageLogs['Calculator'].ul_id }),
+			body: JSON.stringify({ usageLogID: activeUsageLogs[serviceType].ul_id }),
 			headers: {
 				'content-type': 'application/json'
 			}
@@ -68,6 +78,8 @@
 	{#if availableServices}
 		{#each Object.entries(availableServices) as [service, count]}
 			<ServiceCard
+				on:availService={handleAvailService}
+				on:endService={handleEndService}
 				serviceName={service}
 				available={count}
 				src={`/service-card-images/${camelize(service)}.svg`}
