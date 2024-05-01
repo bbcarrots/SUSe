@@ -23,7 +23,8 @@ export const actions = {
 			college: studentData.college,
 			program: studentData.program,
 			phone_number: studentData.phoneNumber,
-			is_enrolled: false
+			is_enrolled: false,
+            is_active: false
 		});
 	}
 };
