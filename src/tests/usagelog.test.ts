@@ -65,7 +65,7 @@ describe('insertUsageLogDB()', async () => {
 			rfid: 80001,
 			pw: 'password',
 			nickname: 'Tupac',
-			is_active: true
+			is_active: false
 		};
 		await insertAdminDB(adminInstance);
 	});
@@ -76,7 +76,7 @@ describe('insertUsageLogDB()', async () => {
 		await deleteAdminDB(newAdminID);
 	});
 
-	it.todo('success: inserted usage log in database', async () => {
+	it('success: inserted usage log in database', async () => {
 		// usagelog
 		const usageLogInstance: UsageLogDBObj = {
 			ul_id: newULID,
@@ -94,6 +94,7 @@ describe('insertUsageLogDB()', async () => {
 			usageLogRaws: null,
 			error: null
 		};
+
 		await expect(insertUsageLogDB(usageLogInstance)).resolves.toStrictEqual(expectedState);
 		await deleteUsageLogDB(newULID); // clean up dummy entry
 	});
