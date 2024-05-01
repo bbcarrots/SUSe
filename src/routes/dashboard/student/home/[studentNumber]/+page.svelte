@@ -31,7 +31,9 @@
 
 		const payload = { studentNumber: $page.params.studentNumber, ...event.detail };
 
-		const response = await fetch('../../api/avail-end', {
+        console.log(payload)
+
+		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
 			body: JSON.stringify(payload),
 			headers: {
@@ -40,13 +42,15 @@
 		});
 
 		availServiceResponse = await response.json();
+
+        console.log(availServiceResponse)   
 	}
 
 	async function handleEndService(event: CustomEvent) {
 		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
         with payload requirement: usageLogID. */
 
-		const response = await fetch('../../api/avail-end', {
+		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -60,6 +64,7 @@
 
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 	<ServiceCard
+        on:availService={handleAvailService}
 		serviceName={'Calculator'}
 		available={services?.['Calculator']}
 		src={'/service-card-images/calculator.svg'}
