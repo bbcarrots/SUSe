@@ -6,8 +6,8 @@
 	export let data;
 	userID.set(Number($page.params.studentNumber));
 
-	console.log($page.params.studentNumber);
-	console.log(data);
+	// console.log($page.params.studentNumber);
+	// console.log(data);
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
