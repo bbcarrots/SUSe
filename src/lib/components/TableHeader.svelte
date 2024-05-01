@@ -9,20 +9,20 @@
 	export let isEditing: boolean;
 	export let hide: Array<string>;
 
-	export const sortTable = (key: string): void => {
-		/* If the user is not editing, set the appropriate sortKey and sortDirection based on the key. */
-		/* If the key is the same, inverse the direction of the sorting. */
-		/* If the key is different, sort upwards and set the sortKey to the new key. */
-		// console.log(isEditing, sortDirection, sortKey)
-		if (!isEditing) {
-			if (sortKey === key) {
-				sortDirection = -sortDirection;
-			} else {
-				sortKey = key;
-				sortDirection = 1;
-			}
-		}
-	};
+    export const sortTable = (key: string): void => {
+        /* If the user is not editing, set the appropriate sortKey and sortDirection based on the key. */
+        /* If the key is the same, inverse the direction of the sorting. */
+        /* If the key is different, sort upwards and set the sortKey to the new key. */
+        if (!isEditing){
+            if (sortKey === key) {
+                sortDirection = -sortDirection;
+            } else {
+                sortKey = key;
+                sortDirection = 1;
+            }
+        }
+    };
+
 </script>
 
 <!-- TABLE HEADER -->
