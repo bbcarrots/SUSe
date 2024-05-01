@@ -128,4 +128,45 @@ describe('updateAdminDB()', async () => {
     await expect(updateAdminDB(updatedAdminInstance)).resolves.toStrictEqual(expectedState);
   });
 });
+
+
+describe('deleteAdminDB()', async () => {
+  const newAdminNumber = 202100003;
+  const newRFID = 700003;
+  const newNickname = 'Spongebob';
+  const adminInstance: AdminDBObj = {
+    admin_id: newAdminNumber,
+    rfid: newRFID,
+    pw: 'password',
+    nickname: newNickname,
+    is_active: false
+  };
+  beforeEach(async () => {
+    await insertAdminDB(adminInstance);
+  });
+
+  afterEach(async () => {
+    await deleteAdminDB(newAdminNumber);
+  });
+
+  it('success: delete admin', async () => {
+    const expectedState: AdminResponse = {
+      success: true,
+      adminRaws: null,
+      error: null
+    };
+
+    await expect(deleteAdminDB(newAdminNumber)).resolves.toStrictEqual(expectedState);
+  });
+
+  it('error: delete non existent admin ID', async () => {
+    const expectedState: AdminResponse = {
+      success: false,
+      adminRaws: null,
+      error: 'Error: Admin does not exist'
+    };
+
+    await expect(updateAdminDB(newAdminNumber + 1)).resolves.toStrictEqual(expectedState);
+  });
+});
   
