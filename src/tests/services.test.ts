@@ -237,7 +237,7 @@ describe('selectServiceDB single selects', async () => {
         service_type_id: 5, // service type number of laptop
         service_name: newServiceName,
         service_type: "Laptop",
-        in_use: (newServiceNumber + offset % 2 == 0) ? false : true
+        in_use: false
       };
 
       serviceInstanceList.push(serviceInstance);
@@ -288,7 +288,7 @@ describe('selectServiceDB single selects', async () => {
       serviceName: "Nike LeBron 20 EP",
       serviceType: "",
       inUse: false,
-      isAdmin: true // so services even in use are shown
+      isAdmin: true 
     }
 
     const selectOutput = await selectServiceDB(nonexistentServiceFilter);
@@ -316,7 +316,7 @@ describe('selectServiceDB, range', async () => {
         service_type_id: 5, // service type number of laptop
         service_name: newServiceName,
         service_type: "Laptop",
-        in_use: false
+        in_use: (newServiceNumber + offset % 2 == 0) ? false : true
       };
 
       serviceInstanceList.push(serviceInstance);
