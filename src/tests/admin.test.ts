@@ -71,4 +71,61 @@ describe('error: insert with admin number in use', async () => {
     await expect(insertAdminDB(dupeAdminInstance)).resolves.toStrictEqual(expectedState);
   });
 });
+
+
+describe('updateAdminDB()', async () => {
+  const newAdminNumber = 202100002;
+  const newRFID = 700002;
+  const newNickname = 'Spongebob';
+  const adminInstance: AdminDBObj = {
+    admin_id: newAdminNumber,
+    rfid: newRFID,
+    pw: 'password',
+    nickname: newNickname,
+    is_active: false
+  };
+  beforeEach(async () => {
+    await insertAdminDB(adminInstance);
+  });
+
+  afterEach(async () => {
+    await deleteAdminDB(newAdminNumber);
+  });
+
+  it('success: update admin', async () => {
+    const expectedState: AdminResponse = {
+      success: true,
+      adminRaws: null,
+      error: null
+    };
+
+    const updatedAdminInstance: AdminDBObj = {
+      admin_id: newAdminNumber,
+      rfid: newRFID,
+      pw: 'password',
+      nickname: "Patrick",
+      is_active: false
+    };
+
+    await expect(updateAdminDB(updatedAdminInstance)).resolves.toStrictEqual(expectedState);
+  });
+
+  it('error: update non existent admin ID', async () => {
+    const expectedState: AdminResponse = {
+      success: false,
+      adminRaws: null,
+      error: 'Error: Admin does not exist'
+    };
+
+    const updatedAdminInstance: AdminDBObj = {
+      admin_id: newAdminNumber + 1,
+      rfid: newRFID,
+      pw: 'password',
+      nickname: "Patrick",
+      is_active: false
+    };
+
+    await expect(updateAdminDB(updatedAdminInstance)).resolves.toStrictEqual(expectedState);
+  });
+});
   
