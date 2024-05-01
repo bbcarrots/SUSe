@@ -6,12 +6,15 @@
 	export let data;
 	userID.set(Number($page.params.studentNumber));
 
-	// console.log($page.params.studentNumber);
-	// console.log(data);
+	let services: { [key: string]: number };
+
+	if (data.availableServices) {
+		services = data.availableServices;
+	}
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
-    
+
 	type StudentServicesResponse = {
 		success: boolean;
 		activeUsageLogs: { [key: string]: UsageLogDBObj };
@@ -58,31 +61,43 @@
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 	<ServiceCard
 		serviceName={'Calculator'}
-		available={1}
+		available={services?.['Calculator']}
 		src={'/service-card-images/calculator.svg'}
 	/>
 
 	<ServiceCard
 		serviceName={'Extension Cord'}
-		available={1}
+		available={services?.['Extension Cord']}
 		src={'/service-card-images/extension-cord.svg'}
 	/>
 
 	<ServiceCard
 		serviceName={'Discussion Room'}
-		available={1}
+		available={services?.['Discussion Room']}
 		src={'/service-card-images/discussion-room.svg'}
 	/>
 
-	<ServiceCard serviceName={'Umbrella'} available={1} src={'/service-card-images/umbrella.svg'} />
+	<ServiceCard
+		serviceName={'Umbrella'}
+		available={services?.['Umbrella']}
+		src={'/service-card-images/umbrella.svg'}
+	/>
 
-	<ServiceCard serviceName={'Laptop'} available={1} src={'/service-card-images/laptop.svg'} />
+	<ServiceCard
+		serviceName={'Laptop'}
+		available={services?.['Laptop']}
+		src={'/service-card-images/laptop.svg'}
+	/>
 
-	<ServiceCard serviceName={'Adapter'} available={1} src={'/service-card-images/adapter.svg'} />
+	<ServiceCard
+		serviceName={'Adapter'}
+		available={services?.['Adapter']}
+		src={'/service-card-images/adapter.svg'}
+	/>
 
 	<ServiceCard
 		serviceName={'Reading Glasses'}
-		available={1}
+		available={services?.['Reading Glasses']}
 		src={'/service-card-images/reading-glasses.svg'}
 	/>
 </div>
