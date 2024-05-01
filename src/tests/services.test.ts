@@ -2,12 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // services
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
-import {
-	insertServiceDB,
-	deleteServiceDB,
-	updateServiceDB,
-	selectServiceDB
-} from '$lib/server/ServiceSB';
+import { insertServiceDB, deleteServiceDB, updateServiceDB, selectServiceDB } from '$lib/server/ServiceSB';
 
 describe('sanity/integrity test: it should add 5 and 3 properly', () => {
 	it('adds 5 + 3 to equal 8', () => {
