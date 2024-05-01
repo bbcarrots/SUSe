@@ -3,11 +3,18 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { serviceTypes, serviceStatus } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
+	import { type ServiceFilter } from '$lib/utils/types.js';
 
 	export let data;
+
 	//for filters
-	let serviceTypesValue: string[] = [];
-	let serviceStatusValue: string[] = [];
+	let serviceFilter: ServiceFilter = {
+		serviceID: [],
+		serviceName: [],
+		serviceType: [],
+		inUse: [],
+		isAdmin: []
+	};
 
 	//for table
 	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
@@ -69,15 +76,24 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Services</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
-		<Multiselect field={'Service Status'} options={serviceStatus} bind:value={serviceStatusValue} />
+		<Multiselect
+			field={'Service Type'}
+			options={serviceTypes}
+			bind:value={serviceFilter.serviceType}
+		/>
+		<Multiselect
+			field={'Service Status'}
+			options={serviceStatus}
+			bind:value={serviceFilter.inUse}
+		/>
 	</div>
-	<Table 
+	<Table
 		on:delete={handleDelete}
 		on:update={handleUpdate}
-		{headers} 
-		info={services} 
-		primaryKey="serviceID" 
-		{hide} {disableEdit} 
+		{headers}
+		info={services}
+		primaryKey="serviceID"
+		{hide}
+		{disableEdit}
 	/>
 </div>

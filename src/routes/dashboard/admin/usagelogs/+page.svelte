@@ -3,12 +3,16 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
+	import { type UsageLogFilter } from '$lib/utils/types.js';
+
 	export let data;
 
 	//for filters
-	let serviceTypesValue: string[] = [];
-	let dateTimeStart: string;
-	let dateTimeEnd: string;
+	let usageLogFilter: UsageLogFilter = {
+		dateRangeStart: '',
+		dateRangeEnd: '',
+		serviceType: []
+	};
 
 	//for table
 	let headers: string[] = [
@@ -86,7 +90,11 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Usage Logs</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
+		<Multiselect
+			field={'Service Type'}
+			options={serviceTypes}
+			bind:value={usageLogFilter.serviceType}
+		/>
 
 		<!-- date range pickers -->
 		<div class="relative">
@@ -96,7 +104,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={dateTimeStart}
+				bind:value={usageLogFilter.dateRangeStart}
 				type="datetime-local"
 			/>
 		</div>
@@ -107,7 +115,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={dateTimeEnd}
+				bind:value={usageLogFilter.dateRangeEnd}
 				type="datetime-local"
 			/>
 		</div>

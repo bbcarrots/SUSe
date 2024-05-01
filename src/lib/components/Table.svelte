@@ -13,25 +13,25 @@
 	export let hide: Array<string>;
 	export let disableEdit: Array<string>;
 
-    /* activePage is binded to the value from Pagination.svelte */
-	let activePage = 1
+	/* activePage is binded to the value from Pagination.svelte */
+	let activePage = 1;
 	const rowsPerPage = 10;
 	const totalRows = info.length;
 	const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-    /* sortKey and sortDirection are binded to values from TableHeader.svelte */
+	/* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
 	let sortDirection: number;
 
-    /* isEditing is binded to the value from TableRow.svelte. */
+	/* isEditing is binded to the value from TableRow.svelte. */
 	let isEditing: boolean;
 	let sortedItems = writable<Array<any>>([]);
 
-    /* Reactively sorts the items and stores in sortedItems based on the sortKey and sortDirection. */
-    /* The sorting will be disabled if isEditing is true. */
+	/* Reactively sorts the items and stores in sortedItems based on the sortKey and sortDirection. */
+	/* The sorting will be disabled if isEditing is true. */
 
 	$: {
-		const calculatedRows = info.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+		const calculatedRows = info.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
 		const disableSort: boolean = isEditing;
 		const key: string = sortKey;
 		const direction: number = sortDirection;
@@ -46,6 +46,10 @@
 					return aVal.localeCompare(bVal) * direction;
 				} else if (typeof aVal === 'number' && typeof bVal === 'number') {
 					return (aVal - bVal) * direction;
+				} else if (typeof aVal === 'boolean' && typeof bVal === 'boolean') {
+					const aNum = aVal ? 1 : 0;
+					const bNum = bVal ? 1 : 0;
+					return (aNum - bNum) * direction;
 				} else {
 					return 0;
 				}
@@ -58,12 +62,13 @@
 	const dispatch = createEventDispatcher();
 
 	async function forwardApprove(event: CustomEvent) {
-        /* Forwards Approve event to parent page. */
+		/* Forwards Approve event to parent page. */
 		dispatch('approve', event.detail);
+		updateInfo();
 	}
 
 	async function forwardDelete(event: CustomEvent) {
-        /* Forwards Delete event to parent page and updates Table after deletion. */
+		/* Forwards Delete event to parent page and updates Table after deletion. */
 		dispatch('delete', event.detail);
 
 		const primaryKeyDelete = event.detail[primaryKey];
@@ -71,27 +76,27 @@
 			(entry: { [key: string]: any }) => entry[primaryKey] === primaryKeyDelete
 		);
 
-        /* Delete the current entry from all the other entries */
+		/* Delete the current entry from all the other entries */
 		if (index !== -1) {
 			info.splice(index, 1);
 		}
 
-        /* Update the content of info for the changes to be reflected in the DOM without needing to refresh */
-		updateInfo(); 
+		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh */
+		updateInfo();
 	}
 
 	function updateInfo() {
-        /* Updates information shown in the Table component after a successful deletion. */
+		/* Updates information shown in the Table component after a successful deletion. */
 		info = info;
 	}
 
 	async function forwardUpdate(event: CustomEvent) {
-        /* Forwards Update event to parent page. */
+		/* Forwards Update event to parent page. */
 		dispatch('update', event.detail);
 	}
 </script>
 
-<div class="grid justify-items">
+<div class="justify-items grid">
 	<Table hoverable={true} divClass="overflow-x-auto">
 		<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
 		<TableBody>
@@ -109,6 +114,6 @@
 			{/each}
 		</TableBody>
 	</Table>
-	
+
 	<Pagination {totalPages} bind:activePage></Pagination>
 </div>

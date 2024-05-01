@@ -5,18 +5,22 @@
 
 <section class="flex items-center justify-center lg:h-screen">
 	<div
-		class="content grid
+		class="content grid items-center
                 gap-y-12 sm:grid-cols-4 sm:grid-rows-2
                 lg:grid-cols-12 lg:grid-rows-1 lg:gap-20"
 	>
 		<div
-			class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
+			class="grid gap-10 sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
                     lg:col-start-2 lg:col-end-7 lg:row-start-1"
 		>
-			<h1>Present your Form 5 to the admin for approval.</h1>
-			<h4>
-				Please prepare your Form 5 and present it to the admin to get your UP ID registered in SUSe!
-			</h4>
+			<div class="grid gap-4 text-center">
+				<h1>Present your Form 5 to the admin for approval.</h1>
+				<h4>
+					Please prepare your Form 5 and present it to the admin to get your UP ID registered in
+					SUSe!
+				</h4>
+			</div>
+
 			<a href="/"><Button>Return to Login</Button></a>
 		</div>
 		<div
@@ -27,3 +31,9 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	.content {
+		max-width: 1400px;
+	}
+</style>

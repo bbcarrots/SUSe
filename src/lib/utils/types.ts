@@ -34,3 +34,30 @@ export type AdminProcessed = {
 	nickname: string;
 	isActive: boolean;
 };
+
+// all filters store strings fron the frontend
+export type ServiceFilter = {
+	serviceID: number[];
+	serviceName: string[];
+	serviceType: string[];
+	inUse: boolean[];
+	isAdmin: boolean[];
+};
+
+export type StudentFilter = {
+	studentNumberYear: string[];
+	isActive: string[];
+	college: string[];
+	program: string[];
+};
+
+export type AdminFilter = {
+	nickname: string[];
+	isActive: string[];
+};
+
+export type UsageLogFilter = {
+	dateRangeStart: string;
+	dateRangeEnd: string;
+	serviceType: string[];
+};
