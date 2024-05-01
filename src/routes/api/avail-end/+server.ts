@@ -1,6 +1,6 @@
 import { Admin } from '$lib/classes/Admin.js';
 import { Service } from '$lib/classes/Service.js';
-import { UsageLog } from '$lib/classes/UsageLog.js';
+import { UsageLog, type UsageLogDBObj } from '$lib/classes/UsageLog.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
@@ -23,6 +23,7 @@ export async function POST({ request }) {
 
     const serviceUpdateResponse = await Service.updateService({
         service_id: service!.service_id,
+        service_type_id: 0,
         service_name: '',
         service_type: '',
         in_use: true
@@ -76,9 +77,12 @@ export async function POST({ request }) {
         return json(usageLogSelectResponse)
     }
 
+    const activeUL: { [key: string]: UsageLogDBObj | undefined } = {}
+    activeUL[serviceType] = usageLogSelectResponse.usageLogRaws?.[0]
+
 	return json({
         success: true,
-        activeUsageLogs: { serviceType: usageLogSelectResponse.usageLogRaws?.[0] },
+        activeUsageLogs: activeUL,
         availableServices: {},
         error: ''
     });
@@ -139,6 +143,7 @@ export async function PATCH({ request }) {
 
     const serviceUpdateResponse = await Service.updateService({
         service_id: serviceID != undefined ? serviceID : 0,
+        service_type_id: 0,
         service_name: '',
         service_type: '',
         in_use: false

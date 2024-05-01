@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { serviceTypes } from '$lib/utils/filterOptions';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -35,16 +36,14 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		if (filter.serviceName) {
 			query = query.like('service_name', '%' + filter.serviceName + '%');
 		}
-
-		if (filter.serviceType) {
-			query = query.eq('service_type', filter.serviceType);
-		}
 	} else {
 		// if user is a student, selects all services which are not in_use
-		query = query.eq('in_use', false);
+		if (filter.inUse != null) {
+            query = query.eq('in_use', filter.inUse);
+        }
 	}
 
-	const { data, error } = await query;
+	const { data, error } = await query; 
 
 	if (error) {
 		return {
@@ -60,13 +59,23 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
 			for (const row of data) {
-				formattedData.push({
-					service_id: row.service_id,
-                    service_type_id: row.service_type_id,
-					service_name: row.service_name,
-					service_type: row.service_type.service_type, // we assume each service only has one service_type
-					in_use: row.in_use
-				});
+				if (filter.serviceType && filter.serviceType == row.service_type.service_type) {
+                    formattedData.push({
+                        service_id: row.service_id,
+                        service_type_id: row.service_type_id,
+                        service_name: row.service_name,
+                        service_type: row.service_type.service_type, // we assume each service only has one service_type
+                        in_use: row.in_use
+                    });
+                } else if (!filter.serviceType) {
+                    formattedData.push({
+                        service_id: row.service_id,
+                        service_type_id: row.service_type_id,
+                        service_name: row.service_name,
+                        service_type: row.service_type.service_type, // we assume each service only has one service_type
+                        in_use: row.in_use
+                    });
+                }
 			}
 			return {
 				success: true,
@@ -83,9 +92,15 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		// counts number of times a particular service_type appears
 		for (const row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
-				serviceTypeCount[row.service_type.service_type] += 1;
+				if (!row.in_use) {
+                    serviceTypeCount[row.service_type.service_type] += 1;
+                }
 			} else {
-				serviceTypeCount[row.service_type.service_type] = 1;
+				if (row.in_use) {
+                    serviceTypeCount[row.service_type.service_type] = 0
+                } else {
+                    serviceTypeCount[row.service_type.service_type] = 1
+                }
 			}
 		}
 	}
@@ -119,7 +134,7 @@ export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceRes
 async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Checks if there is a single existing record of a service with the given service number and username. */
 	const serviceDB = await selectServiceDB(filter);
-
+    
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
         if (serviceDB.serviceRaws[0].in_use) {
             return {
@@ -159,7 +174,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(service)) {
-		if (value && (typeof value == 'string' || typeof value == 'boolean')) {
+		if ((value && typeof value == 'string') || typeof value == 'boolean') {
 			updateObj[key] = value;
 		}
 	}
