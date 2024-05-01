@@ -22,7 +22,7 @@
 		'Program',
 		'Is Enrolled'
 	];
-	let hide: string[] = ['isEnrolled'];
+	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
 	let studentObjects = data.studentRaws;
 	let students: StudentProcessed[] = [];
@@ -38,7 +38,8 @@
 				phoneNumber: student.phone_number,
 				college: student.college,
 				program: student.program,
-				isEnrolled: student.is_enrolled
+				isEnrolled: student.is_enrolled,
+                isActive: student.is_active,
 			};
 		});
 	}
