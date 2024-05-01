@@ -84,9 +84,7 @@
 		let hasInvalid = false;
 
 		/* Check if each input has valid entries */
-		document.querySelectorAll('input').forEach((input) => {
-			// console.log(input.reportValidity());
-
+		document.querySelectorAll('input').forEach(input => {
 			if (!input.reportValidity()) {
 				hasInvalid = true;
 			}
