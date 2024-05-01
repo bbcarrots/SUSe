@@ -10,7 +10,7 @@
 	let serviceStatusValue: string[] = [];
 
 	//for table
-	let headers: string[] = ['Service ID', 'Service Type'];
+	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
 	let hide: string[] = [];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 	let serviceObjects = data.serviceRaws;
@@ -71,12 +71,13 @@
 		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
 		<Multiselect field={'Service Status'} options={serviceStatus} bind:value={serviceStatusValue} />
 	</div>
-	<Table 
+	<Table
 		on:delete={handleDelete}
 		on:update={handleUpdate}
-		{headers} 
-		info={services} 
-		primaryKey="serviceID" 
-		{hide} {disableEdit} 
+		{headers}
+		info={services}
+		primaryKey="serviceID"
+		{hide}
+		{disableEdit}
 	/>
 </div>
