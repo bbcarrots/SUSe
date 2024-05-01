@@ -303,9 +303,6 @@ describe('deleteUsageLogDB()', async () => {
 	});
 
   it('error: deleting with nonexistent ULID', async () => {
-    // insert first UL
-    await insertUsageLogDB(usageLogInstance);
-
     // returned UsageLogResponse upon failed delete
     const expectedState: UsageLogResponse = {
       success: false,
@@ -314,6 +311,7 @@ describe('deleteUsageLogDB()', async () => {
     }
 
     // insert studentSameSN, should error
-    await expect(deleteUsageLogDB(newULID + 1)).resolves.toStrictEqual(expectedState)
+    await expect(deleteUsageLogDB(newULID + 1)).resolves.toStrictEqual(expectedState);
+    await deleteUsageLogDB(newULID);
   });
 });
