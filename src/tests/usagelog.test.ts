@@ -315,3 +315,108 @@ describe('deleteUsageLogDB()', async () => {
     await deleteUsageLogDB(newULID);
   });
 });
+
+describe.only('selectUsageLogDB()', async () => {
+	const newULID = 1020306;
+	const newSN = 205100001;
+	const newAdminID = 212300001;
+	const newServiceID = 40001;
+
+  const studentInstance: StudentDBObj = {
+    sn_id: newSN,
+    rfid: 90001,
+    username: 'klamar',
+    pw: 'mrmorale',
+    first_name: 'Kendrick',
+    middle_initial: '',
+    last_name: 'Lamar',
+    college: 'College of Social Sciences and Philosophy',
+    program: 'BS Psychology',
+    phone_number: '09123456789',
+    is_enrolled: true,
+    is_active: true
+  };
+
+  const serviceInstance: ServiceDBObj = {
+    service_id: newServiceID,
+    service_type_id: 5,
+    service_name: 'Gaming PC',
+    service_type: 'Laptop',
+    in_use: false
+  };
+
+  const adminInstance: AdminDBObj = {
+    admin_id: newAdminID,
+    rfid: 80001,
+    pw: 'password',
+    nickname: 'Tupac',
+    is_active: false
+  };
+
+  const usageLogList: UsageLogDBObj[] = [];
+
+	beforeEach(async () => {
+		// student
+		await insertStudentDB(studentInstance);
+		await insertServiceDB(serviceInstance);
+		await insertAdminDB(adminInstance);
+
+    for (let offset = 0; offset < 3; offset++) {
+      const usageLogInstance: UsageLogDBObj = {
+        ul_id: newULID + offset,
+        sn_id: newSN,
+        admin_id: newAdminID,
+        service_id: newServiceID,
+        service_type: 'Laptop',
+        datetime_start: '2027-04-0' + (5 + offset).toString() + '11:06:00+00',
+        datetime_end: '2027-04-0' + (5 + offset).toString() + '11:06:59+00'
+      };
+
+			usageLogList.push(usageLogInstance);
+			await insertUsageLogDB(usageLogInstance);
+		}
+	});
+
+	afterEach(async () => {
+		await deleteServiceDB(newServiceID);
+		await deleteStudentDB(newSN);
+		await deleteAdminDB(newAdminID);
+    for (const usagelog in usageLogList) {
+      await deleteUsageLogDB(usagelog.ul_id)
+    }
+	});
+
+	it.todo('success: select single usage log', async () => {
+		const oneUsageLogFilter: UsageLogFilter = {
+      usageLogID: newULID,
+      studentNumber: 0,
+      minDate: "",
+      maxDate: ""
+		};
+		const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
+
+		if (selectOutput.usageLogRaws !== null) {
+      console.log("selected usage log:", selectOutput.usageLogRaws);
+			const selectOutputULID = selectOutput.usageLogRaws[0].ul_id; // extract ULID from selected UL
+			// compare selected ULID with inserted ULID
+			expect(selectOutputULID).toStrictEqual(newULID);
+		}
+	});
+
+  it('error: select single nonexistent usage log', async () => {
+		const oneUsageLogFilter: UsageLogFilter = {
+      usageLogID: newULID + 1,
+      studentNumber: 0,
+      minDate: "",
+      maxDate: ""
+		};
+    const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
+    const selectOutputArray = selectOutput.usageLogRaws;
+
+    const empty: UsageLogDBObj[] = [];
+
+		if (selectOutput.usageLogRaws !== null) {
+			expect(selectOutputArray).toStrictEqual(empty);
+		}
+	});
+});
