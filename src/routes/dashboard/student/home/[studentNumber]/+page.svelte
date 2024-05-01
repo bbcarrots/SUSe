@@ -39,9 +39,9 @@
 		availServiceResponse = await response.json();
 	}
 
-	async function handleDeleteService(event: CustomEvent) {
-		/* Handles Delete event from TableRow by sending a DELETE request 
-        with payload requirement: studentNumber. */
+	async function handleEndService(event: CustomEvent) {
+		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
+        with payload requirement: usageLogID. */
 
 		const response = await fetch('../../api/avail-end', {
 			method: 'PATCH',
