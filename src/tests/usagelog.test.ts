@@ -120,7 +120,7 @@ describe('insertUsageLogDB()', async () => {
   });
 });
 
-describe.todo('updateUsageLogDB()', async () => {
+describe.skip('updateUsageLogDB()', async () => {
 	const newULID = 1020305;
 	const newSN = 205100001;
 	const newAdminID = 212300001;
@@ -386,7 +386,7 @@ describe('selectUsageLogDB()', async () => {
     }
 	});
 
-	it.todo('success: select single usage log', async () => {
+	it.skip('success: select single usage log', async () => {
 		const oneUsageLogFilter: UsageLogFilter = {
       usageLogID: newULID,
       studentNumber: 0,
@@ -400,6 +400,41 @@ describe('selectUsageLogDB()', async () => {
 			const selectOutputULID = selectOutput.usageLogRaws[0].ul_id; // extract ULID from selected UL
 			// compare selected ULID with inserted ULID
 			expect(selectOutputULID).toStrictEqual(newULID);
+		}
+	});
+
+  it.skip('success: multiple ULs with student number', async () => {
+		const oneUsageLogFilter: UsageLogFilter = {
+      usageLogID: 0,
+      studentNumber: newSN,
+      minDate: "",
+      maxDate: ""
+		};
+		const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
+
+		if (selectOutput.usageLogRaws !== null) {
+      const expectedULIDs: number[] = [newULID, newULID + 1, newULID + 2];
+			const selectOutputULIDs = selectOutput.usageLogRaws.map(usagelog => usagelog.ul_id);
+			
+			expect(selectOutputULIDs.sort()).toStrictEqual(expectedULIDs.sort());
+		}
+	});
+
+  it.skip('success: multiple ULs with mindate and maxdate', async () => {
+		const oneUsageLogFilter: UsageLogFilter = {
+      usageLogID: 0,
+      studentNumber: newSN,
+      minDate: "2027-04-05 11:06:00+00",
+      maxDate: "2027-04-06 11:06:00+00" // only two ULs should be selected, excluding the last one inserted
+		};
+
+		const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
+
+		if (selectOutput.usageLogRaws !== null) {
+      const expectedULIDs: number[] = [newULID, newULID + 1];
+			const selectOutputULIDs = selectOutput.usageLogRaws.map(usagelog => usagelog.ul_id);
+			
+			expect(selectOutputULIDs.sort()).toStrictEqual(expectedULIDs.sort());
 		}
 	});
 
