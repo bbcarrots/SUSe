@@ -2,7 +2,8 @@
 	import Button from '$lib/components/Button.svelte';
 	import LoginForm from '$lib/components/LoginForm.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { userRFID, userID } from '$lib/stores/User.js';
 
 	export let form;
 
@@ -15,7 +16,7 @@
 		/* Handles RFID validation event from LoginForm by sending a POST request 
         with payload requirement: rfid. */
 
-		const response = await fetch('api/student', {
+		const response = await fetch('api/rfid', {
 			method: 'POST',
 			body: JSON.stringify(event.detail),
 			headers: {
@@ -24,6 +25,27 @@
 		});
 
 		rfidResponse = await response.json();
+
+		// if success but no returned students, redirect to register page
+		if (rfidResponse.success == true && rfidResponse.studentRaws?.length == 0) {
+			userRFID.set(event.detail);
+			goto(`/register`);
+		}
+
+		// if success, redirect to approprate student dashboard
+		else if (rfidResponse.success == true) {
+			// if there is a student ID,
+			if (rfidResponse.studentRaws?.[0].sn_id !== undefined) {
+				if (rfidResponse.studentRaws?.[0].is_enrolled) {
+					// if the user is enrolled
+					userID.set(rfidResponse.studentRaws?.[0].sn_id);
+					goto(`/dashboard/student/home/${$userID}`);
+				} else {
+					// if the user is not enrolled, redirect to form 5 notice
+					goto(`/register/form5`);
+				}
+			}
+		}
 	}
 </script>
 
@@ -37,18 +59,9 @@
 			class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
                     lg:col-start-2 lg:col-end-7 lg:row-start-1"
 		>
-			{#if form == null || form.success == false}
-				<LoginForm />
-				{#if form != null && form.error != null}
-					<p class="text-red-600">{form.error}</p>
-				{/if}
-			{:else if form.success == true}
-				<h1>Present your Form 5 to the admin for approval.</h1>
-				<h4>
-					Please prepare your Form 5 and present it to the admin to get your UP ID registered in
-					SUSe!
-				</h4>
-				<Button>Return to Login</Button>
+			<LoginForm on:inputRFID={handleRFID} />
+			{#if form != null && form.error != null}
+				<p class="text-red-600">{form.error}</p>
 			{/if}
 		</div>
 		<div

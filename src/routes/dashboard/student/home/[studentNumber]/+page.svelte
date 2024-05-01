@@ -8,7 +8,6 @@
 
 	userID.set(Number($page.params.studentNumber));
 
-	console.log(data.availableServices);
 	let availableServices = data.availableServices;
 
 	// ----------------------------------------------------------------------------------

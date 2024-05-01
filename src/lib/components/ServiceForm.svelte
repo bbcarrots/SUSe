@@ -13,14 +13,14 @@
 
     function handleCheckboxChange(event: any) {
         const checkbox = event.target;
-        console.log(checkbox)
+        // console.log(checkbox)
 
         if (checkbox.checked) {
             formData.consented = true;
         } else {
             formData.consented = false;
         }
-        console.log(formData)
+        // console.log(formData)
     }
 
 </script>
