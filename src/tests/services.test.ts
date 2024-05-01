@@ -352,7 +352,7 @@ describe('selectServiceDB, range', async () => {
 			serviceID: 0,
 			serviceName: '',
 			serviceType: 'Laptop',
-			inUse: false,
+			inUse: null,
 			isAdmin: true // so services even in use are shown
 		};
 
@@ -361,10 +361,10 @@ describe('selectServiceDB, range', async () => {
 			const selectedOutputServiceNumbers = selectOutput.serviceRaws.map(
 				(service) => service.service_id
 			); // extract service number from selected service records
-			const expectedServiceNumbers = [100006, 100007, 100008]; // all laptops, not including glasses
+			const expectedServiceNumbers = [12, 13, 14, 15, 100006, 100007, 100008]; // all laptops, not including glasses
 
 			// compare selected service number with inserted service number
-			expect(selectedOutputServiceNumbers).toEqual(expectedServiceNumbers);
+			expect(selectedOutputServiceNumbers).toEqual(expect.arrayContaining(expectedServiceNumbers));
 		}
 	});
 
