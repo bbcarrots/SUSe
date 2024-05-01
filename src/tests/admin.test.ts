@@ -166,7 +166,7 @@ describe('deleteAdminDB()', async () => {
       error: 'Error: Admin does not exist'
     };
 
-    await expect(updateAdminDB(newAdminNumber + 1)).resolves.toStrictEqual(expectedState);
+    await expect(deleteAdminDB(newAdminNumber + 1)).resolves.toStrictEqual(expectedState);
   });
 });
   
