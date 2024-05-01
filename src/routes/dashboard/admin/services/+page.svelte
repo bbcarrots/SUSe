@@ -10,8 +10,8 @@
 	let serviceStatusValue: string[] = [];
 
 	//for table
-	let headers: string[] = ['Service ID', 'Service Type'];
-	let hide: string[] = [];
+	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 	let serviceObjects = data.serviceRaws;
 	let services: ServiceProcessed[] = [];
@@ -21,6 +21,7 @@
 		services = serviceObjects.map((service) => {
 			return {
 				serviceID: service.service_id,
+                serviceTypeID: service.service_type_id,
 				serviceName: service.service_name,
 				serviceType: service.service_type,
 				inUse: service.in_use
