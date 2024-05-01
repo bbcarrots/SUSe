@@ -39,7 +39,7 @@
 				college: student.college,
 				program: student.program,
 				isEnrolled: student.is_enrolled,
-                isActive: student.is_active,
+				isActive: student.is_active
 			};
 		});
 	}
