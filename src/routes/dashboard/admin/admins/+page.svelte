@@ -3,11 +3,15 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
 	import { type AdminProcessed } from '$lib/utils/types.js';
+	import { type AdminFilter } from '$lib/utils/types.js';
+
 	export let data;
 
 	//for filters
-	let userStatusValue: string[] = [];
-	let adminNicknamesValue: string[] = [];
+	let adminFilter: AdminFilter = {
+		nickname: [],
+		isActive: []
+	};
 
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
@@ -67,11 +71,11 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Admins</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'User Status'} options={userStatus} bind:value={userStatusValue} />
+		<Multiselect field={'User Status'} options={userStatus} bind:value={adminFilter.isActive} />
 		<Multiselect
 			field={'Admin Nicknames'}
 			options={adminNicknames}
-			bind:value={adminNicknamesValue}
+			bind:value={adminFilter.nickname}
 		/>
 	</div>
 	<Table
