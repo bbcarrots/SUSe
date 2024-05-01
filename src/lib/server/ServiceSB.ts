@@ -41,7 +41,9 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		}
 	} else {
 		// if user is a student, selects all services which are not in_use
-		query = query.eq('in_use', false);
+		if (filter.inUse != null) {
+            query = query.eq('in_use', filter.inUse);
+        }
 	}
 
 	const { data, error } = await query;
@@ -83,9 +85,15 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		// counts number of times a particular service_type appears
 		for (const row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
-				serviceTypeCount[row.service_type.service_type] += 1;
+				if (!row.in_use) {
+                    serviceTypeCount[row.service_type.service_type] += 1;
+                }
 			} else {
-				serviceTypeCount[row.service_type.service_type] = 1;
+				if (row.in_use) {
+                    serviceTypeCount[row.service_type.service_type] = 0
+                } else {
+                    serviceTypeCount[row.service_type.service_type] = 1
+                }
 			}
 		}
 	}
