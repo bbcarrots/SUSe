@@ -19,8 +19,6 @@
 	const totalRows = info.length;
 	const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-	// console.log(totalPages)
-
     /* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
 	let sortDirection: number;

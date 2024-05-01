@@ -5,6 +5,7 @@
 	import { Modal } from 'flowbite-svelte';
 	import Button from './Button.svelte';
 	import ServiceForm from './ServiceForm.svelte';
+	import type { serviceTypes } from '$lib/utils/filterOptions';
 
 	export let serviceName: string;
 	export let available: number;
@@ -32,7 +33,7 @@
 		countdown = formatTime(0);
 		popupModalStart = false;
 
-		dispatch('availService', { serviceName: serviceName});
+		dispatch('availService', { serviceType: serviceName });
 	}
 
 	function endService() {
@@ -41,7 +42,8 @@
 		popupModalEnd = false;
 
 		//todo: edit the usage log entry
-        // dispatch('endService', usageLogID)
+        const usageLogID = 0
+        dispatch('endService', usageLogID)
 	}
 
 	// function to update the current time for the count

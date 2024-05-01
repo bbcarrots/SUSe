@@ -23,6 +23,7 @@ export async function POST({ request }) {
 
     const serviceUpdateResponse = await Service.updateService({
         service_id: service!.service_id,
+        service_type_id: 0,
         service_name: '',
         service_type: '',
         in_use: true
@@ -139,6 +140,7 @@ export async function PATCH({ request }) {
 
     const serviceUpdateResponse = await Service.updateService({
         service_id: serviceID != undefined ? serviceID : 0,
+        service_type_id: 0,
         service_name: '',
         service_type: '',
         in_use: false

@@ -31,8 +31,6 @@
 
 		const payload = { studentNumber: $page.params.studentNumber, ...event.detail };
 
-        console.log(payload)
-
 		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
 			body: JSON.stringify(payload),
@@ -52,55 +50,70 @@
 
 		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
-			body: JSON.stringify(event.detail),
+			body: JSON.stringify({ usageLogID: availServiceResponse.activeUsageLogs.usageLogID }),
 			headers: {
 				'content-type': 'application/json'
 			}
 		});
 
 		endServiceResponse = await response.json();
+
+        console.log(endServiceResponse)   
 	}
 </script>
 
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 	<ServiceCard
         on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Calculator'}
 		available={services?.['Calculator']}
 		src={'/service-card-images/calculator.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Extension Cord'}
 		available={services?.['Extension Cord']}
 		src={'/service-card-images/extension-cord.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Discussion Room'}
 		available={services?.['Discussion Room']}
 		src={'/service-card-images/discussion-room.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Umbrella'}
 		available={services?.['Umbrella']}
 		src={'/service-card-images/umbrella.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Laptop'}
 		available={services?.['Laptop']}
 		src={'/service-card-images/laptop.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Adapter'}
 		available={services?.['Adapter']}
 		src={'/service-card-images/adapter.svg'}
 	/>
 
 	<ServiceCard
+        on:availService={handleAvailService}
+        on:endService={handleEndService}
 		serviceName={'Reading Glasses'}
 		available={services?.['Reading Glasses']}
 		src={'/service-card-images/reading-glasses.svg'}

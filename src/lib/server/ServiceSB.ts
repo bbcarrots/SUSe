@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { serviceTypes } from '$lib/utils/filterOptions';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -35,10 +36,6 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		if (filter.serviceName) {
 			query = query.like('service_name', '%' + filter.serviceName + '%');
 		}
-
-		if (filter.serviceType) {
-			query = query.eq('service_type', filter.serviceType);
-		}
 	} else {
 		// if user is a student, selects all services which are not in_use
 		if (filter.inUse != null) {
@@ -46,7 +43,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
         }
 	}
 
-	const { data, error } = await query;
+	const { data, error } = await query; 
 
 	if (error) {
 		return {
@@ -62,13 +59,23 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
 			for (const row of data) {
-				formattedData.push({
-					service_id: row.service_id,
-                    service_type_id: row.service_type_id,
-					service_name: row.service_name,
-					service_type: row.service_type.service_type, // we assume each service only has one service_type
-					in_use: row.in_use
-				});
+				if (filter.serviceType && filter.serviceType == row.service_type.service_type) {
+                    formattedData.push({
+                        service_id: row.service_id,
+                        service_type_id: row.service_type_id,
+                        service_name: row.service_name,
+                        service_type: row.service_type.service_type, // we assume each service only has one service_type
+                        in_use: row.in_use
+                    });
+                } else if (!filter.serviceType) {
+                    formattedData.push({
+                        service_id: row.service_id,
+                        service_type_id: row.service_type_id,
+                        service_name: row.service_name,
+                        service_type: row.service_type.service_type, // we assume each service only has one service_type
+                        in_use: row.in_use
+                    });
+                }
 			}
 			return {
 				success: true,
