@@ -17,7 +17,7 @@
 	};
 
 	//for table
-	let headers: string[] = ['Service ID', 'Service Type'];
+	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
 	let hide: string[] = [];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 	let serviceObjects = data.serviceRaws;
