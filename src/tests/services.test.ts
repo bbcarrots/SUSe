@@ -78,7 +78,7 @@ describe('fail: Service.insertService with same Service ID', async () => {
 		await expect(insertServiceDB(serviceSameID)).resolves.toStrictEqual(expectedState);
 	});
 });
-
+// test comment
 describe('updateServiceDB()', async () => {
 	const newServiceNumber = 100004;
 	const newServiceName = 'Extension cord (5 meters)';
