@@ -26,8 +26,8 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	// if user is an admin, selects service_id, service_name, service_type, in_use
 	if (filter.isAdmin) {
 		if (filter.inUse != null) {
-            query = query.eq('in_use', filter.inUse);
-        }
+			query = query.eq('in_use', filter.inUse);
+		}
 
 		if (filter.serviceID) {
 			query = query.eq('service_id', filter.serviceID);
@@ -39,11 +39,11 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	} else {
 		// if user is a student, selects all services which are not in_use
 		if (filter.inUse != null) {
-            query = query.eq('in_use', filter.inUse);
-        }
+			query = query.eq('in_use', filter.inUse);
+		}
 	}
 
-	const { data, error } = await query; 
+	const { data, error } = await query;
 
 	if (error) {
 		return {
@@ -60,22 +60,22 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		if (data != null) {
 			for (const row of data) {
 				if (filter.serviceType && filter.serviceType == row.service_type.service_type) {
-                    formattedData.push({
-                        service_id: row.service_id,
-                        service_type_id: row.service_type_id,
-                        service_name: row.service_name,
-                        service_type: row.service_type.service_type, // we assume each service only has one service_type
-                        in_use: row.in_use
-                    });
-                } else if (!filter.serviceType) {
-                    formattedData.push({
-                        service_id: row.service_id,
-                        service_type_id: row.service_type_id,
-                        service_name: row.service_name,
-                        service_type: row.service_type.service_type, // we assume each service only has one service_type
-                        in_use: row.in_use
-                    });
-                }
+					formattedData.push({
+						service_id: row.service_id,
+						service_type_id: row.service_type_id,
+						service_name: row.service_name,
+						service_type: row.service_type.service_type, // we assume each service only has one service_type
+						in_use: row.in_use
+					});
+				} else if (!filter.serviceType) {
+					formattedData.push({
+						service_id: row.service_id,
+						service_type_id: row.service_type_id,
+						service_name: row.service_name,
+						service_type: row.service_type.service_type, // we assume each service only has one service_type
+						in_use: row.in_use
+					});
+				}
 			}
 			return {
 				success: true,
@@ -93,14 +93,14 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		for (const row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
 				if (!row.in_use) {
-                    serviceTypeCount[row.service_type.service_type] += 1;
-                }
+					serviceTypeCount[row.service_type.service_type] += 1;
+				}
 			} else {
 				if (row.in_use) {
-                    serviceTypeCount[row.service_type.service_type] = 0
-                } else {
-                    serviceTypeCount[row.service_type.service_type] = 1
-                }
+					serviceTypeCount[row.service_type.service_type] = 0;
+				} else {
+					serviceTypeCount[row.service_type.service_type] = 1;
+				}
 			}
 		}
 	}
@@ -134,16 +134,16 @@ export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceRes
 async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceResponse> {
 	/* Checks if there is a single existing record of a service with the given service number and username. */
 	const serviceDB = await selectServiceDB(filter);
-    
+
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
-        if (serviceDB.serviceRaws[0].in_use) {
-            return {
-                success: true,
-                serviceRaws: null,
-                availableServices: null,
-                error: 'Warning: Service is in use.'
-            };
-        }
+		if (serviceDB.serviceRaws[0].in_use) {
+			return {
+				success: true,
+				serviceRaws: null,
+				availableServices: null,
+				error: 'Warning: Service is in use.'
+			};
+		}
 
 		return success;
 	}
@@ -174,7 +174,14 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(service)) {
-		if ((value && typeof value == 'string') || typeof value == 'boolean') {
+		if (
+			(value &&
+				typeof value == 'string' &&
+				key != 'service_id' &&
+				key != 'service_type_id' &&
+				key != 'service_type') ||
+			typeof value == 'boolean'
+		) {
 			updateObj[key] = value;
 		}
 	}
