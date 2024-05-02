@@ -14,6 +14,9 @@
 		availableServices = data.availableServices;
 	}
 
+	let activeUsageLogs: { [key: string]: UsageLogDBObj } =
+		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
+
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
 
@@ -27,15 +30,17 @@
 	let availServiceResponse: StudentServicesResponse;
 	let endServiceResponse: StudentServicesResponse;
 
-    let activeUsageLogs: { [key: string]: UsageLogDBObj } = {}
-
 	async function handleAvailService(event: CustomEvent) {
 		/* Handles Avail Service event from ServiceCardForm by sending a POST request 
         with payload requirements: studentNumber, serviceType. */
 
-        const { serviceType } = event.detail
+		const { serviceType } = event.detail;
 
-		const payload = { studentNumber: $page.params.studentNumber, serviceType: serviceType };
+		const payload = {
+			studentNumber: $page.params.studentNumber,
+			serviceType: serviceType,
+			updateStudent: Object.keys(activeUsageLogs).length == 0 ? true : false
+		};
 
 		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
@@ -47,22 +52,29 @@
 
 		availServiceResponse = await response.json();
 
-        console.log(availServiceResponse)   
+		// console.log(availServiceResponse);
 
-        activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs)
+		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
 
-        console.log(activeUsageLogs)   
+		console.log(activeUsageLogs);
 	}
 
 	async function handleEndService(event: CustomEvent) {
 		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
         with payload requirement: usageLogID, serviceType. */
+		console.log(activeUsageLogs);
 
-        const { serviceType } = event.detail
+		const { serviceType } = event.detail;
+
+		const payload = {
+			studentNumber: $page.params.studentNumber,
+			usageLogID: activeUsageLogs[serviceType].ul_id,
+			updateStudent: Object.keys(activeUsageLogs).length == 1 ? true : false
+		};
 
 		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
-			body: JSON.stringify({ usageLogID: activeUsageLogs[serviceType].ul_id }),
+			body: JSON.stringify(payload),
 			headers: {
 				'content-type': 'application/json'
 			}
@@ -70,7 +82,12 @@
 
 		endServiceResponse = await response.json();
 
-        console.log(endServiceResponse)   
+        if (endServiceResponse.success) {
+            delete activeUsageLogs[serviceType]
+        }
+
+		// console.log(endServiceResponse);
+		console.log(activeUsageLogs);
 	}
 </script>
 

@@ -1,11 +1,33 @@
 import { Admin } from '$lib/classes/Admin.js';
 import { Service } from '$lib/classes/Service.js';
+import { Student } from '$lib/classes/Student.js';
 import { UsageLog, type UsageLogDBObj } from '$lib/classes/UsageLog.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
 	/* Handles Avail Service requests for service and usage log records. */
-    const { studentNumber, serviceType } = await request.json()
+    const { studentNumber, serviceType, updateStudent } = await request.json()
+
+    if (updateStudent) {
+        const studentUpdateResponse = await Student.updateStudent({
+            sn_id: studentNumber,
+			rfid: 0,
+			username: '',
+			pw: '',
+			first_name: '',
+			middle_initial: '',
+			last_name: '',
+			college: '',
+			program: '',
+			phone_number: '',
+			is_enrolled: true,
+            is_active: true
+        })
+        
+        if (!studentUpdateResponse.success) {
+            return json(studentUpdateResponse)
+        }
+    }
 
 	const serviceSelectResponse = await Service.selectServices({
         serviceID: 0,
@@ -90,7 +112,28 @@ export async function POST({ request }) {
 
 export async function PATCH({ request }) {
 	/* Handles End Service requests for service and usage log records. */
-	const { usageLogID } = await request.json();
+	const { studentNumber, usageLogID, updateStudent } = await request.json();
+
+    if (updateStudent) {
+        const studentUpdateResponse = await Student.updateStudent({
+            sn_id: studentNumber,
+			rfid: 0,
+			username: '',
+			pw: '',
+			first_name: '',
+			middle_initial: '',
+			last_name: '',
+			college: '',
+			program: '',
+			phone_number: '',
+			is_enrolled: true,
+            is_active: false
+        })
+        
+        if (!studentUpdateResponse.success) {
+            return json(studentUpdateResponse)
+        }
+    }
 
     const usageLogSelectResponse = await UsageLog.selectUsageLogs({
         usageLogID: usageLogID,
