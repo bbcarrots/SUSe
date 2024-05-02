@@ -240,33 +240,33 @@ describe('selectAdminDB()', async () => {
 		}
   });
 
-  it.skip('success: select range from isActive', async () => {
-    const activeAdminFilter: AdminFilter = {
-      adminID: 0,
-      nickname: "",
-      isActive: true
-		};
+  // it.skip('success: select range from isActive', async () => {
+  //   const activeAdminFilter: AdminFilter = {
+  //     adminID: 0,
+  //     nickname: "",
+  //     isActive: true
+	// 	};
 
-    const selectOutput = await selectAdminDB(activeAdminFilter);
-    const expectedAdmins = ['Spongebob', 'Squidward'];
+  //   const selectOutput = await selectAdminDB(activeAdminFilter);
+  //   const expectedAdmins = ['Spongebob', 'Squidward'];
 
-		if (selectOutput.adminRaws !== null) {
-      const selectOutputNames = selectOutput.adminRaws.map(admin => admin.nickname)
-			// compare selected admin id with inserted admin id 
-			expect(selectOutputNames).toStrictEqual(expectedAdmins);
-		}  });
+	// 	if (selectOutput.adminRaws !== null) {
+  //     const selectOutputNames = selectOutput.adminRaws.map(admin => admin.nickname)
+	// 		// compare selected admin id with inserted admin id 
+	// 		expect(selectOutputNames).toStrictEqual(expectedAdmins);
+	// 	}  });
 
-    it('success: select nonexistent admin', async () => {
-      const oneAdminFilter: AdminFilter = {
-        adminID: 0,
-        nickname: "LeBron James",
-        isActive: null
-      };
-      const selectOutput = await selectAdminDB(oneAdminFilter);
+  //   it('success: select nonexistent admin', async () => {
+  //     const oneAdminFilter: AdminFilter = {
+  //       adminID: 0,
+  //       nickname: "LeBron James",
+  //       isActive: null
+  //     };
+  //     const selectOutput = await selectAdminDB(oneAdminFilter);
   
-      if (selectOutput.adminRaws !== null) {
-        const selectOutputID = selectOutput.adminRaws;
-        expect(selectOutputID).toStrictEqual([]);
-      }
-    });
+  //     if (selectOutput.adminRaws !== null) {
+  //       const selectOutputID = selectOutput.adminRaws;
+  //       expect(selectOutputID).toStrictEqual([]);
+  //     }
+  //   });
 });
