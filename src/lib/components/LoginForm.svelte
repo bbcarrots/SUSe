@@ -6,7 +6,7 @@
 	//to determine which login to display
 	let rfidLogin = true;
 	let rfidValue: string;
-	let clicks: number = 0;
+	export let clicks: number = 0;
 
 	const dispatch = createEventDispatcher(); // for forwarding events
 
@@ -16,11 +16,15 @@
 			const target = e.target; //take the target of the event
 			const focusedElement = document.activeElement; //this is the active element being focused
 
-			// if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
+			//if the current element is an image, increment the clicks if the count is less than 5
 			if (target instanceof HTMLImageElement) {
-				clicks = clicks + 1;
-				dispatch('clicked', clicks);
-			} else if (
+				if (clicks < 5) {
+					clicks = clicks + 1;
+				}
+			}
+
+			// if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
+			else if (
 				focusedElement === rfidInput &&
 				!(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)
 			) {

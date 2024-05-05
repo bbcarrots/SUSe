@@ -15,12 +15,6 @@
 
 	let rfidResponse: StudentResponse | AdminResponse;
 
-	function handleClicked(event: CustomEvent) {
-		if (clicks != 5) {
-			clicks = event.detail;
-		}
-	}
-
 	async function handleRFID(event: CustomEvent) {
 		/* Handles RFID validation event from LoginForm by sending a POST request 
         with payload requirement: rfid. */
@@ -82,7 +76,7 @@
 			class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
                     lg:col-start-2 lg:col-end-7 lg:row-start-1"
 		>
-			<LoginForm on:clicked={handleClicked} on:inputRFID={handleRFID} />
+			<LoginForm bind:clicks on:inputRFID={handleRFID} />
 			{#if form != null && form.error != null}
 				<p class="text-red-600">{form.error}</p>
 			{/if}
