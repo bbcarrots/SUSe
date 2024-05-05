@@ -109,7 +109,7 @@ export async function POST({ request }) {
 		usageLogID: 0,
 		studentNumber: studentNumber,
 		minDate: dateToday,
-		maxDate: ''
+		maxDate: null
 	});
 
 	if (!usageLogSelectResponse.success) {
