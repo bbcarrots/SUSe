@@ -80,19 +80,27 @@
 	{:else if field == 'program'}
 		<select
 			on:input
+			bind:value
 			name={field}
 			id={field}
 			class="block w-full rounded-[5px] border border-gray-300 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 		>
 			{#each $CollegePrograms as program}
 				{#if program.college == college}
-					{#each program.programs as department}
-						{#if department == value}
-							<option value={department} selected>{department}</option>
-						{:else}
+					{#if program.programs.includes(value)}
+						{#each program.programs as department, index}
+							{#if department == value}
+								<option value={department} selected>{department} </option>
+							{:else}
+								<option value={department}>{department}</option>
+							{/if}
+						{/each}
+					{:else}
+						<option value={''} selected></option>
+						{#each program.programs as department, index}
 							<option value={department}>{department}</option>
-						{/if}
-					{/each}
+						{/each}
+					{/if}
 				{/if}
 			{/each}
 		</select>

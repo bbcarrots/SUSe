@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { serviceTypes } from '$lib/utils/filterOptions';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -20,11 +21,13 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
     Filter contains option for service ID, type, name, if in use, and if is admin. */
 	let query = supabase
 		.from('service')
-		.select('service_id, service_name, in_use, service_type (service_type)');
+		.select('service_id, service_type_id, service_name, in_use, service_type (service_type)');
 
 	// if user is an admin, selects service_id, service_name, service_type, in_use
 	if (filter.isAdmin) {
-		query = query.eq('in_use', filter.inUse);
+		if (filter.inUse != null) {
+			query = query.eq('in_use', filter.inUse);
+		}
 
 		if (filter.serviceID) {
 			query = query.eq('service_id', filter.serviceID);
@@ -33,13 +36,11 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		if (filter.serviceName) {
 			query = query.like('service_name', '%' + filter.serviceName + '%');
 		}
-
-		if (filter.serviceType) {
-			query = query.eq('service_type', filter.serviceType);
-		}
 	} else {
 		// if user is a student, selects all services which are not in_use
-		query = query.eq('in_use', false);
+		if (filter.inUse != null) {
+			query = query.eq('in_use', filter.inUse);
+		}
 	}
 
 	const { data, error } = await query;
@@ -58,12 +59,23 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
 			for (const row of data) {
-				formattedData.push({
-					service_id: row.service_id,
-					service_name: row.service_name,
-					service_type: row.service_type.service_type, // we assume each service only has one service_type
-					in_use: row.in_use
-				});
+				if (filter.serviceType && filter.serviceType == row.service_type.service_type) {
+					formattedData.push({
+						service_id: row.service_id,
+						service_type_id: row.service_type_id,
+						service_name: row.service_name,
+						service_type: row.service_type.service_type, // we assume each service only has one service_type
+						in_use: row.in_use
+					});
+				} else if (!filter.serviceType) {
+					formattedData.push({
+						service_id: row.service_id,
+						service_type_id: row.service_type_id,
+						service_name: row.service_name,
+						service_type: row.service_type.service_type, // we assume each service only has one service_type
+						in_use: row.in_use
+					});
+				}
 			}
 			return {
 				success: true,
@@ -80,9 +92,15 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		// counts number of times a particular service_type appears
 		for (const row of data) {
 			if (row.service_type.service_type in serviceTypeCount) {
-				serviceTypeCount[row.service_type.service_type] += 1;
+				if (!row.in_use) {
+					serviceTypeCount[row.service_type.service_type] += 1;
+				}
 			} else {
-				serviceTypeCount[row.service_type.service_type] = 1;
+				if (row.in_use) {
+					serviceTypeCount[row.service_type.service_type] = 0;
+				} else {
+					serviceTypeCount[row.service_type.service_type] = 1;
+				}
 			}
 		}
 	}
@@ -118,6 +136,15 @@ async function checkServiceExistsDB(filter: ServiceFilter): Promise<ServiceRespo
 	const serviceDB = await selectServiceDB(filter);
 
 	if (serviceDB.success && serviceDB.serviceRaws?.length == 1) {
+		if (serviceDB.serviceRaws[0].in_use) {
+			return {
+				success: true,
+				serviceRaws: null,
+				availableServices: null,
+				error: 'Warning: Service is in use.'
+			};
+		}
+
 		return success;
 	}
 
@@ -136,7 +163,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 		serviceID: service.service_id,
 		serviceName: '',
 		serviceType: '',
-		inUse: typeof service.in_use == 'boolean' ? service.in_use : false,
+		inUse: null,
 		isAdmin: true
 	});
 
@@ -147,7 +174,14 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(service)) {
-		if (value && (typeof value == 'string' || typeof value == 'boolean')) {
+		if (
+			(value &&
+				typeof value == 'string' &&
+				key != 'service_id' &&
+				key != 'service_type_id' &&
+				key != 'service_type') ||
+			typeof value == 'boolean'
+		) {
 			updateObj[key] = value;
 		}
 	}
@@ -175,11 +209,11 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		serviceID: serviceID,
 		serviceName: '',
 		serviceType: '',
-		inUse: false, // service has to be not in use to be deleted
+		inUse: null, // service has to be not in use to be deleted
 		isAdmin: true
 	});
 
-	if (!serviceCheck.success) {
+	if (!serviceCheck.success || serviceCheck.error == 'Warning: Service is in use.') {
 		return serviceCheck;
 	}
 

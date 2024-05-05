@@ -18,7 +18,7 @@ export async function load({ params }) {
 		serviceID: 0,
 		serviceName: '',
 		serviceType: '',
-		inUse: false,
+		inUse: null,
 		isAdmin: false
 	});
 

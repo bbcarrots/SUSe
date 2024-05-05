@@ -46,8 +46,8 @@
 
 		dispatch('approve', payload);
 
-        /* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
-		updateInfo(); 
+		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
+		updateInfo();
 	}
 
 	// specific store for student tables
@@ -85,10 +85,8 @@
 
 		/* Check if each input has valid entries */
 		document.querySelectorAll('input').forEach(input => {
-			// console.log(input.reportValidity());
-
 			if (!input.reportValidity()) {
-				hasInvalid = true
+				hasInvalid = true;
 			}
 		});
 
@@ -107,17 +105,15 @@
 				isEditing = false;
 				primaryKeyEdit = null;
 			}
-			
+
 			/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
 			updateInfo();
 		} else {
 			hasInvalid = false;
 		}
-
 	};
 
-
-	function updateInfo() { 
+	function updateInfo() {
 		/* Updates information shown in the TableRow component. */
 		info = info;
 	}
@@ -139,7 +135,6 @@
 	<!-- If it's for editing, display a form -->
 	{#if isEditing && getKey(info, primaryKey) === primaryKeyEdit}
 		{#each Object.entries(info) as [field, value]}
-
 			<!-- generate the primary key col (uneditable) -->
 			{#if disableEdit.includes(field) && !hide.includes(field)}
 				<TableCell {field} {value} {info} {primaryKey} />
@@ -157,7 +152,7 @@
 
 		<!-- generate the action buttons -->
 		<div
-			class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible"
+			class="items-right invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible"
 		>
 			<!-- save button-->
 			<button on:click={() => submitForm()} class="font-medium text-green-800">
@@ -169,7 +164,7 @@
 			</button>
 		</div>
 
-	<!-- If not for editing, display the information -->
+		<!-- If not for editing, display the information -->
 	{:else}
 		<!-- generate information for each column -->
 		{#each Object.entries(info) as [field, value]}
@@ -179,7 +174,9 @@
 		{/each}
 
 		<!-- action buttons -->
-		<div class="invisible sticky right-0 -ml-[40px] flex items-right gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible">
+		<div
+			class="items-right invisible sticky right-0 -ml-[40px] flex gap-4 bg-gradient-to-l from-white via-white to-transparent py-5 pl-[30px] group-hover:visible"
+		>
 			<!-- delete button -->
 			<button on:click={() => (popupModal = true)} class="font-medium text-red-600">
 				<Icon src={Trash} micro size="20" />
@@ -218,7 +215,7 @@
 
 	<!-- Action buttons -->
 	<div class="flex justify-center gap-4">
-		<Button on:click={() => popupModal = false} inverse={true}>Cancel</Button>
+		<Button on:click={() => (popupModal = false)} inverse={true}>Cancel</Button>
 		<Button on:click={() => deleteEntry(getKey(info, primaryKey))} icon="delete">Delete</Button>
 	</div>
 </Modal>
