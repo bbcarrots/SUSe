@@ -3,15 +3,17 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
-	import { type UsageLogFilter } from '$lib/utils/types.js';
+    import { type UsageLogFilter } from '$lib/utils/types.js';
 
 	export let data;
 
 	//for filters
 	let usageLogFilter: UsageLogFilter = {
-		dateRangeStart: '',
-		dateRangeEnd: '',
-		serviceType: []
+		usageLogID: 0,
+		studentNumber: 0,
+		serviceType: [],
+		minDate: '',
+		maxDate: ''
 	};
 
 	//for table
@@ -52,11 +54,27 @@
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogResponse } from '$lib/classes/UsageLog.js';
 
+	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
 	let updateResponse: UsageLogResponse;
 
+	async function handleSelect(filter: UsageLogFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/usagelog', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+	}
+
 	async function handleDelete(event: CustomEvent) {
-		/* Handles Delete event from UsageLogResponse by sending a DELETE request 
+		/* Handles Delete event from TableRow by sending a DELETE request 
         with payload requirement: usageLogID. */
 
 		const response = await fetch('../../api/usagelog', {
@@ -104,7 +122,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.dateRangeStart}
+				bind:value={usageLogFilter.minDate}
 				type="datetime-local"
 			/>
 		</div>
@@ -115,7 +133,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.dateRangeEnd}
+				bind:value={usageLogFilter.maxDate}
 				type="datetime-local"
 			/>
 		</div>

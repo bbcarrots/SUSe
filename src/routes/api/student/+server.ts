@@ -1,6 +1,12 @@
 import { Student } from '$lib/classes/Student.js';
 import { json } from '@sveltejs/kit';
 
+export async function POST({ request }) {
+	/* Handles Select requests for student records. */
+	const filter = await request.json();
+	return json(await Student.selectStudents(filter));
+}
+
 export async function PATCH({ request }) {
 	/* Handles Update and Approve requests for student records. */
 	const updateInfo = Student.toStudentDBObj(await request.json());

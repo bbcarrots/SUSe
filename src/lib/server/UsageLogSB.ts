@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import type { UsageLogDBObj, UsageLogFilter, UsageLogResponse } from '$lib/classes/UsageLog';
+import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog';
+import type { UsageLogFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -61,15 +62,27 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 	for (const row of data) {
 		// reformats supabase return values to conform to UsageLogDBObj
-		formattedData.push({
-			ul_id: row.ul_id,
-			sn_id: row.sn_id,
-			admin_id: row.admin_id,
-			service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
-			service_type: row.service.service_type.service_type, // we assume each service only has one service_type
-			datetime_start: row.datetime_start,
-			datetime_end: row.datetime_end != null ? row.datetime_end : null
-		});
+		if (filter.serviceType.length && filter.serviceType.includes(row.service.service_type.service_type)) {
+            formattedData.push({
+                ul_id: row.ul_id,
+                sn_id: row.sn_id,
+                admin_id: row.admin_id,
+                service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
+                service_type: row.service.service_type.service_type, // we assume each service only has one service_type
+                datetime_start: row.datetime_start,
+                datetime_end: row.datetime_end != null ? row.datetime_end : null
+            });
+        } else if (filter.serviceType.length == 0) {
+            formattedData.push({
+                ul_id: row.ul_id,
+                sn_id: row.sn_id,
+                admin_id: row.admin_id,
+                service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
+                service_type: row.service.service_type.service_type, // we assume each service only has one service_type
+                datetime_start: row.datetime_start,
+                datetime_end: row.datetime_end != null ? row.datetime_end : null
+            });
+        }
 	}
 
 	return {
@@ -125,6 +138,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: log.ul_id,
 		studentNumber: 0,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});
@@ -159,6 +173,7 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: usageLogID,
 		studentNumber: 0,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});

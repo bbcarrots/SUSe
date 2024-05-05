@@ -18,7 +18,7 @@ export type UsageLogProcessed = {
 	serviceID: number;
 	serviceType: string;
 	dateTimeStart: string;
-	dateTimeEnd: string;
+	dateTimeEnd: string | null;
 };
 
 export type ServiceProcessed = {
@@ -35,29 +35,39 @@ export type AdminProcessed = {
 	isActive: boolean;
 };
 
-// all filters store strings fron the frontend
+// filters for selecting service records
 export type ServiceFilter = {
-	serviceID: number[];
-	serviceName: string[];
+	serviceID: number;
+	serviceName: string;
 	serviceType: string[];
-	inUse: boolean[];
-	isAdmin: boolean[];
+	inUse: boolean | null;
+	isAdmin: boolean;
 };
 
+// filters for selecting student records
 export type StudentFilter = {
-	studentNumberYear: string[];
-	isActive: string[];
+	minStudentNumber: number;
+	maxStudentNumber: number;
+	username: string;
+    rfid: number;
 	college: string[];
 	program: string[];
+    isEnrolled: boolean | null;
+    isActive: boolean | null;
 };
 
+// filters for selecting admin records
 export type AdminFilter = {
-	nickname: string[];
-	isActive: string[];
+	adminID: number;
+	nickname: string;
+	isActive: boolean | null;
 };
 
+// filters for selecting usage log records
 export type UsageLogFilter = {
-	dateRangeStart: string;
-	dateRangeEnd: string;
-	serviceType: string[];
+	usageLogID: number;
+	studentNumber: number;
+    serviceType: string[];
+	minDate: string;
+	maxDate: string | null;
 };

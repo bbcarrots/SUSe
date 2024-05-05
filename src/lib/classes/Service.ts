@@ -5,6 +5,7 @@ import {
 	deleteServiceDB
 } from '$lib/server/ServiceSB';
 import type { ServiceProcessed } from '$lib/utils/types';
+import type { ServiceFilter } from '$lib/utils/types';
 
 // parameter type for insert and update service DB functions
 export type ServiceDBObj = {
@@ -21,15 +22,6 @@ export type ServiceResponse = {
 	serviceRaws: ServiceDBObj[] | null;
 	availableServices: { [key: string]: number } | null;
 	error: string | null;
-};
-
-// filters for selecting service records
-export type ServiceFilter = {
-	serviceID: number;
-	serviceName: string;
-	serviceType: string;
-	inUse: boolean | null;
-	isAdmin: boolean;
 };
 
 export class Service {
@@ -50,7 +42,7 @@ export class Service {
 		filter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: '',
-			serviceType: '',
+			serviceType: [],
 			inUse: null,
 			isAdmin: true
 		}

@@ -108,6 +108,7 @@ export async function POST({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: 0,
 		studentNumber: studentNumber,
+        serviceType: [serviceType],
 		minDate: dateToday,
 		maxDate: null
 	});
@@ -136,6 +137,7 @@ export async function PATCH({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: usageLogID,
 		studentNumber: 0,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});
@@ -155,7 +157,7 @@ export async function PATCH({ request }) {
 	const serviceSelectServiceResponse = await Service.selectServices({
 		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: true,
 		isAdmin: true
 	});
@@ -235,7 +237,7 @@ export async function PATCH({ request }) {
 	const serviceSelectStudentResponse = await Service.selectServices({
 		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: false,
 		isAdmin: false
 	});

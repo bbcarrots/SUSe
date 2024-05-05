@@ -8,7 +8,7 @@
 	export let data;
 
 	//for filters
-	let adminFilter: AdminFilter = {
+	let adminFilter = {
 		nickname: [],
 		isActive: []
 	};
@@ -35,6 +35,22 @@
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
+	let selectResponse: AdminResponse;
+
+	async function handleSelect(filter: AdminFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/admin', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+	}
 
 	async function handleDelete(event: CustomEvent) {
 		/* Handles Delete event from TableRow by sending a DELETE request 

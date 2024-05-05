@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import { type StudentDBObj, type StudentFilter, type StudentResponse } from '$lib/classes/Student';
+import { type StudentDBObj, type StudentResponse } from '$lib/classes/Student';
+import { type StudentFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -60,6 +61,14 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
 
     if (filter.username) {
         query = query.like('username', '%' + filter.username + '%'); // username can be found in any position
+    }
+
+    if (filter.college.length) {
+        query = query.in('college', filter.college);
+    }
+
+    if (filter.program.length) {
+        query = query.in('program', filter.program);
     }
 
     if (filter.isEnrolled != null) {
@@ -133,6 +142,8 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 		maxStudentNumber: student.sn_id,
 		username: '',
 		rfid: 0,
+        college: [],
+        program: [],
         isEnrolled: null,
         isActive: null,
 	});
@@ -176,6 +187,8 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 		maxStudentNumber: studentNumber,
 		username: '',
 		rfid: 0,
+        college: [],
+        program: [],
         isEnrolled: null,
         isActive: null,
 	});
