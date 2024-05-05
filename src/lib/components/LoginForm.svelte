@@ -6,6 +6,7 @@
 	//to determine which login to display
 	let rfidLogin = true;
 	let rfidValue: string;
+	let clicks: number = 0;
 
 	const dispatch = createEventDispatcher(); // for forwarding events
 
@@ -16,7 +17,10 @@
 			const focusedElement = document.activeElement; //this is the active element being focused
 
 			// if the current element is rfidInput and you are not clicking an input or a button, do not remove the focus
-			if (
+			if (target instanceof HTMLImageElement) {
+				clicks = clicks + 1;
+				dispatch('clicked', clicks);
+			} else if (
 				focusedElement === rfidInput &&
 				!(target instanceof HTMLInputElement || target instanceof HTMLButtonElement)
 			) {
@@ -61,10 +65,12 @@
 
 	function handleChangeToUsername() {
 		rfidLogin = false;
+		clicks = 0;
 	}
 
 	function handleChangeToRFID() {
 		rfidLogin = true;
+		clicks = 0;
 	}
 </script>
 
