@@ -11,7 +11,7 @@
 
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
-	let hide: string[] = ['isActive'];
+	let hide: string[] = [];
 	let disableEdit: string[] = ['adminID'];
 	let adminObjects = data.adminRaws;
 	let admins: AdminProcessed[] = [];
