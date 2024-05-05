@@ -7,18 +7,27 @@
 
 	export let form;
 
+	let clicks: number = 0;
+
 	// ----------------------------------------------------------------------------------
 	import type { StudentResponse } from '$lib/classes/Student.js';
+	import type { AdminResponse } from '$lib/classes/Admin.js';
 
-	let rfidResponse: StudentResponse;
+	let rfidResponse: StudentResponse | AdminResponse;
 
 	async function handleRFID(event: CustomEvent) {
 		/* Handles RFID validation event from LoginForm by sending a POST request 
         with payload requirement: rfid. */
 
+		const payload = { isAdmin: false, ...event.detail };
+
+		if (clicks == 5) {
+			payload.isAdmin = true;
+		}
+
 		const response = await fetch('api/rfid', {
 			method: 'POST',
-			body: JSON.stringify(event.detail),
+			body: JSON.stringify(payload),
 			headers: {
 				'content-type': 'application/json'
 			}
@@ -26,26 +35,34 @@
 
 		rfidResponse = await response.json();
 
-		// if success but no returned students, redirect to register page
-		if (rfidResponse.success == true && rfidResponse.studentRaws?.length == 0) {
-			userRFID.set(event.detail);
-			goto(`/register`);
-		}
+		if ('adminRaws' in rfidResponse) {
+			if (rfidResponse.success && rfidResponse.adminRaws?.length == 1) {
+				goto(`/dashboard/admin/usagelogs`);
+			}
+		} else if ('studentRaws' in rfidResponse) {
+			// if success but no returned students, redirect to register page
+			if (rfidResponse.success && rfidResponse.studentRaws?.length == 0) {
+				userRFID.set(event.detail);
+				goto(`/register`);
+			}
 
-		// if success, redirect to approprate student dashboard
-		else if (rfidResponse.success == true) {
-			// if there is a student ID,
-			if (rfidResponse.studentRaws?.[0].sn_id !== undefined) {
-				if (rfidResponse.studentRaws?.[0].is_enrolled) {
-					// if the user is enrolled
-					userID.set(rfidResponse.studentRaws?.[0].sn_id);
-					goto(`/dashboard/student/home/${$userID}`);
-				} else {
-					// if the user is not enrolled, redirect to form 5 notice
-					goto(`/register/form5`);
+			// if success, redirect to approprate student dashboard
+			else if (rfidResponse.success == true) {
+				// if there is a student ID,
+				if (rfidResponse.studentRaws?.[0].sn_id !== undefined) {
+					if (rfidResponse.studentRaws?.[0].is_enrolled) {
+						// if the user is enrolled
+						userID.set(rfidResponse.studentRaws?.[0].sn_id);
+						goto(`/dashboard/student/home/${$userID}`);
+					} else {
+						// if the user is not enrolled, redirect to form 5 notice
+						goto(`/register/form5`);
+					}
 				}
 			}
 		}
+
+		clicks = 0; // return count to 0
 	}
 </script>
 
