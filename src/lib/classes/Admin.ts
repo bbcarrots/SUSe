@@ -21,7 +21,7 @@ export type AdminResponse = {
 export type AdminFilter = {
 	adminID: number;
 	nickname: string;
-	isActive: boolean;
+	isActive: boolean | null;
 };
 
 export class Admin {
@@ -42,7 +42,7 @@ export class Admin {
 		filter: AdminFilter = {
 			adminID: 0,
 			nickname: '',
-			isActive: true
+			isActive: null
 		}
 	): Promise<AdminResponse> {
 		/* Selects all admin records in database using the default or given filter. */
