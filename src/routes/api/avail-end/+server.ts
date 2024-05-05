@@ -6,41 +6,54 @@ import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
 	/* Handles Avail Service requests for service and usage log records. */
-    const { studentNumber, serviceType, updateStudent } = await request.json()
+	const { studentNumber, serviceType, updateStudent } = await request.json();
 
-    //----------------------------------------------------SELECTS
+	//----------------------------------------------------SELECTS
 
 	const serviceSelectResponse = await Service.selectServices({
-        serviceID: 0,
+		serviceID: 0,
 		serviceName: '',
 		serviceType: serviceType,
 		inUse: false,
 		isAdmin: true
-    })
-    
-    if (!serviceSelectResponse.success || serviceSelectResponse.serviceRaws?.length == 0) {
-        return json(serviceSelectResponse)
-    }
+	});
 
-    const service = serviceSelectResponse.serviceRaws?.[0]
+	if (!serviceSelectResponse.success) {
+		return json(serviceSelectResponse);
+	} else if (serviceSelectResponse.serviceRaws?.length == 0) {
+		return json({
+			success: false,
+			serviceRaws: null,
+			availableServices: null,
+			error: `Error: No available service of type ${serviceType}`
+		});
+	}
 
-    const adminSelectResponse = await Admin.selectAdmins({
-        adminID: 0,
-        nickname: '',
-        isActive: true
-    })
+	const service = serviceSelectResponse.serviceRaws?.[0];
 
-    if (!adminSelectResponse.success || adminSelectResponse.adminRaws?.length == 0) {
-        return json(adminSelectResponse)
-    }
+	const adminSelectResponse = await Admin.selectAdmins({
+		adminID: 0,
+		nickname: '',
+		isActive: true
+	});
 
-    const admin = adminSelectResponse.adminRaws?.[0]
+	if (!adminSelectResponse.success) {
+		return json(adminSelectResponse);
+	} else if (adminSelectResponse.adminRaws?.length == 0) {
+		return json({
+			success: false,
+			adminRaws: null,
+			error: 'Error: No active Admin.'
+		});
+	}
 
-    //----------------------------------------------------UPDATES&INSERTS
+	const admin = adminSelectResponse.adminRaws?.[0];
 
-    if (updateStudent) {
-        const studentUpdateResponse = await Student.updateStudent({
-            sn_id: studentNumber,
+	//----------------------------------------------------UPDATES&INSERTS
+
+	if (updateStudent) {
+		const studentUpdateResponse = await Student.updateStudent({
+			sn_id: studentNumber,
 			rfid: 0,
 			username: '',
 			pw: '',
@@ -51,106 +64,118 @@ export async function POST({ request }) {
 			program: '',
 			phone_number: '',
 			is_enrolled: true,
-            is_active: true
-        })
-        
-        if (!studentUpdateResponse.success) {
-            return json(studentUpdateResponse)
-        }
-    }
+			is_active: true
+		});
 
-    const serviceUpdateResponse = await Service.updateService({
-        service_id: service!.service_id,
-        service_type_id: 0,
-        service_name: '',
-        service_type: '',
-        in_use: true
-    })
+		if (!studentUpdateResponse.success) {
+			return json(studentUpdateResponse);
+		}
+	}
 
-    if (!serviceUpdateResponse.success) {
-        return json(serviceUpdateResponse)
-    }
+	const serviceUpdateResponse = await Service.updateService({
+		service_id: service!.service_id,
+		service_type_id: 0,
+		service_name: '',
+		service_type: '',
+		in_use: true
+	});
 
-    const dateToday = new Date().toISOString();
+	if (!serviceUpdateResponse.success) {
+		return json(serviceUpdateResponse);
+	}
 
-    const usageLog = {
-        ul_id: 0,
-        sn_id: studentNumber,
-        admin_id: admin!.admin_id,
-        service_id: service!.service_id,
-        service_type: service!.service_type,
-        datetime_start: dateToday,
-        datetime_end: '',
-    }
+	const dateToday = new Date().toISOString();
 
-    delete (usageLog as { ul_id?: number }).ul_id
-    delete (usageLog as { datetime_end?: string }).datetime_end
+	const usageLog = {
+		ul_id: 0,
+		sn_id: studentNumber,
+		admin_id: admin!.admin_id,
+		service_id: service!.service_id,
+		service_type: service!.service_type,
+		datetime_start: dateToday,
+		datetime_end: ''
+	};
 
-    const usageLogInsertResponse = await UsageLog.insertUsageLog(usageLog)
-    
-    if (!usageLogInsertResponse.success) {
-        return json(usageLogInsertResponse)
-    }
+	delete (usageLog as { ul_id?: number }).ul_id;
+	delete (usageLog as { datetime_end?: string }).datetime_end;
 
-    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
-        usageLogID: 0,
+	const usageLogInsertResponse = await UsageLog.insertUsageLog(usageLog);
+
+	if (!usageLogInsertResponse.success) {
+		return json(usageLogInsertResponse);
+	}
+
+	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+		usageLogID: 0,
 		studentNumber: studentNumber,
 		minDate: dateToday,
 		maxDate: ''
-    })
+	});
 
-    if (!usageLogSelectResponse.success) {
-        return json(usageLogSelectResponse)
-    }
+	if (!usageLogSelectResponse.success) {
+		return json(usageLogSelectResponse);
+	}
 
-    const activeUL: { [key: string]: UsageLogDBObj | undefined } = {}
-    activeUL[serviceType] = usageLogSelectResponse.usageLogRaws?.[0]
+	const activeUL: { [key: string]: UsageLogDBObj | undefined } = {};
+	activeUL[serviceType] = usageLogSelectResponse.usageLogRaws?.[0];
 
 	return json({
-        success: true,
-        activeUsageLogs: activeUL,
-        availableServices: {},
-        error: ''
-    });
+		success: true,
+		activeUsageLogs: activeUL,
+		availableServices: {},
+		error: ''
+	});
 }
 
 export async function PATCH({ request }) {
 	/* Handles End Service requests for service and usage log records. */
 	const { studentNumber, usageLogID, updateStudent } = await request.json();
 
-    //----------------------------------------------------SELECTS
+	//----------------------------------------------------SELECTS
 
-    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
-        usageLogID: usageLogID,
+	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+		usageLogID: usageLogID,
 		studentNumber: 0,
 		minDate: '',
 		maxDate: ''
-    })
+	});
 
-    if (!usageLogSelectResponse.success) {
-        return json(usageLogSelectResponse)
-    }
+	if (!usageLogSelectResponse.success) {
+		return json(usageLogSelectResponse);
+	} else if (usageLogSelectResponse.usageLogRaws?.length == 0) {
+		return json({
+			success: false,
+			usageLogRaws: null,
+			error: 'Error: Usage Log does not exist.'
+		});
+	}
 
-    const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id
+	const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id;
 
-    const serviceSelectAdminResponse = await Service.selectServices({
-        serviceID: serviceID != undefined ? serviceID : 0,
+	const serviceSelectServiceResponse = await Service.selectServices({
+		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
 		serviceType: '',
 		inUse: true,
 		isAdmin: true
-    })
+	});
 
-    if (!serviceSelectAdminResponse.success) {
-        return json(serviceSelectAdminResponse)
-    }
+	if (!serviceSelectServiceResponse.success) {
+		return json(serviceSelectServiceResponse);
+	} else if (serviceSelectServiceResponse.serviceRaws?.length == 0) {
+		return json({
+			success: false,
+			serviceRaws: null,
+			availableServices: null,
+			error: 'Error: Service cannot be found.'
+		});
+	}
 
-    //----------------------------------------------------UPDATES
+	//----------------------------------------------------UPDATES
 
-
-    if (updateStudent) {
-        const studentUpdateResponse = await Student.updateStudent({
-            sn_id: studentNumber,
+	if (updateStudent) {
+		const studentUpdateResponse = await Student.updateStudent({
+			sn_id: studentNumber,
 			rfid: 0,
 			username: '',
 			pw: '',
@@ -161,68 +186,68 @@ export async function PATCH({ request }) {
 			program: '',
 			phone_number: '',
 			is_enrolled: true,
-            is_active: false
-        })
-        
-        if (!studentUpdateResponse.success) {
-            return json(studentUpdateResponse)
-        }
-    }
+			is_active: false
+		});
 
-    const dateToday = new Date().toISOString();
+		if (!studentUpdateResponse.success) {
+			return json(studentUpdateResponse);
+		}
+	}
 
-    const usageLog = {
-        ul_id: usageLogID,
-        sn_id: 0,
-        admin_id: 0,
-        service_id: 0,
-        service_type: '',
-        datetime_start: '',
-        datetime_end: dateToday,
-    }
+	const dateToday = new Date().toISOString();
 
-    delete (usageLog as { sn_id?: number }).sn_id
-    delete (usageLog as { admin_id?: number }).admin_id
-    delete (usageLog as { service_id?: number }).service_id
-    delete (usageLog as { service_type?: string }).service_type
-    delete (usageLog as { datetime_start?: string }).datetime_start
+	const usageLog = {
+		ul_id: usageLogID,
+		sn_id: 0,
+		admin_id: 0,
+		service_id: 0,
+		service_type: '',
+		datetime_start: '',
+		datetime_end: dateToday
+	};
 
-    const usageLogUpdateResponse = await UsageLog.updateUsageLog(usageLog)
-    
-    if (!usageLogUpdateResponse.success) {
-        return json(usageLogUpdateResponse)
-    }
+	delete (usageLog as { sn_id?: number }).sn_id;
+	delete (usageLog as { admin_id?: number }).admin_id;
+	delete (usageLog as { service_id?: number }).service_id;
+	delete (usageLog as { service_type?: string }).service_type;
+	delete (usageLog as { datetime_start?: string }).datetime_start;
 
-    const serviceUpdateResponse = await Service.updateService({
-        service_id: serviceID != undefined ? serviceID : 0,
-        service_type_id: 0,
-        service_name: '',
-        service_type: '',
-        in_use: false
-    })
+	const usageLogUpdateResponse = await UsageLog.updateUsageLog(usageLog);
 
-    if (!serviceUpdateResponse.success) {
-        return json(serviceUpdateResponse)
-    }
+	if (!usageLogUpdateResponse.success) {
+		return json(usageLogUpdateResponse);
+	}
 
-    //----------------------------------------------------SELECT
+	const serviceUpdateResponse = await Service.updateService({
+		service_id: serviceID != undefined ? serviceID : 0,
+		service_type_id: 0,
+		service_name: '',
+		service_type: '',
+		in_use: false
+	});
 
-    const serviceSelectStudentResponse = await Service.selectServices({
-        serviceID: serviceID != undefined ? serviceID : 0,
+	if (!serviceUpdateResponse.success) {
+		return json(serviceUpdateResponse);
+	}
+
+	//----------------------------------------------------SELECT
+
+	const serviceSelectStudentResponse = await Service.selectServices({
+		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
 		serviceType: '',
 		inUse: false,
 		isAdmin: false
-    })
+	});
 
-    if (!serviceSelectStudentResponse.success) {
-        return json(serviceSelectStudentResponse)
-    }
+	if (!serviceSelectStudentResponse.success) {
+		return json(serviceSelectStudentResponse);
+	}
 
-    return json({
-        success: true,
-        activeUsageLogs: {},
-        availableServices: serviceSelectStudentResponse.availableServices,
-        error: ''
-    });
+	return json({
+		success: true,
+		activeUsageLogs: {},
+		availableServices: serviceSelectStudentResponse.availableServices,
+		error: ''
+	});
 }
