@@ -43,10 +43,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	if (filter.maxDate) {
 		// if there is a given start and end date range, search for that
 		query = query.lte('datetime_end', filter.maxDate);
-	} 
-    /* else {
-        query = query.is('datetime_end', null);
-    } */
+	}
 
 	const { data, error } = await query;
 

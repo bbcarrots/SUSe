@@ -5,7 +5,6 @@ import type { AdminProcessed } from '$lib/utils/types';
 export type AdminDBObj = {
 	admin_id: number;
 	rfid: number;
-	pw: string;
 	nickname: string;
 	is_active: boolean;
 };
@@ -21,7 +20,7 @@ export type AdminResponse = {
 export type AdminFilter = {
 	adminID: number;
 	nickname: string;
-	isActive: boolean;
+	isActive: boolean | null;
 };
 
 export class Admin {
@@ -32,7 +31,6 @@ export class Admin {
 		return {
 			admin_id: admin.adminID,
 			rfid: 0,
-			pw: '',
 			nickname: 'nickname' in admin ? admin.nickname : '',
 			is_active: admin.isActive
 		};
@@ -42,7 +40,7 @@ export class Admin {
 		filter: AdminFilter = {
 			adminID: 0,
 			nickname: '',
-			isActive: true
+			isActive: null
 		}
 	): Promise<AdminResponse> {
 		/* Selects all admin records in database using the default or given filter. */
