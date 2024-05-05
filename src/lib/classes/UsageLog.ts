@@ -4,7 +4,7 @@ import {
 	selectUsageLogDB,
 	updateUsageLogDB
 } from '$lib/server/UsageLogSB';
-import type { UsageLogProcessed } from '$lib/utils/types';
+import type { UsageLogProcessed, UsageLogFilter } from '$lib/utils/types';
 
 // parameter type for insert and update usage log DB functions
 export type UsageLogDBObj = {
@@ -22,15 +22,6 @@ export type UsageLogResponse = {
 	success: boolean;
 	usageLogRaws: UsageLogDBObj[] | null;
 	error: string | null;
-};
-
-// filters for selecting usage log records
-export type UsageLogFilter = {
-	usageLogID: number;
-	studentNumber: number;
-    serviceType: string[];
-	minDate: string;
-	maxDate: string | null;
 };
 
 export class UsageLog {

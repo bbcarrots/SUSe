@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import type { UsageLogDBObj, UsageLogFilter, UsageLogResponse } from '$lib/classes/UsageLog';
+import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog';
+import type { UsageLogFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
