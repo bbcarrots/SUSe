@@ -14,7 +14,7 @@ export type UsageLogDBObj = {
 	service_id: number;
 	service_type: string;
 	datetime_start: string;
-	datetime_end: string;
+	datetime_end: string | null;
 };
 
 // return value of usage log DB functions
@@ -29,7 +29,7 @@ export type UsageLogFilter = {
 	usageLogID: number;
 	studentNumber: number;
 	minDate: string;
-	maxDate: string;
+	maxDate: string | null;
 };
 
 export class UsageLog {
@@ -53,7 +53,7 @@ export class UsageLog {
 			usageLogID: 0,
 			studentNumber: 0,
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
-			maxDate: new Date().toISOString() // gets date today
+			maxDate: "" // gets date today
 		}
 	): Promise<UsageLogResponse> {
 		/* Selects all usage logs in database using the default or given filter. */

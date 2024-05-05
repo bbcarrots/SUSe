@@ -40,9 +40,11 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 		query = query.gte('datetime_start', filter.minDate);
 	}
 
-	if (filter.maxDate) {
+	if (filter.maxDate && typeof filter.maxDate == 'string') {
 		// if there is a given start and end date range, search for that
 		query = query.lte('datetime_end', filter.maxDate);
+	} else if (filter.maxDate == null) {
+		query = query.is('datetime_end', null);
 	}
 
 	const { data, error } = await query;
@@ -66,7 +68,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 			service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
 			service_type: row.service.service_type.service_type, // we assume each service only has one service_type
 			datetime_start: row.datetime_start,
-			datetime_end: row.datetime_end
+			datetime_end: row.datetime_end != null ? row.datetime_end : null
 		});
 	}
 
@@ -99,6 +101,14 @@ async function checkUsageLogExistsDB(filter: UsageLogFilter): Promise<UsageLogRe
 	const usageLogDB = await selectUsageLogDB(filter);
 
 	if (usageLogDB.success && usageLogDB.usageLogRaws?.length == 1) {
+        if (usageLogDB.usageLogRaws[0].datetime_end == null) {
+            return {
+                success: true,
+                usageLogRaws: null,
+                error: 'Warning: Usage log is ongoing.'
+            };
+        }
+
 		return success;
 	}
 
@@ -155,7 +165,13 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
 
 	if (!usageLogCheck.success) {
 		return usageLogCheck;
-	}
+	} else if (usageLogCheck.error == 'Warning: Usage log is ongoing.') {
+        return {
+            success: false,
+            usageLogRaws: null,
+            error: usageLogCheck.error
+        };
+    }
 
 	const { error } = await supabase.from('usage_log').delete().eq('ul_id', usageLogID);
 
