@@ -44,11 +44,16 @@ export type ServiceFilter = {
 	isAdmin: boolean[];
 };
 
+// filters for selecting student records
 export type StudentFilter = {
-	studentNumberYear: string[];
-	isActive: string[];
+	minStudentNumber: number;
+	maxStudentNumber: number;
+	username: string;
+    rfid: number;
 	college: string[];
 	program: string[];
+    isEnrolled: boolean | null;
+    isActive: boolean | null;
 };
 
 // filters for selecting admin records

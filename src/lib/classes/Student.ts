@@ -5,6 +5,7 @@ import {
 	deleteStudentDB
 } from '$lib/server/StudentSB';
 import type { StudentProcessed } from '$lib/utils/types';
+import type { StudentFilter } from '$lib/utils/types';
 
 // parameter type for insert and update student DB functions
 export type StudentDBObj = {
@@ -27,16 +28,6 @@ export type StudentResponse = {
 	success: boolean;
 	studentRaws: StudentDBObj[] | null;
 	error: string | null;
-};
-
-// filters for selecting student records
-export type StudentFilter = {
-	minStudentNumber: number;
-	maxStudentNumber: number;
-	username: string;
-    rfid: number;
-    isEnrolled: boolean | null;
-    isActive: boolean | null;
 };
 
 export class Student {
@@ -66,6 +57,8 @@ export class Student {
 			maxStudentNumber: new Date().getFullYear(), // gets current year
 			username: '',
             rfid: 0,
+            college: [],
+            program: [],
             isEnrolled: null,
             isActive: null,
 		}

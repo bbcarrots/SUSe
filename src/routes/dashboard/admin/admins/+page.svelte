@@ -38,8 +38,8 @@
 	let selectResponse: AdminResponse;
 
 	async function handleSelect(filter: AdminFilter) {
-		/* Handles Delete event from TableRow by sending a DELETE request 
-        with payload requirement: adminID. */
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
 
 		const response = await fetch('../../api/admin', {
 			method: 'POST',

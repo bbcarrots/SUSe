@@ -2,9 +2,9 @@ import { Admin } from '$lib/classes/Admin.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
-	/* Handles Update and Approve requests for admin records. */
+	/* Handles Select requests for admin records. */
 	const filter = await request.json();
-	return json(await Admin.updateAdmin(filter));
+	return json(await Admin.selectAdmins(filter));
 }
 
 export async function PATCH({ request }) {

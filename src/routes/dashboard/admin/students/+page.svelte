@@ -13,7 +13,7 @@
 	export let data;
 
 	//for filters
-	let studentFilter: StudentFilter = {
+	let studentFilter = {
 		studentNumberYear: [],
 		isActive: [],
 		college: [],
@@ -55,11 +55,27 @@
 	}
 
 	// ----------------------------------------------------------------------------------
-	import type { Student, StudentResponse } from '$lib/classes/Student.js';
+	import type { StudentResponse } from '$lib/classes/Student.js';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
 	let updateResponse: StudentResponse;
+	let selectResponse: StudentResponse;
+
+	async function handleSelect(filter: StudentFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/student', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+	}
 
 	async function handleApprove(event: CustomEvent) {
 		/* Handles Approve event from TableRow by sending a PATCH request 
