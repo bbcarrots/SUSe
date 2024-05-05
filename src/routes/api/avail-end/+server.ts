@@ -108,6 +108,7 @@ export async function POST({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: 0,
 		studentNumber: studentNumber,
+        serviceType: [serviceType],
 		minDate: dateToday,
 		maxDate: null
 	});
@@ -136,6 +137,7 @@ export async function PATCH({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: usageLogID,
 		studentNumber: 0,
+        serviceType: null,
 		minDate: '',
 		maxDate: ''
 	});
