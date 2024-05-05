@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
-import { serviceTypes } from '$lib/utils/filterOptions';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -175,12 +174,10 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 
 	for (const [key, value] of Object.entries(service)) {
 		if (
-			(value &&
-				typeof value == 'string' &&
-				key != 'service_id' &&
-				key != 'service_type_id' &&
-				key != 'service_type') ||
-			typeof value == 'boolean'
+			((value && typeof value == 'string') || typeof value == 'boolean') &&
+			key != 'service_id' &&
+			key != 'service_type_id' &&
+			key != 'service_type'
 		) {
 			updateObj[key] = value;
 		}
@@ -209,13 +206,20 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		serviceID: serviceID,
 		serviceName: '',
 		serviceType: '',
-		inUse: null, // service has to be not in use to be deleted
+		inUse: null,
 		isAdmin: true
 	});
 
-	if (!serviceCheck.success || serviceCheck.error == 'Warning: Service is in use.') {
+	if (!serviceCheck.success) {
 		return serviceCheck;
-	}
+	} else if (serviceCheck.error == 'Warning: Service is in use.') {
+        return {
+			success: false,
+			serviceRaws: null,
+			availableServices: null,
+			error: serviceCheck.error
+		};
+    }
 
 	const { error } = await supabase.from('service').delete().eq('service_id', serviceID);
 

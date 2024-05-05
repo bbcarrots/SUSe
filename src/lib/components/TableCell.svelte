@@ -32,7 +32,7 @@
 	{/if}
 
 	{#if field == 'dateTimeStart' || field == 'dateTimeEnd'}
-		<time datetime={value}>{formatDateTime(value)}</time>
+		<time datetime={value}>{value != null ? formatDateTime(value) : null}</time>
 	{:else if field !== 'studentNumber' || !Object.hasOwn(info, 'isEnrolled')}
 		<p>{value}</p>
 	{/if}

@@ -35,6 +35,8 @@ export type StudentFilter = {
 	maxStudentNumber: number;
 	username: string;
     rfid: number;
+    isEnrolled: boolean | null;
+    isActive: boolean | null;
 };
 
 export class Student {
@@ -63,7 +65,9 @@ export class Student {
 			minStudentNumber: 2000,
 			maxStudentNumber: new Date().getFullYear(), // gets current year
 			username: '',
-            rfid: 0
+            rfid: 0,
+            isEnrolled: null,
+            isActive: null,
 		}
 	): Promise<StudentResponse> {
 		/* Selects all student records in database using the default or given filter. */

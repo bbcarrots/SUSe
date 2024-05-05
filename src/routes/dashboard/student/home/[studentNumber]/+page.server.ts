@@ -11,7 +11,7 @@ export async function load({ params }) {
 		usageLogID: 0,
 		studentNumber: studentNumber,
 		minDate: new Date(dayStart).toISOString(), // need to convert to ISOString to filter DB
-		maxDate: ''
+		maxDate: null
 	});
 
 	const serviceResponse = await Service.selectServices({
