@@ -18,7 +18,7 @@ export type UsageLogProcessed = {
 	serviceID: number;
 	serviceType: string;
 	dateTimeStart: string;
-	dateTimeEnd: string;
+	dateTimeEnd: string | null;
 };
 
 export type ServiceProcessed = {

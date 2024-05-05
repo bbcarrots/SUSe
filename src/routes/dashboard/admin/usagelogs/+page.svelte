@@ -52,11 +52,27 @@
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogResponse } from '$lib/classes/UsageLog.js';
 
+	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
 	let updateResponse: UsageLogResponse;
 
+    async function handleSelect(filter: UsageLogFilter) {
+        /* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+        const response = await fetch('../../api/usagelog', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+    }
+
 	async function handleDelete(event: CustomEvent) {
-		/* Handles Delete event from UsageLogResponse by sending a DELETE request 
+		/* Handles Delete event from TableRow by sending a DELETE request 
         with payload requirement: usageLogID. */
 
 		const response = await fetch('../../api/usagelog', {
