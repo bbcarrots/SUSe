@@ -203,23 +203,6 @@
 					</span>
 				</div>
 			</div>
-
-			<!-- password section-->
-			<div class="grid gap-y-2">
-				<label for="password">
-					<p>Password</p>
-				</label>
-				<input
-					name="password"
-					type="password"
-					id="password"
-					pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{'{'}8,{'}'}"
-					title="Please enter at least one lowercase letter, uppercase letter, and number."
-					placeholder="••••••••"
-					required
-				/>
-				<span> </span>
-			</div>
 		</div>
 
 		<!-- ACTION BUTTONS -->
