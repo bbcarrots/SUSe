@@ -28,6 +28,7 @@ export type UsageLogResponse = {
 export type UsageLogFilter = {
 	usageLogID: number;
 	studentNumber: number;
+    serviceType: string[] | null;
 	minDate: string;
 	maxDate: string | null;
 };
@@ -44,7 +45,7 @@ export class UsageLog {
 			service_id: 'serviceID' in log ? log.serviceID : 0,
 			service_type: 'serviceType' in log ? log.serviceType : '',
 			datetime_start: 'dateTimeStart' in log ? new Date(log.dateTimeStart).toISOString() : '',
-			datetime_end: 'dateTimeEnd' in log ? new Date(log.dateTimeEnd).toISOString() : ''
+			datetime_end: 'dateTimeEnd' in log && log.dateTimeEnd != null ? new Date(log.dateTimeEnd).toISOString() : ''
 		};
 	}
 
@@ -52,6 +53,7 @@ export class UsageLog {
 		filter: UsageLogFilter = {
 			usageLogID: 0,
 			studentNumber: 0,
+            serviceType: null,
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
 			maxDate: "" // gets date today
 		}
