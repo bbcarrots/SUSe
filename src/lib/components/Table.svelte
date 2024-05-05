@@ -26,16 +26,15 @@
 	/* isEditing is binded to the value from TableRow.svelte. */
 	let isEditing: boolean;
 	let sortedItems = writable<Array<any>>([]);
-
+	let calculatedRows = writable<Array<any>>([]);
 	/* Reactively sorts the items and stores in sortedItems based on the sortKey and sortDirection. */
 	/* The sorting will be disabled if isEditing is true. */
 
 	$: {
-		const calculatedRows = info.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage);
 		const disableSort: boolean = isEditing;
 		const key: string = sortKey;
 		const direction: number = sortDirection;
-		const items: Array<any> = [...calculatedRows];
+		const items: Array<any> = [...info];
 
 		if (!disableSort) {
 			items.sort((a, b) => {
@@ -56,6 +55,10 @@
 			});
 			sortedItems.set(items);
 		}
+
+		calculatedRows.set(
+			$sortedItems.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
+		);
 	}
 
 	// ----------------------------------------------------------------------------------
@@ -100,7 +103,7 @@
 	<Table hoverable={true} divClass="overflow-x-auto">
 		<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
 		<TableBody>
-			{#each $sortedItems as info}
+			{#each $calculatedRows as info}
 				<TableRow
 					on:approve={forwardApprove}
 					on:delete={forwardDelete}
