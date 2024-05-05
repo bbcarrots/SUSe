@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
+import { type ServiceFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -58,7 +59,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 		const formattedData: ServiceDBObj[] = [];
 		if (data != null) {
 			for (const row of data) {
-				if (filter.serviceType && filter.serviceType == row.service_type.service_type) {
+				if (filter.serviceType.length && filter.serviceType.includes(row.service_type.service_type)) {
 					formattedData.push({
 						service_id: row.service_id,
 						service_type_id: row.service_type_id,
@@ -66,7 +67,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 						service_type: row.service_type.service_type, // we assume each service only has one service_type
 						in_use: row.in_use
 					});
-				} else if (!filter.serviceType) {
+				} else if (filter.serviceType.length == 0) {
 					formattedData.push({
 						service_id: row.service_id,
 						service_type_id: row.service_type_id,
@@ -161,7 +162,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	const serviceCheck = await checkServiceExistsDB({
 		serviceID: service.service_id,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: null,
 		isAdmin: true
 	});
@@ -205,7 +206,7 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 	const serviceCheck = await checkServiceExistsDB({
 		serviceID: serviceID,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: null,
 		isAdmin: true
 	});

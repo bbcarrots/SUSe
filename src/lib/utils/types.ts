@@ -35,13 +35,13 @@ export type AdminProcessed = {
 	isActive: boolean;
 };
 
-// all filters store strings fron the frontend
+// filters for selecting service records
 export type ServiceFilter = {
-	serviceID: number[];
-	serviceName: string[];
+	serviceID: number;
+	serviceName: string;
 	serviceType: string[];
-	inUse: boolean[];
-	isAdmin: boolean[];
+	inUse: boolean | null;
+	isAdmin: boolean;
 };
 
 // filters for selecting student records

@@ -8,7 +8,7 @@
 	export let data;
 
 	//for filters
-	let serviceFilter: ServiceFilter = {
+	let serviceFilter = {
 		serviceID: [],
 		serviceName: [],
 		serviceType: [],
@@ -23,7 +23,6 @@
 	let serviceObjects = data.serviceRaws;
 	let services: ServiceProcessed[] = [];
 
-	// TO DO: Implement ServiceDBObj map to ServiceProcessed
 	if (serviceObjects !== null && serviceObjects !== undefined) {
 		services = serviceObjects.map((service) => {
 			return {
@@ -40,6 +39,22 @@
 
 	let deleteResponse: ServiceResponse;
 	let updateResponse: ServiceResponse;
+	let selectResponse: ServiceResponse;
+
+	async function handleSelect(filter: ServiceFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/service', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+	}
 
 	async function handleDelete(event: CustomEvent) {
 		/* Handles Delete event from TableRow by sending a DELETE request 
