@@ -61,7 +61,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 
 	for (const row of data) {
 		// reformats supabase return values to conform to UsageLogDBObj
-		if (filter.serviceType && filter.serviceType.includes(row.service.service_type.service_type)) {
+		if (filter.serviceType.length && filter.serviceType.includes(row.service.service_type.service_type)) {
             formattedData.push({
                 ul_id: row.ul_id,
                 sn_id: row.sn_id,
@@ -71,7 +71,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
                 datetime_start: row.datetime_start,
                 datetime_end: row.datetime_end != null ? row.datetime_end : null
             });
-        } else if (filter.serviceType == null) {
+        } else if (filter.serviceType.length == 0) {
             formattedData.push({
                 ul_id: row.ul_id,
                 sn_id: row.sn_id,

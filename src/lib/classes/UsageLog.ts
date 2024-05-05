@@ -28,7 +28,7 @@ export type UsageLogResponse = {
 export type UsageLogFilter = {
 	usageLogID: number;
 	studentNumber: number;
-    serviceType: string[] | null;
+    serviceType: string[];
 	minDate: string;
 	maxDate: string | null;
 };
@@ -53,7 +53,7 @@ export class UsageLog {
 		filter: UsageLogFilter = {
 			usageLogID: 0,
 			studentNumber: 0,
-            serviceType: null,
+            serviceType: [],
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
 			maxDate: "" // gets date today
 		}

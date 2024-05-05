@@ -137,7 +137,7 @@ export async function PATCH({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: usageLogID,
 		studentNumber: 0,
-        serviceType: null,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});

@@ -3,15 +3,17 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
-	import { type UsageLogFilter } from '$lib/utils/types.js';
+    import { type UsageLogFilter } from '$lib/utils/types.js';
 
 	export let data;
 
 	//for filters
 	let usageLogFilter: UsageLogFilter = {
-		dateRangeStart: '',
-		dateRangeEnd: '',
-		serviceType: []
+		usageLogID: 0,
+		studentNumber: 0,
+		serviceType: [],
+		minDate: '',
+		maxDate: ''
 	};
 
 	//for table
@@ -56,11 +58,11 @@
 	let deleteResponse: UsageLogResponse;
 	let updateResponse: UsageLogResponse;
 
-    async function handleSelect(filter: UsageLogFilter) {
-        /* Handles Select event from the filter confirmation by sending a
+	async function handleSelect(filter: UsageLogFilter) {
+		/* Handles Select event from the filter confirmation by sending a
         POST request with payload requirement: filter. */
 
-        const response = await fetch('../../api/usagelog', {
+		const response = await fetch('../../api/usagelog', {
 			method: 'POST',
 			body: JSON.stringify(filter),
 			headers: {
@@ -69,7 +71,7 @@
 		});
 
 		selectResponse = await response.json();
-    }
+	}
 
 	async function handleDelete(event: CustomEvent) {
 		/* Handles Delete event from TableRow by sending a DELETE request 

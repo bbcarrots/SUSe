@@ -57,7 +57,9 @@ export type AdminFilter = {
 };
 
 export type UsageLogFilter = {
-	dateRangeStart: string;
-	dateRangeEnd: string;
-	serviceType: string[];
+	usageLogID: number;
+	studentNumber: number;
+    serviceType: string[];
+	minDate: string;
+	maxDate: string | null;
 };
