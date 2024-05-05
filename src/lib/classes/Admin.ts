@@ -5,7 +5,6 @@ import type { AdminProcessed } from '$lib/utils/types';
 export type AdminDBObj = {
 	admin_id: number;
 	rfid: number;
-	pw: string;
 	nickname: string;
 	is_active: boolean;
 };
@@ -32,7 +31,6 @@ export class Admin {
 		return {
 			admin_id: admin.adminID,
 			rfid: 0,
-			pw: '',
 			nickname: 'nickname' in admin ? admin.nickname : '',
 			is_active: admin.isActive
 		};

@@ -69,6 +69,14 @@ async function checkAdminExistsDB(filter: AdminFilter): Promise<AdminResponse> {
 	const adminDB = await selectAdminDB(filter);
 
 	if (adminDB.success && adminDB.adminRaws?.length == 1) {
+        if (adminDB.adminRaws[0].is_active) {
+			return {
+				success: true,
+				adminRaws: null,
+				error: 'Warning: Admin is active.'
+			};
+		}
+
 		return success;
 	}
 
@@ -95,7 +103,7 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(admin)) {
-		// updates admin name only
+		// updates admin name and is active
 		if ((value && typeof value == 'string') || typeof value == 'boolean') {
 			updateObj[key] = value;
 		}
@@ -124,7 +132,13 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
 
 	if (!adminCheck.success) {
 		return adminCheck;
-	}
+	} else if (adminCheck.error == 'Warning: Admin is active.') {
+        return {
+            success: false,
+            adminRaws: null,
+            error: 'Warning: Admin is active.'
+        };
+    }
 
 	const { error } = await supabase.from('admin').delete().eq('admin_id', adminID);
 
