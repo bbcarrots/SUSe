@@ -136,7 +136,7 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
         return {
             success: false,
             adminRaws: null,
-            error: 'Warning: Admin is active.'
+            error: adminCheck.error
         };
     }
 
