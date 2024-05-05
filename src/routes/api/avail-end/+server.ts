@@ -157,7 +157,7 @@ export async function PATCH({ request }) {
 	const serviceSelectServiceResponse = await Service.selectServices({
 		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: true,
 		isAdmin: true
 	});
@@ -237,7 +237,7 @@ export async function PATCH({ request }) {
 	const serviceSelectStudentResponse = await Service.selectServices({
 		serviceID: serviceID != undefined ? serviceID : 0,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: false,
 		isAdmin: false
 	});

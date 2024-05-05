@@ -18,7 +18,7 @@ export async function load({ params }) {
 	const serviceResponse = await Service.selectServices({
 		serviceID: 0,
 		serviceName: '',
-		serviceType: '',
+		serviceType: [],
 		inUse: null,
 		isAdmin: false
 	});
