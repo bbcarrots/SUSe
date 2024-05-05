@@ -8,6 +8,36 @@ export async function POST({ request }) {
 	/* Handles Avail Service requests for service and usage log records. */
     const { studentNumber, serviceType, updateStudent } = await request.json()
 
+    //----------------------------------------------------SELECTS
+
+	const serviceSelectResponse = await Service.selectServices({
+        serviceID: 0,
+		serviceName: '',
+		serviceType: serviceType,
+		inUse: false,
+		isAdmin: true
+    })
+    
+    if (!serviceSelectResponse.success || serviceSelectResponse.serviceRaws?.length == 0) {
+        return json(serviceSelectResponse)
+    }
+
+    const service = serviceSelectResponse.serviceRaws?.[0]
+
+    const adminSelectResponse = await Admin.selectAdmins({
+        adminID: 0,
+        nickname: '',
+        isActive: true
+    })
+
+    if (!adminSelectResponse.success || adminSelectResponse.adminRaws?.length == 0) {
+        return json(adminSelectResponse)
+    }
+
+    const admin = adminSelectResponse.adminRaws?.[0]
+
+    //----------------------------------------------------UPDATES&INSERTS
+
     if (updateStudent) {
         const studentUpdateResponse = await Student.updateStudent({
             sn_id: studentNumber,
@@ -29,20 +59,6 @@ export async function POST({ request }) {
         }
     }
 
-	const serviceSelectResponse = await Service.selectServices({
-        serviceID: 0,
-		serviceName: '',
-		serviceType: serviceType,
-		inUse: false,
-		isAdmin: true
-    })
-    
-    if (!serviceSelectResponse.success) {
-        return json(serviceSelectResponse)
-    }
-
-    const service = serviceSelectResponse.serviceRaws?.[0]
-
     const serviceUpdateResponse = await Service.updateService({
         service_id: service!.service_id,
         service_type_id: 0,
@@ -54,18 +70,6 @@ export async function POST({ request }) {
     if (!serviceUpdateResponse.success) {
         return json(serviceUpdateResponse)
     }
-
-    const adminSelectResponse = await Admin.selectAdmins({
-        adminID: 0,
-        nickname: '',
-        isActive: true
-    })
-
-    if (!adminSelectResponse.success) {
-        return json(adminSelectResponse)
-    }
-
-    const admin = adminSelectResponse.adminRaws?.[0]
 
     const dateToday = new Date().toISOString();
 
@@ -114,6 +118,36 @@ export async function PATCH({ request }) {
 	/* Handles End Service requests for service and usage log records. */
 	const { studentNumber, usageLogID, updateStudent } = await request.json();
 
+    //----------------------------------------------------SELECTS
+
+    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+        usageLogID: usageLogID,
+		studentNumber: 0,
+		minDate: '',
+		maxDate: ''
+    })
+
+    if (!usageLogSelectResponse.success) {
+        return json(usageLogSelectResponse)
+    }
+
+    const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id
+
+    const serviceSelectAdminResponse = await Service.selectServices({
+        serviceID: serviceID != undefined ? serviceID : 0,
+		serviceName: '',
+		serviceType: '',
+		inUse: true,
+		isAdmin: true
+    })
+
+    if (!serviceSelectAdminResponse.success) {
+        return json(serviceSelectAdminResponse)
+    }
+
+    //----------------------------------------------------UPDATES
+
+
     if (updateStudent) {
         const studentUpdateResponse = await Student.updateStudent({
             sn_id: studentNumber,
@@ -133,17 +167,6 @@ export async function PATCH({ request }) {
         if (!studentUpdateResponse.success) {
             return json(studentUpdateResponse)
         }
-    }
-
-    const usageLogSelectResponse = await UsageLog.selectUsageLogs({
-        usageLogID: usageLogID,
-		studentNumber: 0,
-		minDate: '',
-		maxDate: ''
-    })
-
-    if (!usageLogSelectResponse.success) {
-        return json(usageLogSelectResponse)
     }
 
     const dateToday = new Date().toISOString();
@@ -170,20 +193,6 @@ export async function PATCH({ request }) {
         return json(usageLogUpdateResponse)
     }
 
-    const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id
-
-    const serviceSelectAdminResponse = await Service.selectServices({
-        serviceID: serviceID != undefined ? serviceID : 0,
-		serviceName: '',
-		serviceType: '',
-		inUse: true,
-		isAdmin: true
-    })
-
-    if (!serviceSelectAdminResponse.success) {
-        return json(serviceSelectAdminResponse)
-    }
-
     const serviceUpdateResponse = await Service.updateService({
         service_id: serviceID != undefined ? serviceID : 0,
         service_type_id: 0,
@@ -195,6 +204,8 @@ export async function PATCH({ request }) {
     if (!serviceUpdateResponse.success) {
         return json(serviceUpdateResponse)
     }
+
+    //----------------------------------------------------SELECT
 
     const serviceSelectStudentResponse = await Service.selectServices({
         serviceID: serviceID != undefined ? serviceID : 0,
