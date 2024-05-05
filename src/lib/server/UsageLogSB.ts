@@ -138,7 +138,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: log.ul_id,
 		studentNumber: 0,
-        serviceType: null,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});
@@ -173,7 +173,7 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
 	const usageLogCheck = await checkUsageLogExistsDB({
 		usageLogID: usageLogID,
 		studentNumber: 0,
-        serviceType: null,
+        serviceType: [],
 		minDate: '',
 		maxDate: ''
 	});
