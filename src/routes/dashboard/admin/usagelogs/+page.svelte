@@ -122,7 +122,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.dateRangeStart}
+				bind:value={usageLogFilter.minDate}
 				type="datetime-local"
 			/>
 		</div>
@@ -133,7 +133,7 @@
 			<input
 				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.dateRangeEnd}
+				bind:value={usageLogFilter.maxDate}
 				type="datetime-local"
 			/>
 		</div>
