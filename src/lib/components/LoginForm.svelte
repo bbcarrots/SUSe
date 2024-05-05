@@ -18,6 +18,8 @@
 
 			//if the current element is an image, increment the clicks if the count is less than 5
 			if (target instanceof HTMLImageElement) {
+				e.preventDefault();
+
 				if (clicks < 5) {
 					clicks = clicks + 1;
 				}
