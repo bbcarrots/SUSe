@@ -51,11 +51,14 @@ export type StudentFilter = {
 	program: string[];
 };
 
+// filters for selecting admin records
 export type AdminFilter = {
-	nickname: string[];
-	isActive: string[];
+	adminID: number;
+	nickname: string;
+	isActive: boolean | null;
 };
 
+// filters for selecting usage log records
 export type UsageLogFilter = {
 	usageLogID: number;
 	studentNumber: number;

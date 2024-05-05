@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminDBObj, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(

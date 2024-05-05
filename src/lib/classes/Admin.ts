@@ -1,5 +1,6 @@
 import { insertAdminDB, selectAdminDB, updateAdminDB, deleteAdminDB } from '$lib/server/AdminSB';
 import type { AdminProcessed } from '$lib/utils/types';
+import type { AdminFilter } from '$lib/utils/types';
 
 // parameter type for insert and update admin DB functions
 export type AdminDBObj = {
@@ -14,13 +15,6 @@ export type AdminResponse = {
 	success: boolean;
 	adminRaws: AdminDBObj[] | null;
 	error: string | null;
-};
-
-// filters for selecting admin records
-export type AdminFilter = {
-	adminID: number;
-	nickname: string;
-	isActive: boolean | null;
 };
 
 export class Admin {
