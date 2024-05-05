@@ -62,6 +62,14 @@ export async function selectStudentDB(filter: StudentFilter): Promise<StudentRes
         query = query.like('username', '%' + filter.username + '%'); // username can be found in any position
     }
 
+    if (filter.isEnrolled != null) {
+        query = query.eq('is_enrolled', filter.isEnrolled); // username can be found in any position
+    }
+
+    if (filter.isActive != null) {
+        query = query.eq('is_active', filter.isActive); // username can be found in any position
+    }
+
 	const { data, error } = await query;
 
 	if (error) {
@@ -99,6 +107,14 @@ async function checkStudentExistsDB(filter: StudentFilter): Promise<StudentRespo
 	const studentDB = await selectStudentDB(filter);
 
 	if (studentDB.success && studentDB.studentRaws?.length == 1) {
+        if (studentDB.studentRaws[0].is_active) {
+			return {
+				success: true,
+				studentRaws: null,
+				error: 'Warning: Student is active.'
+			};
+		}
+
 		return success;
 	}
 
@@ -116,7 +132,9 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 		minStudentNumber: student.sn_id,
 		maxStudentNumber: student.sn_id,
 		username: '',
-		rfid: 0
+		rfid: 0,
+        isEnrolled: null,
+        isActive: null,
 	});
 
 	if (!studentCheck.success) {
@@ -132,8 +150,7 @@ export async function updateStudentDB(student: StudentDBObj): Promise<StudentRes
 			typeof value == 'string') || typeof value == 'boolean') &&
 			key != 'sn_id' &&
 			key != 'rfid' &&
-			key != 'username' &&
-            key != 'pw'
+			key != 'username'
 		) {
 			updateObj[key] = value;
 		}
@@ -158,12 +175,20 @@ export async function deleteStudentDB(studentNumber: number): Promise<StudentRes
 		minStudentNumber: studentNumber,
 		maxStudentNumber: studentNumber,
 		username: '',
-		rfid: 0
+		rfid: 0,
+        isEnrolled: null,
+        isActive: null,
 	});
 
 	if (!studentCheck.success) {
 		return studentCheck;
-	}
+	} else if (studentCheck.error == 'Warning: Student is active.') {
+        return {
+			success: false,
+			studentRaws: null,
+			error: studentCheck.error
+		};
+    }
 
 	const { error } = await supabase.from('student').delete().eq('sn_id', studentNumber);
 

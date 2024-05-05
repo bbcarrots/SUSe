@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
-import { serviceTypes } from '$lib/utils/filterOptions';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
