@@ -4,34 +4,47 @@
 	import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
 	import { type AdminProcessed } from '$lib/utils/types.js';
 	import { type AdminFilter } from '$lib/utils/types.js';
+	import { AdminFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	export let data;
 
 	//for filters
-	let adminFilter = {
-		nickname: [],
-		isActive: []
-	};
+	$: {
+		if (browser) handleSelect($AdminFilterStore);
+	}
+
 
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
 	let hide: string[] = [];
 	let disableEdit: string[] = ['adminID'];
-	let adminObjects = data.adminRaws;
 	let admins: AdminProcessed[] = [];
 
-	if (adminObjects !== null && adminObjects !== undefined) {
-		admins = adminObjects.map((admin) => {
-			return {
-				adminID: admin.admin_id,
-				nickname: admin.nickname,
-				isActive: admin.is_active
-			};
-		});
+	onMount(()=>{
+		let adminObjects = data.adminRaws;
+		mapAdminDatabaseObjects(adminObjects);
+
+	})
+
+	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null){
+		if (adminObjects !== null && adminObjects !== undefined) {
+			admins = adminObjects.map((admin) => {
+				return {
+					adminID: admin.admin_id,
+					nickname: admin.nickname,
+					isActive: admin.is_active
+				};
+			});
+		} else {
+			admins = [];
+		}
 	}
 
+
 	// ----------------------------------------------------------------------------------
-	import type { AdminResponse } from '$lib/classes/Admin.js';
+	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
@@ -50,6 +63,7 @@
 		});
 
 		selectResponse = await response.json();
+		mapAdminDatabaseObjects(selectResponse.adminRaws);
 	}
 
 	async function handleDelete(event: CustomEvent) {
@@ -87,12 +101,17 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Admins</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'User Status'} options={userStatus} bind:value={adminFilter.isActive} />
-		<Multiselect
-			field={'Admin Nicknames'}
-			options={adminNicknames}
-			bind:value={adminFilter.nickname}
-		/>
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Active</h6>
+			<select 
+				bind:value={$AdminFilterStore.isActive}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not Active</option>
+				<option value={true}>Is Active</option>
+			</select>
+		</div>
 	</div>
 	<Table
 		on:delete={handleDelete}
