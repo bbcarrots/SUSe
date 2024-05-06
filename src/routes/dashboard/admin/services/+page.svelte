@@ -4,38 +4,49 @@
 	import { serviceTypes, serviceStatus } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
 	import { type ServiceFilter } from '$lib/utils/types.js';
+	import { ServiceFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	export let data;
 
 	//for filters
-	let serviceFilter = {
-		serviceID: [],
-		serviceName: [],
-		serviceType: [],
-		inUse: [],
-		isAdmin: []
-	};
+	$: {
+		console.log($ServiceFilterStore)
+		if (browser) handleSelect($ServiceFilterStore);
+	}
+
 
 	//for table
 	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
 	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
-	let serviceObjects = data.serviceRaws;
 	let services: ServiceProcessed[] = [];
 
-	if (serviceObjects !== null && serviceObjects !== undefined) {
-		services = serviceObjects.map((service) => {
-			return {
-				serviceID: service.service_id,
-                serviceTypeID: service.service_type_id,
-				serviceName: service.service_name,
-				serviceType: service.service_type,
-				inUse: service.in_use
-			};
-		});
+	onMount(()=>{
+		let serviceObjects = data.serviceRaws;
+		mapServiceDatabaseObjects(serviceObjects);
+
+	})
+
+	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null){
+		if (serviceObjects !== null && serviceObjects !== undefined) {
+			services = serviceObjects.map((service) => {
+				return {
+					serviceID: service.service_id,
+					serviceTypeID: service.service_type_id,
+					serviceName: service.service_name,
+					serviceType: service.service_type,
+					inUse: service.in_use
+				};
+			});
+		} else {
+			services=[];
+		}
 	}
+
 	// ----------------------------------------------------------------------------------
-	import type { ServiceResponse } from '$lib/classes/Service.js';
+	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
 
 	let deleteResponse: ServiceResponse;
 	let updateResponse: ServiceResponse;
@@ -54,6 +65,7 @@
 		});
 
 		selectResponse = await response.json();
+		mapServiceDatabaseObjects(selectResponse.serviceRaws);
 	}
 
 	async function handleDelete(event: CustomEvent) {
@@ -94,13 +106,19 @@
 		<Multiselect
 			field={'Service Type'}
 			options={serviceTypes}
-			bind:value={serviceFilter.serviceType}
+			bind:value={$ServiceFilterStore.serviceType}
 		/>
-		<Multiselect
-			field={'Service Status'}
-			options={serviceStatus}
-			bind:value={serviceFilter.inUse}
-		/>
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">In Use</h6>
+			<select 
+				bind:value={$ServiceFilterStore.inUse}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not In Use</option>
+				<option value={true}>In Use</option>
+			</select>
+		</div>
 	</div>
 	<Table
 		on:delete={handleDelete}
