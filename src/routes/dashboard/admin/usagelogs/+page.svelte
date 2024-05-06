@@ -5,12 +5,13 @@
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
     import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
 
 	export let data;
 
 	//select everytime the usage log filter store is updated
 	$: {
-		handleSelect($UsageLogFilterStore);
+		if (browser) handleSelect($UsageLogFilterStore);
 	}
 
 	//for table
@@ -53,11 +54,14 @@
 					dateTimeEnd: usageLog.datetime_end
 				};
 			});
+		} else{
+			usageLogs = [];
 		}
 	}
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { onMount } from 'svelte';
+	import { ssrImportKey } from 'vite/runtime';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
