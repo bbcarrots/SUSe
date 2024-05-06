@@ -4,17 +4,14 @@
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
     import { type UsageLogFilter } from '$lib/utils/types.js';
+	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 
 	export let data;
 
-	//for filters
-	let usageLogFilter: UsageLogFilter = {
-		usageLogID: 0,
-		studentNumber: 0,
-		serviceType: [],
-		minDate: '',
-		maxDate: ''
-	};
+	//select everytime the usage log filter store is updated
+	$: {
+		handleSelect($UsageLogFilterStore);
+	}
 
 	//for table
 	let headers: string[] = [
@@ -34,25 +31,33 @@
 		'serviceType',
 		'adminID'
 	];
-	let usageLogObjects = data.usageLogRaws;
+
 	let usageLogs: UsageLogProcessed[] = [];
 
-	if (usageLogObjects !== null && usageLogObjects !== undefined) {
-		usageLogs = usageLogObjects.map((usageLog) => {
-			return {
-				usageLogID: usageLog.ul_id,
-				serviceID: usageLog.service_id,
-				serviceType: usageLog.service_type,
-				studentNumber: usageLog.sn_id,
-				adminID: usageLog.admin_id,
-				dateTimeStart: usageLog.datetime_start,
-				dateTimeEnd: usageLog.datetime_end
-			};
-		});
-	}
+	onMount(async() => {
+		let usageLogObjects = data.usageLogRaws;
+		mapULDatabaseObjects(usageLogObjects);
 
+	}) 
+
+	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null){
+		if (usageLogObjects !== null && usageLogObjects !== undefined) {
+			usageLogs = usageLogObjects.map((usageLog: any) => {
+				return {
+					usageLogID: usageLog.ul_id,
+					serviceID: usageLog.service_id,
+					serviceType: usageLog.service_type,
+					studentNumber: usageLog.sn_id,
+					adminID: usageLog.admin_id,
+					dateTimeStart: usageLog.datetime_start,
+					dateTimeEnd: usageLog.datetime_end
+				};
+			});
+		}
+	}
 	// ----------------------------------------------------------------------------------
-	import type { UsageLogResponse } from '$lib/classes/UsageLog.js';
+	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
+	import { onMount } from 'svelte';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
@@ -71,6 +76,7 @@
 		});
 
 		selectResponse = await response.json();
+		mapULDatabaseObjects(selectResponse.usageLogRaws);
 	}
 
 	async function handleDelete(event: CustomEvent) {
@@ -111,7 +117,7 @@
 		<Multiselect
 			field={'Service Type'}
 			options={serviceTypes}
-			bind:value={usageLogFilter.serviceType}
+			bind:value={$UsageLogFilterStore.serviceType}
 		/>
 
 		<!-- date range pickers -->
@@ -120,9 +126,9 @@
 				Date Range Start
 			</h6>
 			<input
-				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
+				class="datetime block h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.minDate}
+				bind:value={$UsageLogFilterStore.minDate}
 				type="datetime-local"
 			/>
 		</div>
@@ -131,9 +137,9 @@
 				Date Range End
 			</h6>
 			<input
-				class="datetime block h-1/2 h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
+				class="datetime block h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
-				bind:value={usageLogFilter.maxDate}
+				bind:value={$UsageLogFilterStore.maxDate}
 				type="datetime-local"
 			/>
 		</div>
