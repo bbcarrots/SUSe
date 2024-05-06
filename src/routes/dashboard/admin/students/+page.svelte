@@ -15,10 +15,7 @@
 
 	//for filters
 	$: {
-		if (browser) {
-            console.log($StudentFilterStore)
-            handleSelect($StudentFilterStore)
-        };
+		if (browser) handleSelect($StudentFilterStore);
 	}
 
 	//for table
