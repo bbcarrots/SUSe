@@ -15,7 +15,10 @@
 
 	//for filters
 	$: {
-		if (browser) handleSelect($StudentFilterStore);
+		if (browser) {
+            console.log($StudentFilterStore)
+            handleSelect($StudentFilterStore)
+        };
 	}
 
 	//for table
@@ -84,7 +87,7 @@
 
 		selectResponse = await response.json();
 		mapStudentDatabaseObjects(selectResponse.studentRaws);
-		console.log(selectResponse.studentRaws)
+		// console.log(selectResponse.studentRaws)
 	}
 
 	async function handleApprove(event: CustomEvent) {

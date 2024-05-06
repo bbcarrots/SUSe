@@ -14,16 +14,17 @@ export async function POST({ request }) {
                 isActive: null
             })
         )
+    } else {return json(
+            await Student.selectStudents({
+                minStudentNumber: 2000,
+                maxStudentNumber: new Date().getFullYear(),
+                username: '',
+                rfid: rfid,
+                college: [],
+                program: [],
+                isEnrolled: null,
+                isActive: null
+            })
+        );
     }
-
-	return json(
-		await Student.selectStudents({
-			minStudentNumber: 2000,
-			maxStudentNumber: new Date().getFullYear(),
-			username: '',
-			rfid: rfid,
-			isEnrolled: null,
-			isActive: null
-		})
-	);
 }
