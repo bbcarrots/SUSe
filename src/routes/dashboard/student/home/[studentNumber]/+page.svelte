@@ -51,18 +51,12 @@
 		});
 
 		availServiceResponse = await response.json();
-
-		// console.log(availServiceResponse);
-
 		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
-
-		// console.log(activeUsageLogs);
 	}
 
 	async function handleEndService(event: CustomEvent) {
 		/* Handles End Service event from ServiceCardForm by sending a PATCH request 
         with payload requirement: usageLogID, serviceType. */
-		// console.log(activeUsageLogs);
 
 		const { serviceType } = event.detail;
 
@@ -85,9 +79,6 @@
         if (endServiceResponse.success) {
             delete activeUsageLogs[serviceType]
         }
-
-		// console.log(endServiceResponse);
-		console.log(activeUsageLogs);
 	}
 </script>
 
