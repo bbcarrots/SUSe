@@ -24,6 +24,7 @@ export let StudentFilterStore: Writable<StudentFilter> = writable({
 // filters for selecting admin records
 export let AdminFilterStore: Writable<AdminFilter> = writable({
 	adminID: 0,
+    rfid: 0,
 	nickname: "",
 	isActive: null
 });
