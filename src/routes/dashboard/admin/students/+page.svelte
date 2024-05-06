@@ -84,7 +84,6 @@
 
 		selectResponse = await response.json();
 		mapStudentDatabaseObjects(selectResponse.studentRaws);
-		// console.log(selectResponse.studentRaws)
 	}
 
 	async function handleApprove(event: CustomEvent) {

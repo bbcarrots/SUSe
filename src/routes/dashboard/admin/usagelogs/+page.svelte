@@ -70,8 +70,6 @@
 		/* Handles Select event from the filter confirmation by sending a
         POST request with payload requirement: filter. */
 
-        console.log(filter)
-
         const payload: UsageLogFilter = {
             usageLogID: filter.usageLogID,
             studentNumber: filter.studentNumber,
