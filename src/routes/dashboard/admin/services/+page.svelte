@@ -12,7 +12,6 @@
 
 	//for filters
 	$: {
-		console.log($ServiceFilterStore)
 		if (browser) handleSelect($ServiceFilterStore);
 	}
 
