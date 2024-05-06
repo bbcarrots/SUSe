@@ -76,7 +76,7 @@
 			class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
                     lg:col-start-2 lg:col-end-7 lg:row-start-1"
 		>
-			<LoginForm on:inputRFID={handleRFID} />
+			<LoginForm bind:clicks on:inputRFID={handleRFID} />
 			{#if form != null && form.error != null}
 				<p class="text-red-600">{form.error}</p>
 			{/if}
