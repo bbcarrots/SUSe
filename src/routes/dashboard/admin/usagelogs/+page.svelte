@@ -61,7 +61,6 @@
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { onMount } from 'svelte';
-	import { ssrImportKey } from 'vite/runtime';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
@@ -71,9 +70,17 @@
 		/* Handles Select event from the filter confirmation by sending a
         POST request with payload requirement: filter. */
 
+        const payload: UsageLogFilter = {
+            usageLogID: filter.usageLogID,
+            studentNumber: filter.studentNumber,
+            serviceType: filter.serviceType,
+            minDate: filter.minDate ? new Date(filter.minDate).toISOString() : filter.minDate,
+            maxDate: filter.maxDate ? new Date(filter.maxDate).toISOString() : filter.maxDate
+        }
+
 		const response = await fetch('../../api/usagelog', {
 			method: 'POST',
-			body: JSON.stringify(filter),
+			body: JSON.stringify(payload),
 			headers: {
 				'content-type': 'application/json'
 			}

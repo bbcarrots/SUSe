@@ -33,6 +33,7 @@ export class Admin {
 	public static async selectAdmins(
 		filter: AdminFilter = {
 			adminID: 0,
+            rfid: 0,
 			nickname: '',
 			isActive: null
 		}

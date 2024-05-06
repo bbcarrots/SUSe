@@ -25,6 +25,10 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 		query = query.eq('admin_id', filter.adminID);
 	}
 
+    if (filter.rfid) {
+		query = query.eq('rfid', filter.rfid);
+	}
+
 	if (filter.nickname) {
 		query = query.like('admin_name', '%' + filter.nickname + '%');
 	}
@@ -93,6 +97,7 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
     NOTE: Cannot update the admin id. Need to delete and insert again. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: admin.admin_id,
+        rfid: 0,
 		nickname: '',
 		isActive: null // Admin should be inactive to be updated
 	});
@@ -127,6 +132,7 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
 	/* Deletes an existing admin record. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: adminID,
+        rfid: 0,
 		nickname: '',
 		isActive: null
 	});

@@ -31,6 +31,7 @@ export type ServiceProcessed = {
 
 export type AdminProcessed = {
 	adminID: number;
+    rfid: number;
 	nickname: string;
 	isActive: boolean;
 };
@@ -59,6 +60,7 @@ export type StudentFilter = {
 // filters for selecting admin records
 export type AdminFilter = {
 	adminID: number;
+    rfid: number;
 	nickname: string;
 	isActive: boolean | null;
 };

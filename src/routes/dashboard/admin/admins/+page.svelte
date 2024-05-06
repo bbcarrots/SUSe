@@ -18,7 +18,7 @@
 
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
-	let hide: string[] = [];
+	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
 	let admins: AdminProcessed[] = [];
 
@@ -33,6 +33,7 @@
 			admins = adminObjects.map((admin) => {
 				return {
 					adminID: admin.admin_id,
+                    rfid: admin.rfid,
 					nickname: admin.nickname,
 					isActive: admin.is_active
 				};

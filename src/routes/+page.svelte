@@ -19,7 +19,7 @@
 		/* Handles RFID validation event from LoginForm by sending a POST request 
         with payload requirement: rfid. */
 
-		const payload = { isAdmin: false, ...event.detail };
+		const payload = { isAdmin: false, rfid: event.detail };
 
 		if (clicks == 5) {
 			payload.isAdmin = true;
