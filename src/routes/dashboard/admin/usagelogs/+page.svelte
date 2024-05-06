@@ -117,7 +117,7 @@
 
 <div class="grid gap-2">
 	<h3 class="pt-4">Usage Logs</h3>
-	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+	<div class="my-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 		<Multiselect
 			field={'Service Type'}
 			options={serviceTypes}
