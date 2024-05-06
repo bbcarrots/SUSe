@@ -5,20 +5,18 @@
 	import {
 		collegePrograms,
 		colleges,
-		studentNumberYear,
-		userStatus
+		studentNumberYear
 	} from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
+	import { StudentFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
 
 	export let data;
 
 	//for filters
-	let studentFilter = {
-		studentNumberYear: [],
-		isActive: [],
-		college: [],
-		program: []
-	};
+	$: {
+		if (browser) handleSelect($StudentFilterStore);
+	}
 
 	//for table
 	let headers: string[] = [
@@ -34,28 +32,38 @@
 	];
 	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
-	let studentObjects = data.studentRaws;
 	let students: StudentProcessed[] = [];
 
-	if (studentObjects !== null && studentObjects !== undefined) {
-		students = studentObjects.map((student) => {
-			return {
-				studentNumber: student.sn_id,
-				firstName: student.first_name,
-				middleInitial: student.middle_initial,
-				lastName: student.last_name,
-				email: student.username,
-				phoneNumber: student.phone_number,
-				college: student.college,
-				program: student.program,
-				isEnrolled: student.is_enrolled,
-				isActive: student.is_active
-			};
-		});
+	onMount(()=>{
+		let studentObjects = data.studentRaws;
+		mapStudentDatabaseObjects(studentObjects);
+
+	})
+
+	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null){
+		if (studentObjects !== null && studentObjects !== undefined) {
+			students = studentObjects.map((student) => {
+				return {
+					studentNumber: student.sn_id,
+					firstName: student.first_name,
+					middleInitial: student.middle_initial,
+					lastName: student.last_name,
+					email: student.username,
+					phoneNumber: student.phone_number,
+					college: student.college,
+					program: student.program,
+					isEnrolled: student.is_enrolled,
+					isActive: student.is_active
+				};
+			});
+		} else {
+			students = []
+		}
 	}
 
 	// ----------------------------------------------------------------------------------
-	import type { StudentResponse } from '$lib/classes/Student.js';
+	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
+	import { onMount } from 'svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -75,6 +83,8 @@
 		});
 
 		selectResponse = await response.json();
+		mapStudentDatabaseObjects(selectResponse.studentRaws);
+		console.log(selectResponse.studentRaws)
 	}
 
 	async function handleApprove(event: CustomEvent) {
@@ -129,18 +139,62 @@
 <div class="grid gap-2">
 	<h3 class="pt-4">Students</h3>
 	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'User Status'} options={userStatus} bind:value={studentFilter.isActive} />
 		<Multiselect
 			field={'College Programs'}
 			options={collegePrograms}
-			bind:value={studentFilter.program}
+			bind:value={$StudentFilterStore.program}
 		/>
-		<Multiselect field={'Colleges'} options={colleges} bind:value={studentFilter.college} />
-		<Multiselect
-			field={'Student Number Year'}
-			options={studentNumberYear}
-			bind:value={studentFilter.studentNumberYear}
-		/>
+		<Multiselect field={'Colleges'} options={colleges} bind:value={$StudentFilterStore.college} />
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Active</h6>
+			<select 
+				bind:value={$StudentFilterStore.isActive}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not Active</option>
+				<option value={true}>Is Active</option>
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Enrolled</h6>
+			<select 
+				bind:value={$StudentFilterStore.isEnrolled}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not Enrolled</option>
+				<option value={true}>Is Enrolled</option>
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Min Student Number</h6>
+			<select 
+				bind:value={$StudentFilterStore.minStudentNumber}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}></option>
+				{#each studentNumberYear as year}
+					<option value={year.value}>{year.name}</option>
+				{/each}
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Max Student Number</h6>
+			<select 
+				bind:value={$StudentFilterStore.maxStudentNumber}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}></option>
+				{#each studentNumberYear as year}
+					<option value={year.value}>{year.name}</option>
+				{/each}
+			</select>
+		</div>
 	</div>
 	<Table
 		on:approve={handleApprove}
