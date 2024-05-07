@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { TableBodyRow, TableBodyCell, Modal } from 'flowbite-svelte';
-	import { Check, XMark, Icon, Pencil, Trash } from 'svelte-hero-icons';
+	import { Check, XMark, Icon, Pencil, Trash, Star } from 'svelte-hero-icons';
 
 	import { getKey } from '$lib/utils/utils';
 
@@ -50,6 +50,17 @@
 		updateInfo();
 	}
 
+	function updateActive(primaryKeyIsActive: string, info: any) {
+		const payload: any = {};
+		info.isActive = !info.isActive;
+		payload[primaryKey] = primaryKeyIsActive;
+
+		dispatch('updateActive', payload);
+		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
+
+		updateInfo();
+	}
+
 	// specific store for student tables
 	const defaultCollegeValue = info.college ? info.college : ''; // gets the default value of college based on info.college
 	export let college = defaultCollegeValue; // stores the current value of the college property to dynamically show which programs are available
@@ -84,7 +95,7 @@
 		let hasInvalid = false;
 
 		/* Check if each input has valid entries */
-		document.querySelectorAll('input').forEach(input => {
+		document.querySelectorAll('input').forEach((input) => {
 			if (!input.reportValidity()) {
 				hasInvalid = true;
 			}
@@ -189,6 +200,25 @@
 				>
 					<Icon src={Check} micro size="20" />
 				</button>
+			{/if}
+			{#if info.hasOwnProperty('adminID')}
+				{#if info.isActive == false}
+					<!-- set active button -->
+					<button
+						on:click={() => updateActive(getKey(info, primaryKey), info)}
+						class="font-medium text-green-800"
+					>
+						<Icon src={Star} outline size="20" />
+					</button>
+				{:else}
+					<!-- set inactive button -->
+					<button
+						on:click={() => updateActive(getKey(info, primaryKey), info)}
+						class="font-medium text-green-800"
+					>
+						<Icon src={Star} micro size="20" />
+					</button>
+				{/if}
 			{/if}
 			<!-- edit button -->
 			<button

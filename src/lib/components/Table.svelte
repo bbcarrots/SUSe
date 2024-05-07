@@ -73,6 +73,11 @@
 		updateInfo();
 	}
 
+	async function forwardActive(event: CustomEvent) {
+		/* Forwards Approve event to parent page. */
+		dispatch('updateActive', event.detail);
+	}
+
 	async function forwardDelete(event: CustomEvent) {
 		/* Forwards Delete event to parent page and updates Table after deletion. */
 		dispatch('delete', event.detail);
@@ -111,6 +116,7 @@
 					on:approve={forwardApprove}
 					on:delete={forwardDelete}
 					on:update={forwardUpdate}
+					on:updateActive={forwardActive}
 					{info}
 					{primaryKey}
 					bind:isEditing

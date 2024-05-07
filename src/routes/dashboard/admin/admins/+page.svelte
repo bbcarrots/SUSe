@@ -15,25 +15,23 @@
 		if (browser) handleSelect($AdminFilterStore);
 	}
 
-
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
 	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
 	let admins: AdminProcessed[] = [];
 
-	onMount(()=>{
+	onMount(() => {
 		let adminObjects = data.adminRaws;
 		mapAdminDatabaseObjects(adminObjects);
+	});
 
-	})
-
-	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null){
+	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
 		if (adminObjects !== null && adminObjects !== undefined) {
 			admins = adminObjects.map((admin) => {
 				return {
 					adminID: admin.admin_id,
-                    rfid: admin.rfid,
+					rfid: admin.rfid,
 					nickname: admin.nickname,
 					isActive: admin.is_active
 				};
@@ -42,7 +40,6 @@
 			admins = [];
 		}
 	}
-
 
 	// ----------------------------------------------------------------------------------
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
@@ -97,14 +94,21 @@
 
 		updateResponse = await response.json();
 	}
+
+	// TODO: Update the active field of the admin in the backend by inverting the current status
+	async function handleUpdateActive() {
+		console.log('here!');
+	}
 </script>
 
 <div class="grid gap-2">
 	<h3 class="pt-4">Admins</h3>
 	<div class="my-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Active</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Active
+			</h6>
+			<select
 				bind:value={$AdminFilterStore.isActive}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -117,6 +121,7 @@
 	<Table
 		on:delete={handleDelete}
 		on:update={handleUpdate}
+		on:updateActive={handleUpdateActive}
 		{headers}
 		info={admins}
 		primaryKey="adminID"
