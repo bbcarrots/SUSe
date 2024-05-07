@@ -36,49 +36,14 @@
 		}
 	}
 
-	function approveEnrollment(primaryKeyApprove: string, info: any) {
-		/* Edits the isEnrolled field of the information to true. */
-		/* Forwards the information to Table.svelte */
-		const payload: any = {};
-
-		info.isEnrolled = true;
-		payload[primaryKey] = primaryKeyApprove;
-
-		dispatch('approve', payload);
-
-		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
-		updateInfo();
-	}
-
-	function updateActive(primaryKeyIsActive: string, info: any) {
-		const payload: any = {};
-		info.isActive = !info.isActive;
-		payload[primaryKey] = primaryKeyIsActive;
-
-		dispatch('updateActive', payload);
-		/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
-
-		updateInfo();
-	}
-
 	// specific store for student tables
 	const defaultCollegeValue = info.college ? info.college : ''; // gets the default value of college based on info.college
 	export let college = defaultCollegeValue; // stores the current value of the college property to dynamically show which programs are available
 
 	let formData = new FormData(); // stores the data from the input fields
 
-	function updateFormData(property: string) {
-		/* Gets the value in the input field given the property being edited. */
-		/* Stores the value in formData corresponding to the correct property. */
-		const element = document.getElementById(property) as HTMLInputElement;
-		const value = element?.value || '';
-
-		if (property == 'college') {
-			college = value;
-		}
-
-		formData.set(property, value);
-	}
+	// ----------------------------------------------------------------------------------
+	// functions that handle the edit form
 
 	function handleInputChange(event: any) {
 		/* Handles everytime the input is changed. */
@@ -104,9 +69,6 @@
 		if (!hasInvalid) {
 			for (let [key, value] of formData.entries()) {
 				payload[key] = value;
-				if (info.hasOwnProperty(key)) {
-					info[key] = value;
-				}
 			}
 
 			dispatch('update', payload);
@@ -116,17 +78,41 @@
 				isEditing = false;
 				primaryKeyEdit = null;
 			}
-
-			/* Update the content of info for the changes to be reflected in the DOM without needing to refresh. */
-			updateInfo();
 		} else {
 			hasInvalid = false;
 		}
 	};
 
-	function updateInfo() {
-		/* Updates information shown in the TableRow component. */
-		info = info;
+	function updateFormData(property: string) {
+		/* Gets the value in the input field given the property being edited. */
+		/* Stores the value in formData corresponding to the correct property. */
+		const element = document.getElementById(property) as HTMLInputElement;
+		const value = element?.value || '';
+
+		if (property == 'college') {
+			college = value;
+		}
+
+		formData.set(property, value);
+	}
+
+	// ----------------------------------------------------------------------------------
+	// update, delete, approve functions that dispatch the corresponding event upwards
+
+	function approveEnrollment(primaryKeyApprove: string) {
+		/* Edits the isEnrolled field of the information to true. */
+		/* Forwards the information to Table.svelte */
+		const payload: any = {};
+		payload[primaryKey] = primaryKeyApprove;
+
+		dispatch('approve', payload);
+	}
+
+	function updateActive(primaryKeyIsActive: string) {
+		const payload: any = {};
+		payload[primaryKey] = primaryKeyIsActive;
+
+		dispatch('updateActive', payload);
 	}
 
 	function deleteEntry(primaryKeyDelete: string) {
@@ -195,7 +181,7 @@
 			{#if info.hasOwnProperty('isEnrolled') && info.isEnrolled == '0'}
 				<!-- approve enrollment button -->
 				<button
-					on:click={() => approveEnrollment(getKey(info, primaryKey), info)}
+					on:click={() => approveEnrollment(getKey(info, primaryKey))}
 					class="font-medium text-green-800"
 				>
 					<Icon src={Check} micro size="20" />
@@ -205,7 +191,7 @@
 				{#if info.isActive == false}
 					<!-- set active button -->
 					<button
-						on:click={() => updateActive(getKey(info, primaryKey), info)}
+						on:click={() => updateActive(getKey(info, primaryKey))}
 						class="font-medium text-green-800"
 					>
 						<Icon src={Star} outline size="20" />
@@ -213,7 +199,7 @@
 				{:else}
 					<!-- set inactive button -->
 					<button
-						on:click={() => updateActive(getKey(info, primaryKey), info)}
+						on:click={() => updateActive(getKey(info, primaryKey))}
 						class="font-medium text-green-800"
 					>
 						<Icon src={Star} micro size="20" />

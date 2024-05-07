@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { SvelteComponent, createEventDispatcher } from 'svelte';
 	import { TableBody, Table } from 'flowbite-svelte';
 	import { writable } from 'svelte/store';
 
@@ -67,22 +67,40 @@
 	// ----------------------------------------------------------------------------------
 	const dispatch = createEventDispatcher();
 
+	let eventObject: CustomEvent; //to store the event
+
 	async function forwardApprove(event: CustomEvent) {
 		/* Forwards Approve event to parent page. */
+		eventObject = event;
 		dispatch('approve', event.detail);
-		updateInfo();
 	}
 
 	async function forwardActive(event: CustomEvent) {
 		/* Forwards Approve event to parent page. */
+		eventObject = event;
 		dispatch('updateActive', event.detail);
 	}
 
 	async function forwardDelete(event: CustomEvent) {
 		/* Forwards Delete event to parent page and updates Table after deletion. */
+		eventObject = event;
 		dispatch('delete', event.detail);
+	}
 
-		const primaryKeyDelete = event.detail[primaryKey];
+	async function forwardUpdate(event: CustomEvent) {
+		/* Forwards Update event to parent page. */
+		eventObject = event;
+		dispatch('update', event.detail);
+	}
+
+	// ----------------------------------------------------------------------------------
+	// UI functions to update after receiving success response
+	interface InfoEntry {
+		[key: string]: any;
+	}
+
+	export function deleteEntryUI() {
+		const primaryKeyDelete = eventObject.detail[primaryKey];
 		const index = info.findIndex(
 			(entry: { [key: string]: any }) => entry[primaryKey] === primaryKeyDelete
 		);
@@ -96,14 +114,49 @@
 		updateInfo();
 	}
 
+	export function updateEntryUI() {
+		//find the current entry to update edit
+		for (const [, entry] of Object.entries<InfoEntry>(info)) {
+			//if the object to edit is found, update the information of the entry
+			if (entry[primaryKey] == eventObject.detail[primaryKey]) {
+				for (const [key, value] of Object.entries(eventObject.detail)) {
+					if (entry.hasOwnProperty(key)) {
+						entry[key] = value;
+					}
+				}
+			}
+		}
+
+		updateInfo();
+	}
+
+	export function approveEntryUI() {
+		//find the current entry to update edit
+		for (const [, entry] of Object.entries<InfoEntry>(info)) {
+			//if the object to edit is found, update the information of the entry
+			if (entry[primaryKey] == eventObject.detail[primaryKey]) {
+				entry['isEnrolled'] = true;
+			}
+		}
+
+		updateInfo();
+	}
+
+	export function updateEntryActiveUI() {
+		//find the current entry to update edit
+		for (const [, entry] of Object.entries<InfoEntry>(info)) {
+			//if the object to edit is found, update the information of the entry
+			if (entry[primaryKey] == eventObject.detail[primaryKey]) {
+				entry['isActive'] = !entry['isActive'];
+			}
+		}
+
+		updateInfo();
+	}
+
 	function updateInfo() {
 		/* Updates information shown in the Table component after a successful deletion. */
 		info = info;
-	}
-
-	async function forwardUpdate(event: CustomEvent) {
-		/* Forwards Update event to parent page. */
-		dispatch('update', event.detail);
 	}
 </script>
 
@@ -111,7 +164,7 @@
 	<Table hoverable={true} divClass="overflow-x-auto">
 		<TableHeader {hide} {headers} bind:sortKey bind:sortDirection {isEditing} />
 		<TableBody>
-			{#each $calculatedRows as info}
+			{#each $calculatedRows as info, index}
 				<TableRow
 					on:approve={forwardApprove}
 					on:delete={forwardDelete}
