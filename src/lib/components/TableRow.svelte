@@ -201,7 +201,7 @@
 					<Icon src={Check} micro size="20" />
 				</button>
 			{/if}
-			{#if info.hasOwnProperty('adminID')}
+			{#if info.hasOwnProperty('nickname') && info.hasOwnProperty('adminID')}
 				{#if info.isActive == false}
 					<!-- set active button -->
 					<button
