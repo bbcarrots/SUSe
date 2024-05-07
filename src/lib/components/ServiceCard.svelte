@@ -16,10 +16,10 @@
 		data: null
 	};
 
-	let timeStarted: string;
-	let timeEnded: string;
-	let timeNow: string;
-	let started = false;
+	export let timeStarted: Date;
+	let timeEnded: Date;
+	let timeNow: Date;
+	export let started = false;
 	let countdown: string = formatTime(0);
 
 	let popupModalStart = false;
@@ -46,9 +46,8 @@
 
 	// function to update the current time for the count
 	function updateTimeNow() {
-		const currentTime = new Date();
-		timeNow = currentTime.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'medium' });
-		countdown = formatTime(currentTime.getTime() - new Date(timeStarted).getTime());
+		timeNow = new Date();
+		countdown = formatTime(timeNow.getTime() - new Date(timeStarted).getTime());
 	}
 
 	let intervalId: ReturnType<typeof setTimeout>;
@@ -69,7 +68,7 @@
 	{#if started == false}
 		<p>Available: {available}</p>
 	{:else}
-		<p>Time Started: {timeStarted}</p>
+		<p>Time Started: {timeStarted.toLocaleDateString()}</p>
 		<p>{countdown}</p>
 	{/if}
 	<div class="absolute bottom-2 right-2 z-20 flex w-[100px] items-end justify-end">

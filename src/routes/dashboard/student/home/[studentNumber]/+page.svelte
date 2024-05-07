@@ -16,6 +16,7 @@
 
 	let activeUsageLogs: { [key: string]: UsageLogDBObj } =
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
+	console.log('load',activeUsageLogs);
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
@@ -52,6 +53,7 @@
 
 		availServiceResponse = await response.json();
 		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
+		console.log('avail',activeUsageLogs);
 	}
 
 	async function handleEndService(event: CustomEvent) {
@@ -79,19 +81,36 @@
         if (endServiceResponse.success) {
             delete activeUsageLogs[serviceType]
         }
+
+		console.log('end',activeUsageLogs);
+
 	}
 </script>
 
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 	{#if availableServices}
+		<!-- for each available service -->
 		{#each Object.entries(availableServices) as [service, count]}
-			<ServiceCard
-				on:availService={handleAvailService}
-				on:endService={handleEndService}
-				serviceName={service}
-				available={count}
-				src={`/service-card-images/${camelize(service)}.svg`}
-			/>
+			{#if service in activeUsageLogs}
+				<ServiceCard
+					on:availService={handleAvailService}
+					on:endService={handleEndService}
+					serviceName={service}
+					available={count}
+					started={true}
+					timeStarted={new Date(activeUsageLogs[service]?.datetime_start)}
+					src={`/service-card-images/${camelize(service)}.svg`}
+				/>
+			{:else}
+				<ServiceCard
+					on:availService={handleAvailService}
+					on:endService={handleEndService}
+					serviceName={service}
+					available={count}
+					timeStarted={new Date(0)}
+					src={`/service-card-images/${camelize(service)}.svg`}
+				/>
+			{/if}
 		{/each}
 	{:else}
 		<p>No available services</p>
