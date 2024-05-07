@@ -6,9 +6,10 @@
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount } from 'svelte';
 
 	export let data;
+	let table: SvelteComponent;
 
 	//for filters
 	$: {
@@ -77,6 +78,9 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -93,11 +97,14 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+		}
 	}
 
 	// TODO: Update the active field of the admin in the backend by inverting the current status
-	async function handleUpdateActive() {
-		console.log('here!');
+	async function handleUpdateActive(event: CustomEvent) {
+		table.updateEntryActiveUI();
 	}
 </script>
 
@@ -125,6 +132,7 @@
 		{headers}
 		info={admins}
 		primaryKey="adminID"
+		bind:this={table}
 		{hide}
 		{disableEdit}
 	/>
