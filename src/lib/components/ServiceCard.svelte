@@ -96,7 +96,11 @@
 
 <!-- Modal for end service confirmation -->
 <Modal bind:open={popupModalEnd} size="xs" autoclose>
-	<div class="text-center"></div>
+	<div class="text-center">
+		<p>
+            I confirm that I will be ending the returning/ending the service of {serviceName}.
+        </p>
+	</div>
 
 	<!-- Action buttons -->
 	<div class="flex justify-center gap-4">
