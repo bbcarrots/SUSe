@@ -90,7 +90,7 @@
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 	{#if availableServices}
 		<!-- for each available service -->
-		{#each Object.entries(availableServices) as [service, count]}
+		{#each Object.entries(availableServices).sort((a, b) => a[0].localeCompare(b[0])) as [service, count]}
 			{#if service in activeUsageLogs}
 				<ServiceCard
 					on:availService={handleAvailService}
