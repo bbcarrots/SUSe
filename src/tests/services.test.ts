@@ -206,7 +206,7 @@ describe('error: deleting service that is in use', async () => {
 
 		// returned ServiceResponse upon failed deletion from database
 		const expectedState: ServiceResponse = {
-			success: true,
+			success: false,
 			serviceRaws: null,
 			availableServices: null,
 			error: 'Warning: Service is in use.'

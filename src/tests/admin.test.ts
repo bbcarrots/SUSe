@@ -18,7 +18,6 @@ describe('insertAdminDB()', () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -41,7 +40,6 @@ describe('error: insert with admin number in use', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -63,7 +61,6 @@ describe('error: insert with admin number in use', async () => {
     const dupeAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber,
       rfid: newRFID + 1,
-      pw: 'password',
       nickname: newNickname,
       is_active: false
     };
@@ -80,7 +77,6 @@ describe('updateAdminDB()', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -102,7 +98,6 @@ describe('updateAdminDB()', async () => {
     const updatedAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber,
       rfid: newRFID,
-      pw: 'password',
       nickname: "Patrick",
       is_active: false
     };
@@ -120,7 +115,6 @@ describe('updateAdminDB()', async () => {
     const updatedAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber + 1,
       rfid: newRFID,
-      pw: 'password',
       nickname: "Patrick",
       is_active: false
     };
@@ -136,7 +130,6 @@ describe('deleteAdminDB()', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -173,18 +166,16 @@ describe('selectAdminDB()', async () => {
   const newAdminNumber = 202100004;
   const newRFID = 700004;
 
-  const adminInstanceOne: AdminDBObj = {
+  let adminInstanceOne: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: 'Spongebob',
     is_active: true
   };
 
-  const adminInstanceTwo: AdminDBObj = {
+  let adminInstanceTwo: AdminDBObj = {
     admin_id: newAdminNumber + 1,
     rfid: newRFID + 1,
-    pw: 'password',
     nickname: 'Squidward',
     is_active: true
   };
@@ -192,22 +183,35 @@ describe('selectAdminDB()', async () => {
   const adminInstanceThree: AdminDBObj = {
     admin_id: newAdminNumber + 2,
     rfid: newRFID + 2,
-    pw: 'password',
     nickname: 'Mr. Krabs',
     is_active: false
   };
-  const adminList: AdminDBObj[] = [adminInstanceOne, adminInstanceTwo, adminInstanceThree];
 
   beforeEach(async () => {
-    for(const admin in adminList){
-      await insertAdminDB(admin);
-    }
+    await insertAdminDB(adminInstanceOne);
+    await insertAdminDB(adminInstanceTwo);
+    await insertAdminDB(adminInstanceThree);
   });
 
   afterEach(async () => {
-    for(const admin in adminList){
-      await deleteAdminDB(admin.admin_id);
-    }
+    let adminInstanceOne: AdminDBObj = {
+      admin_id: newAdminNumber,
+      rfid: newRFID,
+      nickname: 'Spongebob',
+      is_active: false
+    };
+  
+    let adminInstanceTwo: AdminDBObj = {
+      admin_id: newAdminNumber + 1,
+      rfid: newRFID + 1,
+      nickname: 'Squidward',
+      is_active: false
+    };
+    await updateAdminDB(adminInstanceOne);
+    await updateAdminDB(adminInstanceTwo);
+    await deleteAdminDB(adminInstanceOne.admin_id);
+    await deleteAdminDB(adminInstanceTwo.admin_id);
+    await deleteAdminDB(adminInstanceThree.admin_id);
   });
 
   it('success: select single admin with adminID', async () => {
