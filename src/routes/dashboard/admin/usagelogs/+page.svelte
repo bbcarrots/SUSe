@@ -1,13 +1,16 @@
+<svelte:options accessors />
+
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
-    import { type UsageLogFilter } from '$lib/utils/types.js';
+	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
 
 	export let data;
+	let table: SvelteComponent;
 
 	//select everytime the usage log filter store is updated
 	$: {
@@ -35,13 +38,12 @@
 
 	let usageLogs: UsageLogProcessed[] = [];
 
-	onMount(async() => {
+	onMount(async () => {
 		let usageLogObjects = data.usageLogRaws;
 		mapULDatabaseObjects(usageLogObjects);
+	});
 
-	}) 
-
-	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null){
+	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
 		if (usageLogObjects !== null && usageLogObjects !== undefined) {
 			usageLogs = usageLogObjects.map((usageLog: any) => {
 				return {
@@ -54,13 +56,13 @@
 					dateTimeEnd: usageLog.datetime_end
 				};
 			});
-		} else{
+		} else {
 			usageLogs = [];
 		}
 	}
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount, type ComponentType } from 'svelte';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
@@ -70,13 +72,13 @@
 		/* Handles Select event from the filter confirmation by sending a
         POST request with payload requirement: filter. */
 
-        const payload: UsageLogFilter = {
-            usageLogID: filter.usageLogID,
-            studentNumber: filter.studentNumber,
-            serviceType: filter.serviceType,
-            minDate: filter.minDate ? new Date(filter.minDate).toISOString() : filter.minDate,
-            maxDate: filter.maxDate ? new Date(filter.maxDate).toISOString() : filter.maxDate
-        }
+		const payload: UsageLogFilter = {
+			usageLogID: filter.usageLogID,
+			studentNumber: filter.studentNumber,
+			serviceType: filter.serviceType,
+			minDate: filter.minDate ? new Date(filter.minDate).toISOString() : filter.minDate,
+			maxDate: filter.maxDate ? new Date(filter.maxDate).toISOString() : filter.maxDate
+		};
 
 		const response = await fetch('../../api/usagelog', {
 			method: 'POST',
@@ -103,6 +105,9 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -119,6 +124,9 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+		}
 	}
 </script>
 
@@ -158,6 +166,7 @@
 	<Table
 		on:delete={handleDelete}
 		on:update={handleUpdate}
+		bind:this={table}
 		{headers}
 		info={usageLogs}
 		primaryKey="usageLogID"
