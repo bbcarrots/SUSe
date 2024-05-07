@@ -16,8 +16,8 @@
 	/* activePage is binded to the value from Pagination.svelte */
 	let activePage = 1;
 	const rowsPerPage = 10;
-	const totalRows = info.length;
-	const totalPages = Math.ceil(totalRows / rowsPerPage);
+	let totalRows = info.length;
+	let totalPages = Math.ceil(totalRows / rowsPerPage);
 
 	/* sortKey and sortDirection are binded to values from TableHeader.svelte */
 	let sortKey: string;
@@ -55,6 +55,9 @@
 			});
 			sortedItems.set(items);
 		}
+
+		totalRows = $sortedItems.length;
+		totalPages = Math.ceil(totalRows / rowsPerPage);
 
 		calculatedRows.set(
 			$sortedItems.slice((activePage - 1) * rowsPerPage, activePage * rowsPerPage)
