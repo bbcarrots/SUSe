@@ -12,7 +12,6 @@ export type StudentDBObj = {
 	sn_id: number;
 	rfid: number;
 	username: string;
-	pw: string;
 	first_name: string;
 	middle_initial: string;
 	last_name: string;
@@ -39,7 +38,6 @@ export class Student {
 			sn_id: student.studentNumber,
 			rfid: 0,
 			username: 'email' in student ? student.email : '',
-			pw: '',
 			first_name: 'firstName' in student ? student.firstName : '',
 			middle_initial: 'middleInitial' in student ? student.middleInitial : '',
 			last_name: 'lastName' in student ? student.lastName : '',
