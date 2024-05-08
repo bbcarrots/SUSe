@@ -2,14 +2,12 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
-	import {
-		collegePrograms,
-		colleges,
-		studentNumberYear
-	} from '$lib/utils/filterOptions.js';
+	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+    import { createClient } from '@supabase/supabase-js';
 
 	export let data;
 
@@ -34,13 +32,32 @@
 	let disableEdit: string[] = ['email', 'studentNumber'];
 	let students: StudentProcessed[] = [];
 
-	onMount(()=>{
+	onMount(() => {
 		let studentObjects = data.studentRaws;
 		mapStudentDatabaseObjects(studentObjects);
 
-	})
+        // const supabase = createClient(
+        //     'https://yfhwfzwacdlqmyunladz.supabase.co',
+        //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+        // );
 
-	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null){
+		// const channel = supabase
+		// 	.channel('student-db-changes')
+		// 	.on(
+		// 		'postgres_changes',
+		// 		{
+		// 			event: 'UPDATE',
+		// 			schema: 'public',
+        //             table: 'student'
+		// 		},
+		// 		(payload) => console.log(payload)
+		// 	)
+		// 	.subscribe();
+
+        // supabase.removeChannel(channel)
+	});
+
+	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
 			students = studentObjects.map((student) => {
 				return {
@@ -57,13 +74,12 @@
 				};
 			});
 		} else {
-			students = []
+			students = [];
 		}
 	}
 
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
-	import { onMount } from 'svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -146,8 +162,10 @@
 		<Multiselect field={'Colleges'} options={colleges} bind:value={$StudentFilterStore.college} />
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Active</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Active
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.isActive}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -158,8 +176,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Enrolled</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Enrolled
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.isEnrolled}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -170,8 +190,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Min Student Number</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Min Student Number
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.minStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -183,8 +205,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Max Student Number</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Max Student Number
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.maxStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
