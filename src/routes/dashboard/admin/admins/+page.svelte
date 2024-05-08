@@ -6,7 +6,7 @@
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
-	import { SvelteComponent, onMount } from 'svelte';
+	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 
 	export let data;
 	let table: SvelteComponent;
@@ -22,10 +22,39 @@
 	let disableEdit: string[] = ['adminID'];
 	let admins: AdminProcessed[] = [];
 
+    // ----------------------------------------------------------------------------------
+	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
 	onMount(() => {
 		let adminObjects = data.adminRaws;
 		mapAdminDatabaseObjects(adminObjects);
+
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'admin'
+				},
+				() => {
+					handleSelect($AdminFilterStore);
+				}
+			)
+			.subscribe();
 	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
 
 	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
 		if (adminObjects !== null && adminObjects !== undefined) {
