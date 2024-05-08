@@ -6,6 +6,7 @@
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
+	let toasts: SvelteComponent;
 
 	export let data;
 	let table: SvelteComponent;
@@ -89,6 +90,7 @@
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -128,6 +130,9 @@
 		approveResponse = await response.json();
 		if (approveResponse.success == true) {
 			table.approveEntryUI();
+			toasts.addToast({ message: "Successfully approved student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to approve student entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -146,6 +151,9 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete student entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -165,6 +173,9 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update student entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 </script>
@@ -249,3 +260,4 @@
 		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>
