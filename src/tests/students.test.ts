@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // students
-import { type StudentDBObj, type StudentFilter, type StudentResponse } from '$lib/classes/Student';
+import { type StudentDBObj, type StudentResponse } from '$lib/classes/Student';
+import { type StudentFilter } from '$lib/utils/types';
 import { insertStudentDB, deleteStudentDB, updateStudentDB,	selectStudentDB } from '$lib/server/StudentSB';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
