@@ -32,8 +32,14 @@
                 if (toast.timeout <= 0) {
                     toast.open = false;
                     clearInterval(timerId);
+
+                    // Remove the toast from the array after some time
+                    setTimeout(() => {
+                        toasts = toasts.filter(t => t !== toast); 
+                    }, 2000); 
                 }
             }, 1000);
+
         }
     }
 
