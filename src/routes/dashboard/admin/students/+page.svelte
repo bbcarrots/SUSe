@@ -2,16 +2,13 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
-	import {
-		collegePrograms,
-		colleges,
-		studentNumberYear
-	} from '$lib/utils/filterOptions.js';
+	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
 
 	export let data;
+	let table: SvelteComponent;
 
 	//for filters
 	$: {
@@ -34,13 +31,12 @@
 	let disableEdit: string[] = ['email', 'studentNumber'];
 	let students: StudentProcessed[] = [];
 
-	onMount(()=>{
+	onMount(() => {
 		let studentObjects = data.studentRaws;
 		mapStudentDatabaseObjects(studentObjects);
+	});
 
-	})
-
-	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null){
+	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
 			students = studentObjects.map((student) => {
 				return {
@@ -57,13 +53,13 @@
 				};
 			});
 		} else {
-			students = []
+			students = [];
 		}
 	}
 
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount } from 'svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -101,6 +97,9 @@
 		});
 
 		approveResponse = await response.json();
+		if (approveResponse.success == true) {
+			table.approveEntryUI();
+		}
 	}
 
 	async function handleDelete(event: CustomEvent) {
@@ -116,6 +115,9 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -132,6 +134,9 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+		}
 	}
 </script>
 
@@ -146,8 +151,10 @@
 		<Multiselect field={'Colleges'} options={colleges} bind:value={$StudentFilterStore.college} />
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Active</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Active
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.isActive}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -158,8 +165,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Is Enrolled</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Enrolled
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.isEnrolled}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -170,8 +179,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Min Student Number</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Min Student Number
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.minStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -183,8 +194,10 @@
 		</div>
 
 		<div class="relative">
-			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">Max Student Number</h6>
-			<select 
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Max Student Number
+			</h6>
+			<select
 				bind:value={$StudentFilterStore.maxStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -202,6 +215,7 @@
 		{headers}
 		info={students}
 		primaryKey="studentNumber"
+		bind:this={table}
 		{hide}
 		{disableEdit}
 	/>
