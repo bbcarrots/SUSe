@@ -8,6 +8,8 @@
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
+	import Toasts from '$lib/components/Toasts.svelte';
+	let toasts: SvelteComponent;
 
 	export let data;
 	let table: SvelteComponent;
@@ -136,6 +138,9 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted usage log entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete usage log entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -155,6 +160,9 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated usage log entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update usage log entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 </script>
@@ -203,3 +211,4 @@
 		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>
