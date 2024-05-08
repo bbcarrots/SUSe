@@ -48,6 +48,7 @@
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
 	let selectResponse: AdminResponse;
+	let updateActiveResponse: AdminResponse;
 
 	async function handleSelect(filter: AdminFilter) {
 		/* Handles Select event from the filter confirmation by sending a
@@ -102,9 +103,24 @@
 		}
 	}
 
-	// TODO: Update the active field of the admin in the backend by inverting the current status
 	async function handleUpdateActive(event: CustomEvent) {
-		table.updateEntryActiveUI();
+		/* Handles Update Active event from TableRow by sending a PATCH request with 
+        payload requirement: adminID, currentStatus*/
+
+		const payload = { adminID: event.detail.adminID, isActive: !event.detail.currentStatus };
+
+		const response = await fetch('../../api/admin', {
+			method: 'PATCH',
+			body: JSON.stringify(payload),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		updateActiveResponse = await response.json();
+		if (updateActiveResponse.success) {
+			table.updateEntryActiveUI();
+		}
 	}
 </script>
 
