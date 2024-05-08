@@ -6,15 +6,15 @@
 	import { type ServiceFilter } from '$lib/utils/types.js';
 	import { ServiceFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { SvelteComponent, onMount } from 'svelte';
 
 	export let data;
+	let table: SvelteComponent;
 
 	//for filters
 	$: {
 		if (browser) handleSelect($ServiceFilterStore);
 	}
-
 
 	//for table
 	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
@@ -22,13 +22,12 @@
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 	let services: ServiceProcessed[] = [];
 
-	onMount(()=>{
+	onMount(() => {
 		let serviceObjects = data.serviceRaws;
 		mapServiceDatabaseObjects(serviceObjects);
+	});
 
-	})
-
-	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null){
+	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
 		if (serviceObjects !== null && serviceObjects !== undefined) {
 			services = serviceObjects.map((service) => {
 				return {
@@ -40,7 +39,7 @@
 				};
 			});
 		} else {
-			services=[];
+			services = [];
 		}
 	}
 
@@ -80,6 +79,9 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -96,6 +98,9 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+		}
 	}
 </script>
 
@@ -109,7 +114,7 @@
 		/>
 		<div class="relative">
 			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">In Use</h6>
-			<select 
+			<select
 				bind:value={$ServiceFilterStore.inUse}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
@@ -125,6 +130,7 @@
 		{headers}
 		info={services}
 		primaryKey="serviceID"
+		bind:this={table}
 		{hide}
 		{disableEdit}
 	/>
