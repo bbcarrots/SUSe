@@ -59,6 +59,3 @@
         {/if}
     {/each}
 </div>
-
-<button on:click={() => addToast({ message: "This is a success toast", timeout: 500, type: 'success', open: true })}>Add Success Toast</button>
-<button on:click={() => addToast({ message: "This is an error toast", timeout: 10, type: 'error', open: true })}>Add Error Toast</button>
