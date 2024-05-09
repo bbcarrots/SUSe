@@ -17,8 +17,62 @@
 	let activeUsageLogs: { [key: string]: UsageLogDBObj } =
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
 
+    // ----------------------------------------------------------------------------------
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { onMount, onDestroy } from 'svelte';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
+	onMount(() => {
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'service',
+                    filter: 'in_use=eq.true'
+				},
+				(payload) => {
+                    for (const serviceType of serviceTypes) {
+                        if (serviceType.value == payload.new.service_type_id) {
+                             availableServices[serviceType.name] -= 1;
+                        }
+                    }
+				}
+			)
+            .on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'service',
+                    filter: 'in_use=eq.false'
+				},
+				(payload) => {
+                    for (const serviceType of serviceTypes) {
+                        if (serviceType.value == payload.new.service_type_id) {
+                             availableServices[serviceType.name] += 1;
+                        }
+                    }
+				}
+			)
+			.subscribe();
+	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
+
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
+	import { serviceTypes } from '$lib/utils/filterOptions.js';
 
 	type StudentServicesResponse = {
 		success: boolean;

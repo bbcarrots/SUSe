@@ -33,6 +33,7 @@ export async function POST({ request }) {
 
 	const adminSelectResponse = await Admin.selectAdmins({
 		adminID: 0,
+        rfid: 0,
 		nickname: '',
 		isActive: true
 	});
