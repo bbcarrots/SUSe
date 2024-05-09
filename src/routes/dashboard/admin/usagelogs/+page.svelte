@@ -196,6 +196,7 @@
 				class="datetime block h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
 				bind:value={$UsageLogFilterStore.maxDate}
+				min={$UsageLogFilterStore.minDate}
 				type="datetime-local"
 			/>
 		</div>
