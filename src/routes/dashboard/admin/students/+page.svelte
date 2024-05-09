@@ -33,7 +33,7 @@
 	let students: StudentProcessed[] = [];
 
 	// ----------------------------------------------------------------------------------
-	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
     let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
