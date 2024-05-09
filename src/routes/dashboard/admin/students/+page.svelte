@@ -31,10 +31,39 @@
 	let disableEdit: string[] = ['email', 'studentNumber'];
 	let students: StudentProcessed[] = [];
 
+	// ----------------------------------------------------------------------------------
+	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
 	onMount(() => {
 		let studentObjects = data.studentRaws;
 		mapStudentDatabaseObjects(studentObjects);
+
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'student'
+				},
+				() => { // has payload arg if you want to print
+					handleSelect($StudentFilterStore);
+				}
+			)
+			.subscribe();
 	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
 
 	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
@@ -59,7 +88,7 @@
 
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
-	import { SvelteComponent, onMount } from 'svelte';
+	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;

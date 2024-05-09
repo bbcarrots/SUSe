@@ -6,7 +6,7 @@
 	import { type ServiceFilter } from '$lib/utils/types.js';
 	import { ServiceFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
-	import { SvelteComponent, onMount } from 'svelte';
+	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 
 	export let data;
 	let table: SvelteComponent;
@@ -22,10 +22,39 @@
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 	let services: ServiceProcessed[] = [];
 
+    // ----------------------------------------------------------------------------------
+	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
 	onMount(() => {
 		let serviceObjects = data.serviceRaws;
 		mapServiceDatabaseObjects(serviceObjects);
+
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'service'
+				},
+				() => {
+					handleSelect($ServiceFilterStore);
+				}
+			)
+			.subscribe();
 	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
 
 	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
 		if (serviceObjects !== null && serviceObjects !== undefined) {

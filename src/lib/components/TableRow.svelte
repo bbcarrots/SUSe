@@ -108,9 +108,11 @@
 		dispatch('approve', payload);
 	}
 
-	function updateActive(primaryKeyIsActive: string) {
+	function updateActive(primaryKeyIsActive: string, currentStatus: boolean) {
+        /* Forwards the adminID and isActive status to Table.svelte. */
 		const payload: any = {};
 		payload[primaryKey] = primaryKeyIsActive;
+        payload['currentStatus'] = currentStatus;
 
 		dispatch('updateActive', payload);
 	}
@@ -191,7 +193,7 @@
 				{#if info.isActive == false}
 					<!-- set active button -->
 					<button
-						on:click={() => updateActive(getKey(info, primaryKey))}
+						on:click={() => updateActive(getKey(info, primaryKey), getKey(info, 'isActive'))}
 						class="font-medium text-green-800"
 					>
 						<Icon src={Star} outline size="20" />
@@ -199,7 +201,7 @@
 				{:else}
 					<!-- set inactive button -->
 					<button
-						on:click={() => updateActive(getKey(info, primaryKey))}
+						on:click={() => updateActive(getKey(info, primaryKey), getKey(info, 'isActive'))}
 						class="font-medium text-green-800"
 					>
 						<Icon src={Star} micro size="20" />
