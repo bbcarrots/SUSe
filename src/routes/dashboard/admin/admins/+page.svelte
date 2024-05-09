@@ -7,6 +7,8 @@
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
+	let toasts: SvelteComponent;
 
 	export let data;
 	let table: SvelteComponent;
@@ -23,7 +25,7 @@
 	let admins: AdminProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
     let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
@@ -110,6 +112,9 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted admin entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete admin entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -129,6 +134,9 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated admin entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update admin entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -149,6 +157,9 @@
 		updateActiveResponse = await response.json();
 		if (updateActiveResponse.success) {
 			table.updateEntryActiveUI();
+			toasts.addToast({ message: "Successfully updated active status of admin entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update active status of admin entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 </script>
@@ -182,3 +193,4 @@
 		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>

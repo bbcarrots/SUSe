@@ -18,8 +18,8 @@ export type StudentDBObj = {
 	college: string;
 	program: string;
 	phone_number: string;
-	is_enrolled: boolean;
-    is_active: boolean;
+	is_enrolled: boolean | null;
+    is_active: boolean | null;
 };
 
 // return value of student DB functions
@@ -44,8 +44,8 @@ export class Student {
 			college: 'college' in student ? student.college : '',
 			program: 'program' in student ? student.program : '',
 			phone_number: 'phoneNumber' in student ? student.phoneNumber : '',
-			is_enrolled: 'isEnrolled' in student ? student.isEnrolled : false,
-            is_active: 'isActive' in student ? student.isActive : false
+			is_enrolled: 'isEnrolled' in student ? student.isEnrolled : null,
+            is_active: 'isActive' in student ? student.isActive : null
 		};
 	}
 
