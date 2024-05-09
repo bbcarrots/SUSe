@@ -104,6 +104,17 @@
 				{/if}
 			{/each}
 		</select>
+	{:else if field == 'isActive' || field == 'inUse'}
+		<select
+			on:input
+			bind:value
+			name={field}
+			id={field}
+			class="block w-full rounded-[5px] border border-gray-300 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+		>
+			<option value={true} selected={value == 'true'}>true</option>
+			<option value={false} selected={value == 'false'}>false</option>
+		</select>
 	{:else}
 		<input
 			class:error={false}
