@@ -4,7 +4,7 @@ import {
 	selectUsageLogDB,
 	updateUsageLogDB
 } from '$lib/server/UsageLogSB';
-import type { UsageLogProcessed } from '$lib/utils/types';
+import type { UsageLogProcessed, UsageLogFilter } from '$lib/utils/types';
 
 // parameter type for insert and update usage log DB functions
 export type UsageLogDBObj = {
@@ -14,7 +14,7 @@ export type UsageLogDBObj = {
 	service_id: number;
 	service_type: string;
 	datetime_start: string;
-	datetime_end: string;
+	datetime_end: string | null;
 };
 
 // return value of usage log DB functions
@@ -22,14 +22,6 @@ export type UsageLogResponse = {
 	success: boolean;
 	usageLogRaws: UsageLogDBObj[] | null;
 	error: string | null;
-};
-
-// filters for selecting usage log records
-export type UsageLogFilter = {
-	usageLogID: number;
-	studentNumber: number;
-	minDate: string;
-	maxDate: string;
 };
 
 export class UsageLog {
@@ -44,7 +36,7 @@ export class UsageLog {
 			service_id: 'serviceID' in log ? log.serviceID : 0,
 			service_type: 'serviceType' in log ? log.serviceType : '',
 			datetime_start: 'dateTimeStart' in log ? new Date(log.dateTimeStart).toISOString() : '',
-			datetime_end: 'dateTimeEnd' in log ? new Date(log.dateTimeEnd).toISOString() : ''
+			datetime_end: 'dateTimeEnd' in log && log.dateTimeEnd != null ? new Date(log.dateTimeEnd).toISOString() : ''
 		};
 	}
 
@@ -52,8 +44,9 @@ export class UsageLog {
 		filter: UsageLogFilter = {
 			usageLogID: 0,
 			studentNumber: 0,
+            serviceType: [],
 			minDate: new Date(2000).toISOString(), // need to convert to ISOString to filter DB
-			maxDate: new Date().toISOString() // gets date today
+			maxDate: "" // gets date today
 		}
 	): Promise<UsageLogResponse> {
 		/* Selects all usage logs in database using the default or given filter. */

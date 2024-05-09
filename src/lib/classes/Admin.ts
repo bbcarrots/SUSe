@@ -1,11 +1,11 @@
 import { insertAdminDB, selectAdminDB, updateAdminDB, deleteAdminDB } from '$lib/server/AdminSB';
 import type { AdminProcessed } from '$lib/utils/types';
+import type { AdminFilter } from '$lib/utils/types';
 
 // parameter type for insert and update admin DB functions
 export type AdminDBObj = {
 	admin_id: number;
 	rfid: number;
-	pw: string;
 	nickname: string;
 	is_active: boolean;
 };
@@ -17,13 +17,6 @@ export type AdminResponse = {
 	error: string | null;
 };
 
-// filters for selecting admin records
-export type AdminFilter = {
-	adminID: number;
-	nickname: string;
-	isActive: boolean;
-};
-
 export class Admin {
 	/* Contains all admin methods for conversion and DB communication. */
 
@@ -32,7 +25,6 @@ export class Admin {
 		return {
 			admin_id: admin.adminID,
 			rfid: 0,
-			pw: '',
 			nickname: 'nickname' in admin ? admin.nickname : '',
 			is_active: admin.isActive
 		};
@@ -41,8 +33,9 @@ export class Admin {
 	public static async selectAdmins(
 		filter: AdminFilter = {
 			adminID: 0,
+            rfid: 0,
 			nickname: '',
-			isActive: true
+			isActive: null
 		}
 	): Promise<AdminResponse> {
 		/* Selects all admin records in database using the default or given filter. */

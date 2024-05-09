@@ -11,9 +11,9 @@
 	}
 
 	let patterns: Patterns = {
-		firstName: "[A-Za-zÑñ\\-\\' ]+",
+		firstName: "[ A-Za-zÑñ\\-']+",
 		middleInitial: '[A-Z]{1,2}',
-		lastName: "[A-Za-zÑñ\\-\\' ]+",
+		lastName: "[ A-Za-zÑñ\\-']+",
 		email: '[A-Za-z0-9]+',
 		studentNumber: '[0-9]{9}',
 		phoneNumber: '[0-9]{11}'
@@ -80,21 +80,40 @@
 	{:else if field == 'program'}
 		<select
 			on:input
+			bind:value
 			name={field}
 			id={field}
 			class="block w-full rounded-[5px] border border-gray-300 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
 		>
 			{#each $CollegePrograms as program}
 				{#if program.college == college}
-					{#each program.programs as department}
-						{#if department == value}
-							<option value={department} selected>{department}</option>
-						{:else}
+					{#if program.programs.includes(value)}
+						{#each program.programs as department, index}
+							{#if department == value}
+								<option value={department} selected>{department} </option>
+							{:else}
+								<option value={department}>{department}</option>
+							{/if}
+						{/each}
+					{:else}
+						<option value={''} selected></option>
+						{#each program.programs as department, index}
 							<option value={department}>{department}</option>
-						{/if}
-					{/each}
+						{/each}
+					{/if}
 				{/if}
 			{/each}
+		</select>
+	{:else if field == 'isActive' || field == 'inUse'}
+		<select
+			on:input
+			bind:value
+			name={field}
+			id={field}
+			class="block w-full rounded-[5px] border border-gray-300 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+		>
+			<option value={true} selected={value == 'true'}>true</option>
+			<option value={false} selected={value == 'false'}>false</option>
 		</select>
 	{:else}
 		<input

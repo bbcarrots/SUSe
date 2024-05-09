@@ -3,14 +3,20 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
 	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
+	import { type StudentFilter } from '$lib/utils/types.js';
+	import { StudentFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
+	let toasts: SvelteComponent;
 
-	// for filters
-	let collegeValue: string[] = [];
-	let collegeProgramValue: string[] = [];
-	let studentNumberYearValue: string[] = [];
+	export let data;
+	let table: SvelteComponent;
+
+	//for filters
+	$: {
+		if (browser) handleSelect($StudentFilterStore);
+	}
 
 	//for table
-	export let data;
 	let headers: string[] = [
 		'Student Number',
 		'First Name',
@@ -22,33 +28,90 @@
 		'Program',
 		'Is Enrolled'
 	];
-	let hide: string[] = ['isEnrolled'];
+	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
-	let studentObjects = data.studentRaws;
 	let students: StudentProcessed[] = [];
 
-	if (studentObjects !== null && studentObjects !== undefined) {
-		students = studentObjects.map((student) => {
-			return {
-				studentNumber: student.sn_id,
-				firstName: student.first_name,
-				middleInitial: student.middle_initial,
-				lastName: student.last_name,
-				email: student.username,
-				phoneNumber: student.phone_number,
-				college: student.college,
-				program: student.program,
-				isEnrolled: student.is_enrolled
-			};
-		});
+	// ----------------------------------------------------------------------------------
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
+	onMount(() => {
+		let studentObjects = data.studentRaws;
+		mapStudentDatabaseObjects(studentObjects);
+
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'student'
+				},
+				() => { // has payload arg if you want to print
+					handleSelect($StudentFilterStore);
+				}
+			)
+			.subscribe();
+	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
+
+	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
+		if (studentObjects !== null && studentObjects !== undefined) {
+			students = studentObjects.map((student) => {
+				return {
+					studentNumber: student.sn_id,
+					firstName: student.first_name,
+					middleInitial: student.middle_initial,
+					lastName: student.last_name,
+					email: student.username,
+					phoneNumber: student.phone_number,
+					college: student.college,
+					program: student.program,
+					isEnrolled: student.is_enrolled,
+					isActive: student.is_active
+				};
+			});
+		} else {
+			students = [];
+		}
 	}
 
 	// ----------------------------------------------------------------------------------
-	import type { StudentResponse } from '$lib/classes/Student.js';
+	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
+	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
 	let updateResponse: StudentResponse;
+	let selectResponse: StudentResponse;
+
+	async function handleSelect(filter: StudentFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/student', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+		mapStudentDatabaseObjects(selectResponse.studentRaws);
+	}
 
 	async function handleApprove(event: CustomEvent) {
 		/* Handles Approve event from TableRow by sending a PATCH request 
@@ -65,6 +128,12 @@
 		});
 
 		approveResponse = await response.json();
+		if (approveResponse.success == true) {
+			table.approveEntryUI();
+			toasts.addToast({ message: "Successfully approved student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to approve student entry", timeout: 3, type: 'error', open: true })
+		}
 	}
 
 	async function handleDelete(event: CustomEvent) {
@@ -80,6 +149,12 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete student entry", timeout: 3, type: 'error', open: true })
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -96,23 +171,82 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated student entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update student entry", timeout: 3, type: 'error', open: true })
+		}
 	}
 </script>
 
 <div class="grid gap-2">
 	<h3 class="pt-4">Students</h3>
-	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+	<div class="my-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 		<Multiselect
 			field={'College Programs'}
 			options={collegePrograms}
-			bind:value={collegeProgramValue}
+			bind:value={$StudentFilterStore.program}
 		/>
-		<Multiselect field={'Colleges'} options={colleges} bind:value={collegeValue} />
-		<Multiselect
-			field={'Student Number Year'}
-			options={studentNumberYear}
-			bind:value={studentNumberYearValue}
-		/>
+		<Multiselect field={'Colleges'} options={colleges} bind:value={$StudentFilterStore.college} />
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Active
+			</h6>
+			<select
+				bind:value={$StudentFilterStore.isActive}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not Active</option>
+				<option value={true}>Is Active</option>
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Is Enrolled
+			</h6>
+			<select
+				bind:value={$StudentFilterStore.isEnrolled}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not Enrolled</option>
+				<option value={true}>Is Enrolled</option>
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Min Student Number
+			</h6>
+			<select
+				bind:value={$StudentFilterStore.minStudentNumber}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}></option>
+				{#each studentNumberYear as year}
+					<option value={year.value}>{year.name}</option>
+				{/each}
+			</select>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Max Student Number
+			</h6>
+			<select
+				bind:value={$StudentFilterStore.maxStudentNumber}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}></option>
+				{#each studentNumberYear as year}
+					<option value={year.value} disabled={year.value < $StudentFilterStore.minStudentNumber}>{year.name}</option>
+				{/each}
+			</select>
+		</div>
 	</div>
 	<Table
 		on:approve={handleApprove}
@@ -121,7 +255,9 @@
 		{headers}
 		info={students}
 		primaryKey="studentNumber"
+		bind:this={table}
 		{hide}
 		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>

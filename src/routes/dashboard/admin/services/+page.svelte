@@ -3,35 +3,99 @@
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { serviceTypes, serviceStatus } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
+	import { type ServiceFilter } from '$lib/utils/types.js';
+	import { ServiceFilterStore } from '$lib/stores/Filters.js';
+	import { browser } from '$app/environment';
+	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
+	let toasts: SvelteComponent;
 
 	export let data;
+	let table: SvelteComponent;
+
 	//for filters
-	let serviceTypesValue: string[] = [];
-	let serviceStatusValue: string[] = [];
+	$: {
+		if (browser) handleSelect($ServiceFilterStore);
+	}
 
 	//for table
-	let headers: string[] = ['Service ID', 'Service Type'];
-	let hide: string[] = [];
+	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
-	let serviceObjects = data.serviceRaws;
 	let services: ServiceProcessed[] = [];
 
-	// TO DO: Implement ServiceDBObj map to ServiceProcessed
-	if (serviceObjects !== null && serviceObjects !== undefined) {
-		services = serviceObjects.map((service) => {
-			return {
-				serviceID: service.service_id,
-				serviceName: service.service_name,
-				serviceType: service.service_type,
-				inUse: service.in_use
-			};
-		});
+    // ----------------------------------------------------------------------------------
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+    let supabase: SupabaseClient;
+    let channel: RealtimeChannel;
+
+	onMount(() => {
+		let serviceObjects = data.serviceRaws;
+		mapServiceDatabaseObjects(serviceObjects);
+
+		supabase = createClient(
+			'https://yfhwfzwacdlqmyunladz.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		);
+
+		channel = supabase
+			.channel('student-db-changes')
+			.on(
+				'postgres_changes',
+				{
+					event: '*',
+					schema: 'public',
+					table: 'service'
+				},
+				() => {
+					handleSelect($ServiceFilterStore);
+				}
+			)
+			.subscribe();
+	});
+
+    onDestroy(() => {
+		supabase.removeChannel(channel)
+    })
+
+	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
+		if (serviceObjects !== null && serviceObjects !== undefined) {
+			services = serviceObjects.map((service) => {
+				return {
+					serviceID: service.service_id,
+					serviceTypeID: service.service_type_id,
+					serviceName: service.service_name,
+					serviceType: service.service_type,
+					inUse: service.in_use
+				};
+			});
+		} else {
+			services = [];
+		}
 	}
+
 	// ----------------------------------------------------------------------------------
-	import type { ServiceResponse } from '$lib/classes/Service.js';
+	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
 
 	let deleteResponse: ServiceResponse;
 	let updateResponse: ServiceResponse;
+	let selectResponse: ServiceResponse;
+
+	async function handleSelect(filter: ServiceFilter) {
+		/* Handles Select event from the filter confirmation by sending a
+        POST request with payload requirement: filter. */
+
+		const response = await fetch('../../api/service', {
+			method: 'POST',
+			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
+		});
+
+		selectResponse = await response.json();
+		mapServiceDatabaseObjects(selectResponse.serviceRaws);
+	}
 
 	async function handleDelete(event: CustomEvent) {
 		/* Handles Delete event from TableRow by sending a DELETE request 
@@ -46,6 +110,12 @@
 		});
 
 		deleteResponse = await response.json();
+		if (deleteResponse.success == true) {
+			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted service entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete service entry", timeout: 3, type: 'error', open: true })
+		}
 	}
 
 	async function handleUpdate(event: CustomEvent) {
@@ -62,21 +132,44 @@
 		});
 
 		updateResponse = await response.json();
+		if (updateResponse.success == true) {
+			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated service entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update service entry", timeout: 3, type: 'error', open: true })
+		}
 	}
 </script>
 
 <div class="grid gap-2">
 	<h3 class="pt-4">Services</h3>
-	<div class="my-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-		<Multiselect field={'Service Type'} options={serviceTypes} bind:value={serviceTypesValue} />
-		<Multiselect field={'Service Status'} options={serviceStatus} bind:value={serviceStatusValue} />
+	<div class="my-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+		<Multiselect
+			field={'Service Type'}
+			options={serviceTypes}
+			bind:value={$ServiceFilterStore.serviceType}
+		/>
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">In Use</h6>
+			<select
+				bind:value={$ServiceFilterStore.inUse}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={null}>All</option>
+				<option value={false}>Not In Use</option>
+				<option value={true}>In Use</option>
+			</select>
+		</div>
 	</div>
-	<Table 
+	<Table
 		on:delete={handleDelete}
 		on:update={handleUpdate}
-		{headers} 
-		info={services} 
-		primaryKey="serviceID" 
-		{hide} {disableEdit} 
+		{headers}
+		info={services}
+		primaryKey="serviceID"
+		bind:this={table}
+		{hide}
+		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>

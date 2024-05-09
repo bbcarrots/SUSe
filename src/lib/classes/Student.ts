@@ -5,6 +5,7 @@ import {
 	deleteStudentDB
 } from '$lib/server/StudentSB';
 import type { StudentProcessed } from '$lib/utils/types';
+import type { StudentFilter } from '$lib/utils/types';
 
 // parameter type for insert and update student DB functions
 export type StudentDBObj = {
@@ -18,7 +19,8 @@ export type StudentDBObj = {
 	college: string;
 	program: string;
 	phone_number: string;
-	is_enrolled: boolean;
+	is_enrolled: boolean | null;
+    is_active: boolean | null;
 };
 
 // return value of student DB functions
@@ -26,14 +28,6 @@ export type StudentResponse = {
 	success: boolean;
 	studentRaws: StudentDBObj[] | null;
 	error: string | null;
-};
-
-// filters for selecting student records
-export type StudentFilter = {
-	minStudentNumber: number;
-	maxStudentNumber: number;
-	username: string;
-    rfid: number;
 };
 
 export class Student {
@@ -52,7 +46,8 @@ export class Student {
 			college: 'college' in student ? student.college : '',
 			program: 'program' in student ? student.program : '',
 			phone_number: 'phoneNumber' in student ? student.phoneNumber : '',
-			is_enrolled: 'isEnrolled' in student ? student.isEnrolled : false
+			is_enrolled: 'isEnrolled' in student ? student.isEnrolled : null,
+            is_active: 'isActive' in student ? student.isActive : null
 		};
 	}
 
@@ -61,7 +56,11 @@ export class Student {
 			minStudentNumber: 2000,
 			maxStudentNumber: new Date().getFullYear(), // gets current year
 			username: '',
-            rfid: 0
+            rfid: 0,
+            college: [],
+            program: [],
+            isEnrolled: null,
+            isActive: null,
 		}
 	): Promise<StudentResponse> {
 		/* Selects all student records in database using the default or given filter. */

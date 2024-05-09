@@ -5,10 +5,12 @@ import {
 	deleteServiceDB
 } from '$lib/server/ServiceSB';
 import type { ServiceProcessed } from '$lib/utils/types';
+import type { ServiceFilter } from '$lib/utils/types';
 
 // parameter type for insert and update service DB functions
 export type ServiceDBObj = {
 	service_id: number;
+    service_type_id: number,
 	service_name: string;
 	service_type: string;
 	in_use: boolean;
@@ -22,15 +24,6 @@ export type ServiceResponse = {
 	error: string | null;
 };
 
-// filters for selecting service records
-export type ServiceFilter = {
-	serviceID: number;
-	serviceName: string;
-	serviceType: string;
-	inUse: boolean;
-	isAdmin: boolean;
-};
-
 export class Service {
 	/* Contains all service methods for conversion and DB communication. */
 
@@ -38,6 +31,7 @@ export class Service {
 		/* Converts a ServiceProcessed to a ServiceDBObj. */
 		return {
 			service_id: service.serviceID,
+            service_type_id: service.serviceTypeID,
 			service_name: service.serviceName,
 			service_type: service.serviceType,
 			in_use: service.inUse
@@ -48,8 +42,8 @@ export class Service {
 		filter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: '',
-			serviceType: '',
-			inUse: false,
+			serviceType: [],
+			inUse: null,
 			isAdmin: true
 		}
 	): Promise<ServiceResponse> {

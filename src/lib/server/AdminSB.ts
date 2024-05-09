@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 // import { env } from '$env/dynamic/public';
-import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminDBObj, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminFilter } from '$lib/utils/types';
 
 // creates the connection to SUSe supabase
 export const supabase = createClient(
@@ -18,15 +19,23 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 	/* Selects the admin record/s from the database using a filter.
     Filter contains option for admin ID, nickname, and is active. */
 
-	let query = supabase.from('admin').select('*').eq('is_active', filter.isActive);
+	let query = supabase.from('admin').select('*');
 
 	if (filter.adminID) {
 		query = query.eq('admin_id', filter.adminID);
 	}
 
+    if (filter.rfid) {
+		query = query.eq('rfid', filter.rfid);
+	}
+
 	if (filter.nickname) {
 		query = query.like('admin_name', '%' + filter.nickname + '%');
 	}
+
+    if (filter.isActive != null) {
+        query = query.eq('is_active', filter.isActive);
+    }
 
 	const { data, error } = await query;
 
@@ -65,6 +74,14 @@ async function checkAdminExistsDB(filter: AdminFilter): Promise<AdminResponse> {
 	const adminDB = await selectAdminDB(filter);
 
 	if (adminDB.success && adminDB.adminRaws?.length == 1) {
+        if (adminDB.adminRaws[0].is_active) {
+			return {
+				success: true,
+				adminRaws: null,
+				error: 'Warning: Admin is active.'
+			};
+		}
+
 		return success;
 	}
 
@@ -80,8 +97,9 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
     NOTE: Cannot update the admin id. Need to delete and insert again. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: admin.admin_id,
+        rfid: 0,
 		nickname: '',
-		isActive: false // Admin should be inactive to be updated
+		isActive: null // Admin should be inactive to be updated
 	});
 
 	if (!adminCheck.success) {
@@ -91,8 +109,8 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 	const updateObj: { [key: string]: string | boolean } = {};
 
 	for (const [key, value] of Object.entries(admin)) {
-		// updates admin name only
-		if (value && typeof value == 'string') {
+		// updates admin name and is active
+		if ((value && typeof value == 'string') || typeof value == 'boolean') {
 			updateObj[key] = value;
 		}
 	}
@@ -114,13 +132,20 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
 	/* Deletes an existing admin record. */
 	const adminCheck = await checkAdminExistsDB({
 		adminID: adminID,
+        rfid: 0,
 		nickname: '',
-		isActive: false
+		isActive: null
 	});
 
 	if (!adminCheck.success) {
 		return adminCheck;
-	}
+	} else if (adminCheck.error == 'Warning: Admin is active.') {
+        return {
+            success: false,
+            adminRaws: null,
+            error: adminCheck.error
+        };
+    }
 
 	const { error } = await supabase.from('admin').delete().eq('admin_id', adminID);
 

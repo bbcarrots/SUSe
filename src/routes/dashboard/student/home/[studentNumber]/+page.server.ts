@@ -10,15 +10,16 @@ export async function load({ params }) {
 	const usageLogResponse = await UsageLog.selectUsageLogs({
 		usageLogID: 0,
 		studentNumber: studentNumber,
+        serviceType: [],
 		minDate: new Date(dayStart).toISOString(), // need to convert to ISOString to filter DB
-		maxDate: ''
+		maxDate: null
 	});
 
 	const serviceResponse = await Service.selectServices({
 		serviceID: 0,
 		serviceName: '',
-		serviceType: '',
-		inUse: false,
+		serviceType: [],
+		inUse: null,
 		isAdmin: false
 	});
 
