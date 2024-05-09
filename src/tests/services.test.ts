@@ -99,7 +99,7 @@ describe('updateServiceDB()', async () => {
 		await deleteServiceDB(newServiceNumber); // clean up serviceInstance
 	});
 
-	it.only('success: inserted service correctly updated in database', async () => {
+	it('success: inserted service correctly updated in database', async () => {
 		// instance that updates service name only
 
 		const updatedServiceInstance: ServiceDBObj = {
