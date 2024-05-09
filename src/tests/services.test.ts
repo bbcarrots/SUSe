@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // services
-import { type ServiceDBObj, type ServiceFilter, type ServiceResponse } from '$lib/classes/Service';
+import { type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
+import { type ServiceFilter } from '$lib/utils/types';
 import { insertServiceDB, deleteServiceDB, updateServiceDB, selectServiceDB } from '$lib/server/ServiceSB';
 
 describe('sanity/integrity test: it should add 5 and 3 properly', () => {
@@ -98,7 +99,7 @@ describe('updateServiceDB()', async () => {
 		await deleteServiceDB(newServiceNumber); // clean up serviceInstance
 	});
 
-	it('success: inserted service correctly updated in database', async () => {
+	it.only('success: inserted service correctly updated in database', async () => {
 		// instance that updates service name only
 
 		const updatedServiceInstance: ServiceDBObj = {
@@ -116,7 +117,7 @@ describe('updateServiceDB()', async () => {
 		const updatedServiceFilter: ServiceFilter = {
 			serviceID: newServiceNumber,
 			serviceName: 'Extension Cord (4.5 meters)',
-			serviceType: 'Extension Cord',
+			serviceType: ['Extension Cord'],
 			inUse: false,
 			isAdmin: true
 		};
@@ -282,7 +283,7 @@ describe('selectServiceDB single selects', async () => {
 		const nonexistentServiceFilter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: 'Nike LeBron 20 EP',
-			serviceType: '',
+			serviceType: [],
 			inUse: false,
 			isAdmin: true
 		};
@@ -346,7 +347,7 @@ describe('selectServiceDB, range', async () => {
 		const multipleServiceFilter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: '',
-			serviceType: 'Laptop',
+			serviceType: ['Laptop'],
 			inUse: null,
 			isAdmin: true // so services even in use are shown
 		};
@@ -369,7 +370,7 @@ describe('selectServiceDB, range', async () => {
 		const multipleServiceFilter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: '',
-			serviceType: 'Laptop',
+			serviceType: ['Laptop'],
 			inUse: false,
 			isAdmin: false // so only services not in use are shown
 		};
@@ -390,7 +391,7 @@ describe('selectServiceDB, range', async () => {
 		const nameServiceFilter: ServiceFilter = {
 			serviceID: 0,
 			serviceName: 'Acer Nitro 5 AN515-58-50YE',
-			serviceType: '',
+			serviceType: [],
 			inUse: null,
 			isAdmin: true // so services even in use are shown
 		};

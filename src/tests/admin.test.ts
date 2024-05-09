@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // admins
-import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminDBObj, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminFilter } from '$lib/utils/types';
 import { insertAdminDB, deleteAdminDB, updateAdminDB, selectAdminDB } from '$lib/server/AdminSB';
 
 describe('sanity/integrity test: it should add properly', () => {
@@ -217,6 +218,7 @@ describe('selectAdminDB()', async () => {
   it('success: select single admin with adminID', async () => {
     const oneAdminFilter: AdminFilter = {
       adminID: newAdminNumber,
+      rfid: 0,
       nickname: "",
       isActive: null
 		};
@@ -232,6 +234,7 @@ describe('selectAdminDB()', async () => {
   it('success: select single admin with nickname', async () => {
     const oneAdminFilter: AdminFilter = {
       adminID: 0,
+      rfid: 0,
       nickname: "Squidward",
       isActive: null
 		};
