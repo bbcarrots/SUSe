@@ -8,6 +8,8 @@
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
+	import Toasts from '$lib/components/Toasts.svelte';
+	let toasts: SvelteComponent;
 
 	export let data;
 	let table: SvelteComponent;
@@ -39,7 +41,7 @@
 	let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { RealtimeChannel, SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
     let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
@@ -136,6 +138,9 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
+			toasts.addToast({ message: "Successfully deleted usage log entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to delete usage log entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 
@@ -155,6 +160,9 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
+			toasts.addToast({ message: "Successfully updated usage log entry", timeout: 3, type: 'success', open: true })
+		} else {
+			toasts.addToast({ message: "Failed to update usage log entry", timeout: 3, type: 'error', open: true })
 		}
 	}
 </script>
@@ -188,6 +196,7 @@
 				class="datetime block h-full w-full rounded-md border border-gray-300 p-2.5 text-[14px] text-suse-black"
 				on:input
 				bind:value={$UsageLogFilterStore.maxDate}
+				min={$UsageLogFilterStore.minDate}
 				type="datetime-local"
 			/>
 		</div>
@@ -203,3 +212,4 @@
 		{disableEdit}
 	/>
 </div>
+<Toasts bind:this={toasts}></Toasts>

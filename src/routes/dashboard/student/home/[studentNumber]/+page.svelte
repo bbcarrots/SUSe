@@ -16,7 +16,6 @@
 
 	let activeUsageLogs: { [key: string]: UsageLogDBObj } =
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
-	console.log('load',activeUsageLogs);
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
@@ -53,7 +52,6 @@
 
 		availServiceResponse = await response.json();
 		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
-		console.log('avail',activeUsageLogs);
 	}
 
 	async function handleEndService(event: CustomEvent) {
@@ -81,9 +79,6 @@
         if (endServiceResponse.success) {
             delete activeUsageLogs[serviceType]
         }
-
-		console.log('end',activeUsageLogs);
-
 	}
 </script>
 
