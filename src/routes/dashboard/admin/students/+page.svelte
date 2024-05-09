@@ -243,7 +243,7 @@
 			>
 				<option class="text-grey-200" value={null}></option>
 				{#each studentNumberYear as year}
-					<option value={year.value}>{year.name}</option>
+					<option value={year.value} disabled={year.value < $StudentFilterStore.minStudentNumber}>{year.name}</option>
 				{/each}
 			</select>
 		</div>
