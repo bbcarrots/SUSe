@@ -147,7 +147,7 @@ describe('updateStudentDB()', () => {
 		await deleteStudentDB(newStudentNumber); // clean up studentInstance
 	});
 
-	it.todo('success: inserted student correctly updated in database', async () => {
+	it('success: inserted student correctly updated in database', async () => {
 		// instance that updates password, first name, MI, last name, college, program, and phone number
 
 		const updatedStudentInstance: StudentDBObj = {
@@ -173,8 +173,8 @@ describe('updateStudentDB()', () => {
 			maxStudentNumber: newStudentNumber,
 			username: newUsername,
 			rfid: 1004,
-			college: [""],
-    		program: [""],
+			college: [],
+    		program: [],
 			isEnrolled: null,
 		    isActive: null
 		};
