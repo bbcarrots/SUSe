@@ -18,18 +18,13 @@
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel } from '@supabase/supabase-js';
+	import { supabaseFront } from '$lib/stores/SupabaseClient.js';
 	import { onMount, onDestroy } from 'svelte';
-    let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
-
-		channel = supabase
+		channel = $supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -67,7 +62,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		$supabaseFront.removeChannel(channel)
     })
 
 	// ----------------------------------------------------------------------------------
