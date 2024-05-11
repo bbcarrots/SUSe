@@ -51,14 +51,16 @@ describe('insertUsageLogDB()', async () => {
     is_active: false
   };
 
+  let start = new Date('2027-04-05T11:06:00').toISOString();
+  let end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
     admin_id: newAdminID,
     service_id: newServiceID,
     service_type: 'Laptop',
-    datetime_start: '2027-04-05 11:06:00+00',
-    datetime_end: '2027-04-05 11:06:59+00'
+    datetime_start: start,
+    datetime_end: end
   };
 
 	beforeEach(async () => {
@@ -101,6 +103,8 @@ describe('insertUsageLogDB()', async () => {
       error: "duplicate key value violates unique constraint \"usage_log_ul_id_key\"" // error message from supabase with existing ULID
     }
 
+    let start = new Date('2027-04-06T11:06:00').toISOString();
+    let end = new Date('2027-04-06T11:06:59').toISOString();
     // create 2nd dummy usage log with same ULID
     const sameULID: UsageLogDBObj = {
       ul_id: newULID,
@@ -108,8 +112,8 @@ describe('insertUsageLogDB()', async () => {
       admin_id: newAdminID,
       service_id: newServiceID,
       service_type: 'Laptop',
-      datetime_start: '2027-04-06 11:06:00+00',
-      datetime_end: '2027-04-06 11:06:59+00'
+      datetime_start: start,
+      datetime_end: end
     };
 
     // insert sameULID, should error
@@ -154,14 +158,16 @@ describe('updateUsageLogDB()', async () => {
     is_active: false
   };
 
+  let start = new Date('2027-04-05T11:06:00').toISOString();
+  let end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
     admin_id: newAdminID,
     service_id: newServiceID,
     service_type: 'Laptop',
-    datetime_start: '2027-04-05 11:06:00+00',
-    datetime_end: '2027-04-05 11:06:59+00'
+    datetime_start: start,
+    datetime_end: end
   };
 
 	beforeEach(async () => {
@@ -179,7 +185,7 @@ describe('updateUsageLogDB()', async () => {
     await deleteUsageLogDB(newULID);
 	});
 
-	it.todo('success: updated usage log in database', async () => {
+	it('success: updated usage log in database', async () => {
 		// returned UsageLogResponse upon successful insert into database
 		const expectedState: UsageLogResponse = {
 			success: true,
@@ -187,14 +193,17 @@ describe('updateUsageLogDB()', async () => {
 			error: null
 		};
 
+    let start = new Date('2027-04-05T11:07:00').toISOString();
+    let end = new Date('2027-04-05T11:07:59').toISOString();
+    
     const updatedUsageLog: UsageLogDBObj = {
       ul_id: newULID,
       sn_id: newSN,
       admin_id: newAdminID,
       service_id: newServiceID,
       service_type: 'Laptop',
-      datetime_start: '2027-04-05 11:07:00+00',
-      datetime_end: '2027-04-05 11:07:59+00'
+      datetime_start: start,
+      datetime_end: end
     };
 
 		await expect(updateUsageLogDB(updatedUsageLog)).resolves.toStrictEqual(expectedState);
@@ -210,16 +219,18 @@ describe('updateUsageLogDB()', async () => {
       usageLogRaws: null,
       error: "Error: Usage log does not exist" // error message from supabase with existing ULID
     }
+    let start = new Date('2027-04-06T11:06:00').toISOString();
+    let end = new Date('2027-04-06T11:06:59').toISOString();
 
     // create 2nd dummy usage log with same ULID
     const sameULID: UsageLogDBObj = {
-      ul_id: newULID + 1,
+      ul_id: newULID - 1,
       sn_id: newSN,
       admin_id: newAdminID,
       service_id: newServiceID,
       service_type: 'Laptop',
-      datetime_start: '2027-04-06 11:06:00+00',
-      datetime_end: '2027-04-06 11:06:59+00'
+      datetime_start: start,
+      datetime_end: end
     };
 
     // insert sameULID, should error
@@ -261,15 +272,16 @@ describe('deleteUsageLogDB()', async () => {
     nickname: 'Tupac',
     is_active: false
   };
-
+  let start = new Date('2027-04-05T11:06:00').toISOString();
+  let end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
     admin_id: newAdminID,
     service_id: newServiceID,
     service_type: 'Laptop',
-    datetime_start: '2027-04-05 11:06:00+00',
-    datetime_end: '2027-04-05 11:06:59+00'
+    datetime_start: start,
+    datetime_end: end
   };
 
 	beforeEach(async () => {
@@ -306,7 +318,7 @@ describe('deleteUsageLogDB()', async () => {
     }
 
     // insert studentSameSN, should error
-    await expect(deleteUsageLogDB(newULID + 1)).resolves.toStrictEqual(expectedState);
+    await expect(deleteUsageLogDB(newULID - 1)).resolves.toStrictEqual(expectedState);
     await deleteUsageLogDB(newULID);
   });
 });
@@ -355,14 +367,17 @@ describe('selectUsageLogDB()', async () => {
 		await insertAdminDB(adminInstance);
 
     for (let offset = 0; offset < 3; offset++) {
+      let start = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:00').toISOString();
+      let end = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:59').toISOString();
+
       const usageLogInstance: UsageLogDBObj = {
         ul_id: newULID + offset,
         sn_id: newSN,
         admin_id: newAdminID,
         service_id: newServiceID,
         service_type: 'Laptop',
-        datetime_start: '2027-04-0' + (5 + offset).toString() + '11:06:00+00',
-        datetime_end: '2027-04-0' + (5 + offset).toString() + '11:06:59+00'
+        datetime_start: start,
+        datetime_end: end
       };
 
 			usageLogList.push(usageLogInstance);
@@ -379,7 +394,7 @@ describe('selectUsageLogDB()', async () => {
     }
 	});
 
-	it.todo('success: select single usage log', async () => {
+	it('success: select single usage log', async () => {
 		const oneUsageLogFilter: UsageLogFilter = {
       usageLogID: newULID,
       studentNumber: 0,
@@ -397,7 +412,7 @@ describe('selectUsageLogDB()', async () => {
 		}
 	});
 
-  it.todo('success: multiple ULs with student number', async () => {
+  it('success: multiple ULs with student number', async () => {
 		const oneUsageLogFilter: UsageLogFilter = {
       usageLogID: 0,
       studentNumber: newSN,
@@ -415,13 +430,16 @@ describe('selectUsageLogDB()', async () => {
 		}
 	});
 
-  it.todo('success: multiple ULs with mindate and maxdate', async () => {
+  it('success: multiple ULs with mindate and maxdate', async () => {
+    let start = new Date('2027-04-05T11:06:00').toISOString();
+    let end = new Date('2027-04-06T11:07:00').toISOString();
+
 		const oneUsageLogFilter: UsageLogFilter = {
       usageLogID: 0,
       studentNumber: newSN,
       serviceType: [],
-      minDate: "2027-04-05 11:06:00+00",
-      maxDate: "2027-04-06 11:06:00+00" // only two ULs should be selected, excluding the last one inserted
+      minDate: start,
+      maxDate: end // only two ULs should be selected, excluding the last one inserted
 		};
 
 		const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
@@ -436,7 +454,7 @@ describe('selectUsageLogDB()', async () => {
 
   it('error: select single nonexistent usage log', async () => {
 		const oneUsageLogFilter: UsageLogFilter = {
-      usageLogID: newULID + 1,
+      usageLogID: newULID - 1,
       studentNumber: 0,
       serviceType: [],
       minDate: "",

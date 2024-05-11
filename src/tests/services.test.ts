@@ -262,22 +262,22 @@ describe('selectServiceDB single selects', async () => {
 		}
 	});
 
-	// it.todo('success: selected single service in database using service ID', async () => {
-	// 	const oneServiceFilter: ServiceFilter = {
-	// 		serviceID: 100006,
-	// 		serviceName: '',
-	// 		serviceType: '',
-	// 		inUse: false,
-	// 		isAdmin: true
-	// 	};
-	// 	const selectOutput = await selectServiceDB(oneServiceFilter);
-	// 	console.log(selectOutput);
-	// 	if (selectOutput.serviceRaws !== null) {
-	// 		const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
-	// 		// compare selected service number with inserted service number
-	// 		expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
-	// 	}
-	// });
+	it('success: selected single service in database using service ID', async () => {
+		const oneServiceFilter: ServiceFilter = {
+			serviceID: 100006,
+			serviceName: '',
+			serviceType: [],
+			inUse: false,
+			isAdmin: true
+		};
+		const selectOutput = await selectServiceDB(oneServiceFilter);
+		console.log(selectOutput);
+		if (selectOutput.serviceRaws !== null) {
+			const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
+			// compare selected service number with inserted service number
+			expect(selectOutputServiceNumber).toStrictEqual(serviceInstanceList[0].service_id);
+		}
+	});
 
 	it('success: selecting single nonexistent service name, should be empty', async () => {
 		const nonexistentServiceFilter: ServiceFilter = {
