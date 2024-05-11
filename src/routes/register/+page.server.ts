@@ -16,7 +16,6 @@ export const actions = {
 			sn_id: parseInt(studentData.studentNumber),
 			rfid: parseInt(studentData.rfid),
 			username: studentData.username,
-			pw: studentData.password,
 			first_name: studentData.firstName,
 			middle_initial: studentData.middleInitial,
 			last_name: studentData.lastName,

@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // students
-import { type StudentDBObj, type StudentFilter, type StudentResponse } from '$lib/classes/Student';
+import { type StudentDBObj, type StudentResponse } from '$lib/classes/Student';
+import { type StudentFilter } from '$lib/utils/types';
 import { insertStudentDB, deleteStudentDB, updateStudentDB,	selectStudentDB } from '$lib/server/StudentSB';
 
 describe('sanity/integrity test: it should add 2 and 3 properly', () => {
@@ -17,7 +18,6 @@ describe('insertStudentDB()', () => {
 		sn_id: newStudentNumber,
 		rfid: 1000,
 		username: newUsername,
-		pw: 'Password1234',
 		first_name: 'Dummy',
 		middle_initial: 'D',
 		last_name: 'Dumdum',
@@ -48,7 +48,6 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 		sn_id: newStudentNumber,
 		rfid: 1001,
 		username: newUsername,
-		pw: 'Password1234',
 		first_name: 'Dummy',
 		middle_initial: 'D',
 		last_name: 'Dumdum',
@@ -81,7 +80,6 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 			sn_id: newStudentNumber,
 			rfid: 1002,
 			username: 'dummy',
-			pw: '1234Password',
 			first_name: 'DummyJr',
 			middle_initial: 'D',
 			last_name: 'Dumdum',
@@ -109,7 +107,6 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 			sn_id: 202101013,
 			rfid: 1003,
 			username: newUsername,
-			pw: '1234Password',
 			first_name: 'DummyJr',
 			middle_initial: 'D',
 			last_name: 'Dumdum',
@@ -132,7 +129,6 @@ describe('updateStudentDB()', () => {
 		sn_id: newStudentNumber,
 		rfid: 1004,
 		username: newUsername,
-		pw: 'Password1234',
 		first_name: 'Dummy',
 		middle_initial: 'D',
 		last_name: 'Dumdum',
@@ -158,7 +154,6 @@ describe('updateStudentDB()', () => {
 			sn_id: newStudentNumber,
 			rfid: 1004,
 			username: newUsername,
-			pw: 'Password1234',
 			first_name: 'Stephen',
 			middle_initial: 'A',
 			last_name: 'Smith',
@@ -177,7 +172,11 @@ describe('updateStudentDB()', () => {
 			minStudentNumber: newStudentNumber,
 			maxStudentNumber: newStudentNumber,
 			username: newUsername,
-			rfid: 1004
+			rfid: 1004,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 		const updatedStudentOutput = await selectStudentDB(updatedStudentFilter);
 		if (updatedStudentOutput.studentRaws !== null) {
@@ -199,7 +198,6 @@ describe('updateStudentDB()', () => {
 			sn_id: wrongSN,
 			rfid: 1006,
 			username: newUsername,
-			pw: 'Password1234',
 			first_name: 'Stephen',
 			middle_initial: '',
 			last_name: 'Curry',
@@ -222,7 +220,6 @@ describe('deleteStudentDB()', () => {
 		sn_id: newStudentNumber,
 		rfid: 1008,
 		username: newUsername,
-		pw: 'Password1234',
 		first_name: 'Dummy',
 		middle_initial: 'D',
 		last_name: 'Dumdum',
@@ -277,7 +274,6 @@ describe('selectStudentDB', () => {
 				sn_id: newStudentNumber + offset,
 				rfid: newRFID + offset,
 				username: newUsername + offset.toString(),
-				pw: 'Password1234',
 				first_name: 'Dummy',
 				middle_initial: 'D',
 				last_name: 'Dumdum',
@@ -305,7 +301,11 @@ describe('selectStudentDB', () => {
 			minStudentNumber: newStudentNumber,
 			maxStudentNumber: newStudentNumber,
 			username: newUsername,
-			rfid: newRFID
+			rfid: 0,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 		const selectOutput = await selectStudentDB(oneStudentFilter);
 
@@ -323,7 +323,11 @@ describe('selectStudentDB', () => {
 			minStudentNumber: 2030,
 			maxStudentNumber: 2030,
 			username: '',
-			rfid: 0
+			rfid: 0,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 		const selectOutput = await selectStudentDB(multipleStudentFilter);
 		if (selectOutput.studentRaws !== null) {
@@ -340,7 +344,11 @@ describe('selectStudentDB', () => {
 			minStudentNumber: 0,
 			maxStudentNumber: 0,
 			username: '',
-			rfid: newRFID
+			rfid: newRFID,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 		const selectOutput = await selectStudentDB(oneStudentFilter);
 
@@ -356,7 +364,11 @@ describe('selectStudentDB', () => {
 			minStudentNumber: 200000000,
 			maxStudentNumber: 200000000,
 			username: 'dummyfiltertest',
-			rfid: 90210
+			rfid: 90210,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 
 		const selectOutput = await selectStudentDB(nonexistentStudentFilter);
@@ -374,7 +386,11 @@ describe('error: Student.selectStudentDB wrong input', () => {
 			minStudentNumber: 1945,
 			maxStudentNumber: 1989,
 			username: 'dummyfiltertest',
-			rfid: 0
+			rfid: 0,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 
 		const expectedError: StudentResponse = {
@@ -391,7 +407,11 @@ describe('error: Student.selectStudentDB wrong input', () => {
 			minStudentNumber: 194512345,
 			maxStudentNumber: 198954321,
 			username: 'dummyfiltertest',
-			rfid: 90210
+			rfid: 90210,
+			college: [],
+    		program: [],
+			isEnrolled: null,
+		    isActive: null
 		};
 
 		const expectedError: StudentResponse = {
