@@ -271,7 +271,6 @@ describe('selectServiceDB single selects', async () => {
 			isAdmin: true
 		};
 		const selectOutput = await selectServiceDB(oneServiceFilter);
-		console.log(selectOutput);
 		if (selectOutput.serviceRaws !== null) {
 			const selectOutputServiceNumber = selectOutput.serviceRaws[0].service_id; // extract service number from selected service record
 			// compare selected service number with inserted service number

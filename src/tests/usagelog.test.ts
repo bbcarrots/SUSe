@@ -405,7 +405,6 @@ describe('selectUsageLogDB()', async () => {
 		const selectOutput = await selectUsageLogDB(oneUsageLogFilter);
 
 		if (selectOutput.usageLogRaws !== null) {
-      console.log("selected usage log:", selectOutput.usageLogRaws);
 			const selectOutputULID = selectOutput.usageLogRaws[0].ul_id; // extract ULID from selected UL
 			// compare selected ULID with inserted ULID
 			expect(selectOutputULID).toStrictEqual(newULID);
