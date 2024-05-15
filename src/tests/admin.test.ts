@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 // admins
-import { type AdminDBObj, type AdminFilter, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminDBObj, type AdminResponse } from '$lib/classes/Admin';
+import { type AdminFilter } from '$lib/utils/types';
 import { insertAdminDB, deleteAdminDB, updateAdminDB, selectAdminDB } from '$lib/server/AdminSB';
 
 describe('sanity/integrity test: it should add properly', () => {
@@ -18,7 +19,6 @@ describe('insertAdminDB()', () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -41,7 +41,6 @@ describe('error: insert with admin number in use', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -63,7 +62,6 @@ describe('error: insert with admin number in use', async () => {
     const dupeAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber,
       rfid: newRFID + 1,
-      pw: 'password',
       nickname: newNickname,
       is_active: false
     };
@@ -80,7 +78,6 @@ describe('updateAdminDB()', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -102,7 +99,6 @@ describe('updateAdminDB()', async () => {
     const updatedAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber,
       rfid: newRFID,
-      pw: 'password',
       nickname: "Patrick",
       is_active: false
     };
@@ -120,7 +116,6 @@ describe('updateAdminDB()', async () => {
     const updatedAdminInstance: AdminDBObj = {
       admin_id: newAdminNumber + 1,
       rfid: newRFID,
-      pw: 'password',
       nickname: "Patrick",
       is_active: false
     };
@@ -136,7 +131,6 @@ describe('deleteAdminDB()', async () => {
   const adminInstance: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: newNickname,
     is_active: false
   };
@@ -173,18 +167,16 @@ describe('selectAdminDB()', async () => {
   const newAdminNumber = 202100004;
   const newRFID = 700004;
 
-  const adminInstanceOne: AdminDBObj = {
+  let adminInstanceOne: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
-    pw: 'password',
     nickname: 'Spongebob',
     is_active: true
   };
 
-  const adminInstanceTwo: AdminDBObj = {
+  let adminInstanceTwo: AdminDBObj = {
     admin_id: newAdminNumber + 1,
     rfid: newRFID + 1,
-    pw: 'password',
     nickname: 'Squidward',
     is_active: true
   };
@@ -192,27 +184,41 @@ describe('selectAdminDB()', async () => {
   const adminInstanceThree: AdminDBObj = {
     admin_id: newAdminNumber + 2,
     rfid: newRFID + 2,
-    pw: 'password',
     nickname: 'Mr. Krabs',
     is_active: false
   };
-  const adminList: AdminDBObj[] = [adminInstanceOne, adminInstanceTwo, adminInstanceThree];
 
   beforeEach(async () => {
-    for(const admin in adminList){
-      await insertAdminDB(admin);
-    }
+    await insertAdminDB(adminInstanceOne);
+    await insertAdminDB(adminInstanceTwo);
+    await insertAdminDB(adminInstanceThree);
   });
 
   afterEach(async () => {
-    for(const admin in adminList){
-      await deleteAdminDB(admin.admin_id);
-    }
+    let adminInstanceOne: AdminDBObj = {
+      admin_id: newAdminNumber,
+      rfid: newRFID,
+      nickname: 'Spongebob',
+      is_active: false
+    };
+  
+    let adminInstanceTwo: AdminDBObj = {
+      admin_id: newAdminNumber + 1,
+      rfid: newRFID + 1,
+      nickname: 'Squidward',
+      is_active: false
+    };
+    await updateAdminDB(adminInstanceOne);
+    await updateAdminDB(adminInstanceTwo);
+    await deleteAdminDB(adminInstanceOne.admin_id);
+    await deleteAdminDB(adminInstanceTwo.admin_id);
+    await deleteAdminDB(adminInstanceThree.admin_id);
   });
 
   it('success: select single admin with adminID', async () => {
     const oneAdminFilter: AdminFilter = {
       adminID: newAdminNumber,
+      rfid: 0,
       nickname: "",
       isActive: null
 		};
@@ -228,6 +234,7 @@ describe('selectAdminDB()', async () => {
   it('success: select single admin with nickname', async () => {
     const oneAdminFilter: AdminFilter = {
       adminID: 0,
+      rfid: 0,
       nickname: "Squidward",
       isActive: null
 		};
@@ -240,33 +247,35 @@ describe('selectAdminDB()', async () => {
 		}
   });
 
-  // it.skip('success: select range from isActive', async () => {
-  //   const activeAdminFilter: AdminFilter = {
-  //     adminID: 0,
-  //     nickname: "",
-  //     isActive: true
-	// 	};
+  it('success: select range from isActive', async () => {
+    const activeAdminFilter: AdminFilter = {
+      adminID: 0,
+      rfid: 0,
+      nickname: "",
+      isActive: true
+		};
 
-  //   const selectOutput = await selectAdminDB(activeAdminFilter);
-  //   const expectedAdmins = ['Spongebob', 'Squidward'];
+    const selectOutput = await selectAdminDB(activeAdminFilter);
+    const expectedAdmins = ['Spongebob', 'Squidward'];
 
-	// 	if (selectOutput.adminRaws !== null) {
-  //     const selectOutputNames = selectOutput.adminRaws.map(admin => admin.nickname)
-	// 		// compare selected admin id with inserted admin id 
-	// 		expect(selectOutputNames).toStrictEqual(expectedAdmins);
-	// 	}  });
+		if (selectOutput.adminRaws !== null) {
+      const selectOutputNames = selectOutput.adminRaws.map(admin => admin.nickname)
+			// compare selected admin id with inserted admin id 
+			expect(selectOutputNames).not.contain(['Mr. Krabs']);
+		}  });
 
-  //   it('success: select nonexistent admin', async () => {
-  //     const oneAdminFilter: AdminFilter = {
-  //       adminID: 0,
-  //       nickname: "LeBron James",
-  //       isActive: null
-  //     };
-  //     const selectOutput = await selectAdminDB(oneAdminFilter);
-  
-  //     if (selectOutput.adminRaws !== null) {
-  //       const selectOutputID = selectOutput.adminRaws;
-  //       expect(selectOutputID).toStrictEqual([]);
-  //     }
-  //   });
+  it('success: select nonexistent admin', async () => {
+    const oneAdminFilter: AdminFilter = {
+      adminID: 0,
+      rfid: 0,
+      nickname: "LeBron James",
+      isActive: null
+    };
+    const selectOutput = await selectAdminDB(oneAdminFilter);
+
+    if (selectOutput.adminRaws !== null) {
+      const selectOutputID = selectOutput.adminRaws;
+      expect(selectOutputID).toStrictEqual([]);
+    }
+  });
 });

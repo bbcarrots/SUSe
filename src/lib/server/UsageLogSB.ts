@@ -150,7 +150,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	const updateObj: { [key: string]: string | number } = {};
 
 	for (const [key, value] of Object.entries(log)) {
-		if (value && typeof value == 'string') {
+		if (value && typeof value == 'string' && key != 'service_type') {
 			updateObj[key] = value;
 		}
 	}
