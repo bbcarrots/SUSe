@@ -1,6 +1,29 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import Hero from '$lib/components/Hero.svelte';
+
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+
+	let delay = 5000;
+	let targetUrl = '/'; 
+	let countdown = delay / 1000;
+
+	onMount(() => {
+		const intervalId = setInterval(() => {
+		countdown -= 1;
+		}, 1000);
+
+		const timeoutId = setTimeout(() => {
+			goto(targetUrl);
+		}, delay);
+
+		return () => {
+			clearTimeout(timeoutId);
+			clearInterval(intervalId);
+		};
+	});
+
 </script>
 
 <section class="flex items-center justify-center lg:h-screen">
@@ -19,9 +42,10 @@
 					Please prepare your Form 5 and present it to the admin to get your UP ID registered in
 					SUSe!
 				</h4>
+				<p></p>
 			</div>
 
-			<a href="/"><Button>Return to Login</Button></a>
+			<a href="/"><Button>Return to Login (Returning in {countdown})</Button></a>
 		</div>
 		<div
 			class="sm:col-span-2 sm:col-start-2 sm:row-start-2 lg:col-span-5
