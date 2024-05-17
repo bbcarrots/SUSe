@@ -15,7 +15,7 @@
 <button 
     type={submit ? 'submit' : 'button'}
     class="w-full justify-center gap-2 py-3 px-6 rounded-md hover:bg-suse-black/95 font-medium text-sm inline-flex items-center
-        {inverse ? 'bg-transparent text-suse-black border border-suse-black border-solid hover:bg-suse-black/40' : 'bg-suse-black text-suse-white'}
+        {inverse ? 'bg-transparent text-suse-black border border-suse-black border-solid hover:text-white hover:bg-suse-black/70' : 'bg-suse-black text-suse-white'}
         {small ? 'rounded-[100px] py-2 px-4' : 'py-3 px-6'}
         {disabled ? 'opacity-50 pointer-events-none' : ''}"
     on:click
