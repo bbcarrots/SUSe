@@ -113,7 +113,7 @@
 						type="text"
 						id="student-number"
 						placeholder="20XXXXXXX"
-						pattern="^\d{'{'}9{'}'}$"
+						pattern="^{'\\'}d{'{'}9{'}'}$"
 						title="Please enter a 9 digit number."
 						required
 					/>
@@ -128,7 +128,7 @@
 						type="text"
 						id="phone-number"
 						placeholder="09XXXXXXXXX"
-						pattern="^\d{'{'}11{'}'}$"
+						pattern="^{'\\'}d{'{'}11{'}'}$"
 						title="Please enter an 11 digit number."
 						required
 					/>
