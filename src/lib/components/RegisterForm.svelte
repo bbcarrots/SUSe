@@ -4,9 +4,14 @@
 	import { enhance } from '$app/forms';
 	import { userRFID } from '$lib/stores/User';
 	import { CollegePrograms } from '$lib/stores/CollegePrograms';
-
+	import { goto } from '$app/navigation';
+	
 	let inputs: NodeListOf<HTMLInputElement | HTMLSelectElement>;
 	let college = 'College of Engineering';
+
+	function handleCancel(){
+		goto('/');
+	}
 
 	onMount(() => {
 		inputs = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select');
@@ -113,7 +118,7 @@
 						type="text"
 						id="student-number"
 						placeholder="20XXXXXXX"
-						pattern="^\d{'{'}9{'}'}$"
+						pattern="^{'\\'}d{'{'}9{'}'}$"
 						title="Please enter a 9 digit number."
 						required
 					/>
@@ -128,7 +133,7 @@
 						type="text"
 						id="phone-number"
 						placeholder="09XXXXXXXXX"
-						pattern="^\d{'{'}11{'}'}$"
+						pattern="^{'\\'}d{'{'}11{'}'}$"
 						title="Please enter an 11 digit number."
 						required
 					/>
@@ -207,7 +212,7 @@
 
 		<!-- ACTION BUTTONS -->
 		<div class="inline-flex gap-4">
-			<Button inverse={true}>Cancel</Button>
+			<Button inverse={true} on:click={handleCancel}>Cancel</Button>
 			<Button submit={true}>Register</Button>
 		</div>
 	</form>
