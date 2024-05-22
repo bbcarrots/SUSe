@@ -6,43 +6,33 @@ This is a course requirement for CS 191/192 Software Engineering Courses of the 
 - Tan, Allaine  
 - Torres, Antonio 
 
-Add short project description here.
+Want to check out our project? Follow the links below to see our deployment on Vercel. Disclaimer: The data inside our database is accessible for all and only used for demo purposes. Please do not put personal information!
+- [SUSê Login](https://suse.vercel.app/)
+- [SUSê Registration Form](https://suse.vercel.app/register)
+- [SUSê Student Dashboard](https://suse.vercel.app/dashboard/student/home/202000000)
+- [SUSê Admin Dashboard Usage Logs Table](https://suse.vercel.app/dashboard/admin/usagelogs)
+- [SUSê Admin Dashboard Students Table](https://suse.vercel.app/dashboard/admin/students)
+- [SUSê Admin Dashboard Services Table](https://suse.vercel.app/dashboard/admin/services)
+- [SUSê Admin Dashboard Admin Table](https://suse.vercel.app/dashboard/admin/admins)
 
-<!-- # create-svelte
+# Main Features
+## Student
+- Login using UP RFID. (This is not functional unless you have an RFID reader and tap your ID in the Login page!)
+- Register personal information.
+- Avail and end miscellaneous library services in Student dashboard.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+## Admin
+- Login using a secret mechanic (click the image in the Login page 5 times!) by tapping their RFID.
+- Edit, delete, and approve Student entries. 
+- Edit and delete Usage Log entries. 
+- Edit and delete Service entries. 
+- Edit and delete Admin entries. 
 
-## Creating a project
+# Svelte
+If you are interested in using SvelteKit, you may refer to their [documentation](https://kit.svelte.dev/docs/introduction)! It's also helpful to parallel code by watching tutorials on YouTube!
 
-If you're seeing this, you've probably already done this step. Congrats!
+# Database
+We used [Supabase](https://supabase.com/docs/guides/database/overview) without authentication for our storage. It's an open-source cloud database which enabled us to test our software anywhere.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment. -->
+# Deployment
+We deployed SUSê on [Vercel](https://vercel.com/solutions/svelte) using the instructions specifically for SvelteKit.
