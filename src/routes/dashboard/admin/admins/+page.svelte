@@ -11,6 +11,10 @@
 	let toasts: SvelteComponent;
 
 	export let data;
+    $: {
+        console.log("data");
+        console.log(data)
+    }
 	let table: SvelteComponent;
 
 	//for filters
@@ -70,6 +74,7 @@
 
 	// ----------------------------------------------------------------------------------
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
+	import Button from '$lib/components/Button.svelte';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
@@ -157,10 +162,20 @@
 			toasts.addToast({ message: "Failed to update active status of admin entry", timeout: 3, type: 'error', open: true })
 		}
 	}
+
+    async function request(filter: AdminFilter) {
+        console.log("Hello");
+        const response = await fetch('https://suse.vercel.app/api/admin', {
+            method: 'POST',
+			body: JSON.stringify(filter),
+        });
+        console.log(await response.json());
+    }
 </script>
 
 <div class="grid gap-2">
 	<h3 class="pt-4">Admins</h3>
+    <Button on:click={() => {request($AdminFilterStore)}}>Request</Button>
 	<div class="my-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
 		<div class="relative">
 			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
