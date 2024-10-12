@@ -168,6 +168,9 @@
         const response = await fetch('https://suse.vercel.app/api/admin', {
             method: 'POST',
 			body: JSON.stringify(filter),
+			headers: {
+				'content-type': 'application/json'
+			}
         });
         console.log(await response.json());
     }
