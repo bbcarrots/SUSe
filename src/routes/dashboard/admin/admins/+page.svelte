@@ -165,7 +165,7 @@
 
     async function request(filter: AdminFilter) {
         console.log("Hello");
-        const response = await fetch('http://suse.vercel.app/api/admin', {
+        const response = await fetch('https://suse.vercel.app/api/admin', {
             method: 'POST',
 			body: JSON.stringify(filter),
 			headers: {
