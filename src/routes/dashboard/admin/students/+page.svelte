@@ -8,13 +8,13 @@
 	import { browser } from '$app/environment';
 	let toasts: SvelteComponent;
 
-	export let data;
+	// export let data;
 	let table: SvelteComponent;
 
 	//for filters
-	$: {
-		if (browser) handleSelect($StudentFilterStore);
-	}
+	// $: {
+	// 	if (browser) handleSelect($StudentFilterStore);
+	// }
 
 	//for table
 	let headers: string[] = [
@@ -30,21 +30,15 @@
 	];
 	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
-	let students: StudentProcessed[] = [];
 
 	// ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		let studentObjects = data.studentRaws;
-		mapStudentDatabaseObjects(studentObjects);
-
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
+        if (!$StudentTable.length) {
+            handleSelect($StudentFilterStore);
+        }
 
 		channel = supabase
 			.channel('student-db-changes')
@@ -68,7 +62,7 @@
 
 	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
-			students = studentObjects.map((student) => {
+			$StudentTable = studentObjects.map((student) => {
 				return {
 					studentNumber: student.sn_id,
 					firstName: student.first_name,
@@ -83,14 +77,17 @@
 				};
 			});
 		} else {
-			students = [];
+			$StudentTable = [];
 		}
+        console.log($StudentTable);
 	}
 
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
+	import { StudentTable } from '$lib/stores/AdminTables';
+	import { supabase } from '$lib/utils/utils';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -253,7 +250,7 @@
 		on:delete={handleDelete}
 		on:update={handleUpdate}
 		{headers}
-		info={students}
+		info={$StudentTable}
 		primaryKey="studentNumber"
 		bind:this={table}
 		{hide}

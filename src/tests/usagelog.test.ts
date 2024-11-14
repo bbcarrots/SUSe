@@ -51,8 +51,8 @@ describe('insertUsageLogDB()', async () => {
     is_active: false
   };
 
-  let start = new Date('2027-04-05T11:06:00').toISOString();
-  let end = new Date('2027-04-05T11:06:59').toISOString();
+  const start = new Date('2027-04-05T11:06:00').toISOString();
+  const end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
@@ -103,8 +103,8 @@ describe('insertUsageLogDB()', async () => {
       error: "duplicate key value violates unique constraint \"usage_log_ul_id_key\"" // error message from supabase with existing ULID
     }
 
-    let start = new Date('2027-04-06T11:06:00').toISOString();
-    let end = new Date('2027-04-06T11:06:59').toISOString();
+    const start = new Date('2027-04-06T11:06:00').toISOString();
+    const end = new Date('2027-04-06T11:06:59').toISOString();
     // create 2nd dummy usage log with same ULID
     const sameULID: UsageLogDBObj = {
       ul_id: newULID,
@@ -158,8 +158,8 @@ describe('updateUsageLogDB()', async () => {
     is_active: false
   };
 
-  let start = new Date('2027-04-05T11:06:00').toISOString();
-  let end = new Date('2027-04-05T11:06:59').toISOString();
+  const start = new Date('2027-04-05T11:06:00').toISOString();
+  const end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
@@ -193,8 +193,8 @@ describe('updateUsageLogDB()', async () => {
 			error: null
 		};
 
-    let start = new Date('2027-04-05T11:07:00').toISOString();
-    let end = new Date('2027-04-05T11:07:59').toISOString();
+    const start = new Date('2027-04-05T11:07:00').toISOString();
+    const end = new Date('2027-04-05T11:07:59').toISOString();
     
     const updatedUsageLog: UsageLogDBObj = {
       ul_id: newULID,
@@ -219,8 +219,8 @@ describe('updateUsageLogDB()', async () => {
       usageLogRaws: null,
       error: "Error: Usage log does not exist" // error message from supabase with existing ULID
     }
-    let start = new Date('2027-04-06T11:06:00').toISOString();
-    let end = new Date('2027-04-06T11:06:59').toISOString();
+    const start = new Date('2027-04-06T11:06:00').toISOString();
+    const end = new Date('2027-04-06T11:06:59').toISOString();
 
     // create 2nd dummy usage log with same ULID
     const sameULID: UsageLogDBObj = {
@@ -272,8 +272,8 @@ describe('deleteUsageLogDB()', async () => {
     nickname: 'Tupac',
     is_active: false
   };
-  let start = new Date('2027-04-05T11:06:00').toISOString();
-  let end = new Date('2027-04-05T11:06:59').toISOString();
+  const start = new Date('2027-04-05T11:06:00').toISOString();
+  const end = new Date('2027-04-05T11:06:59').toISOString();
   const usageLogInstance: UsageLogDBObj = {
     ul_id: newULID,
     sn_id: newSN,
@@ -367,8 +367,8 @@ describe('selectUsageLogDB()', async () => {
 		await insertAdminDB(adminInstance);
 
     for (let offset = 0; offset < 3; offset++) {
-      let start = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:00').toISOString();
-      let end = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:59').toISOString();
+      const start = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:00').toISOString();
+      const end = new Date('2027-04-0' + (5 + offset).toString() + 'T11:06:59').toISOString();
 
       const usageLogInstance: UsageLogDBObj = {
         ul_id: newULID + offset,
@@ -389,7 +389,7 @@ describe('selectUsageLogDB()', async () => {
 		await deleteServiceDB(newServiceID);
 		await deleteStudentDB(newSN);
 		await deleteAdminDB(newAdminID);
-    for (const usagelog in usageLogList) {
+    for (const usagelog of usageLogList) {
       await deleteUsageLogDB(usagelog.ul_id)
     }
 	});
@@ -430,8 +430,8 @@ describe('selectUsageLogDB()', async () => {
 	});
 
   it('success: multiple ULs with mindate and maxdate', async () => {
-    let start = new Date('2027-04-05T11:06:00').toISOString();
-    let end = new Date('2027-04-06T11:07:00').toISOString();
+    const start = new Date('2027-04-05T11:06:00').toISOString();
+    const end = new Date('2027-04-06T11:07:00').toISOString();
 
 		const oneUsageLogFilter: UsageLogFilter = {
       usageLogID: 0,

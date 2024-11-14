@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
-	import Multiselect from '$lib/components/Multiselect.svelte';
-	import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
-	import { type AdminProcessed } from '$lib/utils/types.js';
+	// import Multiselect from '$lib/components/Multiselect.svelte';
+	// import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
+	// import { type AdminProcessed } from '$lib/utils/types.js';
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
@@ -10,33 +10,28 @@
 	import Toasts from '$lib/components/Toasts.svelte';
 	let toasts: SvelteComponent;
 
-	export let data;
+	// export let data;
 	let table: SvelteComponent;
 
 	//for filters
-	$: {
-		if (browser) handleSelect($AdminFilterStore);
-	}
+	// $: {
+	// 	if (browser) handleSelect($AdminFilterStore);
+	// }
 
 	//for table
 	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
 	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
-	let admins: AdminProcessed[] = [];
+	// let admins: AdminProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		let adminObjects = data.adminRaws;
-		mapAdminDatabaseObjects(adminObjects);
-
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
+        if (!$AdminTable.length) {
+            handleSelect($AdminFilterStore);
+        }
 
 		channel = supabase
 			.channel('student-db-changes')
@@ -60,7 +55,7 @@
 
 	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
 		if (adminObjects !== null && adminObjects !== undefined) {
-			admins = adminObjects.map((admin) => {
+			$AdminTable = adminObjects.map((admin) => {
 				return {
 					adminID: admin.admin_id,
 					rfid: admin.rfid,
@@ -69,12 +64,15 @@
 				};
 			});
 		} else {
-			admins = [];
+			$AdminTable = [];
 		}
+        console.log($AdminTable)
 	}
 
 	// ----------------------------------------------------------------------------------
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
+	import { AdminTable } from '$lib/stores/AdminTables';
+	import { supabase } from '$lib/utils/utils';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
@@ -186,7 +184,7 @@
 		on:update={handleUpdate}
 		on:updateActive={handleUpdateActive}
 		{headers}
-		info={admins}
+		info={$AdminTable}
 		primaryKey="adminID"
 		bind:this={table}
 		{hide}
