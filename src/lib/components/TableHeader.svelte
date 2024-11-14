@@ -3,7 +3,7 @@
 	import { Icon, ChevronUp, ChevronDown } from 'svelte-hero-icons';
 	import { camelize } from '../utils/utils';
 
-	export let headers: Array<String>;
+	export let headers: Array<string>;
 	export let sortKey: string = 'isEnrolled';
 	export let sortDirection: number = 1;
 	export let isEditing: boolean;
@@ -34,7 +34,7 @@
 				class="{index === 0 ? 'sticky left-0' : ''} bg-white py-4 hover:cursor-pointer"
 				on:click={() => sortTable(camelize(header))}
 			>
-				<div class="flex gap-2" style="width: 180px;">
+				<div class="flex gap-2 min-w-min">
 					<!-- header name -->
 					<p class="font-bold">{header}</p>
 

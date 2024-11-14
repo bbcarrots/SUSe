@@ -10,33 +10,30 @@
 	import Toasts from '$lib/components/Toasts.svelte';
 	let toasts: SvelteComponent;
 
-	export let data;
+	// export let data;
 	let table: SvelteComponent;
 
 	//for filters
-	$: {
-		if (browser) handleSelect($ServiceFilterStore);
-	}
+	// $: {
+	// 	if (browser) handleSelect($ServiceFilterStore);
+	// }
 
 	//for table
 	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
 	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
-	let services: ServiceProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		let serviceObjects = data.serviceRaws;
-		mapServiceDatabaseObjects(serviceObjects);
-
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
+		// let serviceObjects = data.serviceRaws;
+		// mapServiceDatabaseObjects(serviceObjects);
+        
+        if (!$ServiceTable.length) {
+            handleSelect($ServiceFilterStore);
+        }
 
 		channel = supabase
 			.channel('student-db-changes')
@@ -60,7 +57,7 @@
 
 	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
 		if (serviceObjects !== null && serviceObjects !== undefined) {
-			services = serviceObjects.map((service) => {
+			$ServiceTable = serviceObjects.map((service) => {
 				return {
 					serviceID: service.service_id,
 					serviceTypeID: service.service_type_id,
@@ -70,12 +67,15 @@
 				};
 			});
 		} else {
-			services = [];
+			$ServiceTable = [];
 		}
+        console.log($ServiceTable);
 	}
 
 	// ----------------------------------------------------------------------------------
 	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
+	import { supabase } from '$lib/utils/utils.js';
+	import { ServiceTable } from '$lib/stores/AdminTables.js';
 
 	let deleteResponse: ServiceResponse;
 	let updateResponse: ServiceResponse;
@@ -165,7 +165,7 @@
 		on:delete={handleDelete}
 		on:update={handleUpdate}
 		{headers}
-		info={services}
+		info={$ServiceTable}
 		primaryKey="serviceID"
 		bind:this={table}
 		{hide}

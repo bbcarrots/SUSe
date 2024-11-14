@@ -11,13 +11,13 @@
 	import Toasts from '$lib/components/Toasts.svelte';
 	let toasts: SvelteComponent;
 
-	export let data;
+	// export let data;
 	let table: SvelteComponent;
 
 	//select everytime the usage log filter store is updated
-	$: {
-		if (browser) handleSelect($UsageLogFilterStore);
-	}
+	// $: {
+	// 	if (browser) handleSelect($UsageLogFilterStore);
+	// }
 
 	//for table
 	let headers: string[] = [
@@ -38,21 +38,25 @@
 		'adminID'
 	];
 
-	let usageLogs: UsageLogProcessed[] = [];
+	// let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
 	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
+    // let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		let usageLogObjects = data.usageLogRaws;
-		mapULDatabaseObjects(usageLogObjects);
+		// let usageLogObjects = data.usageLogRaws;
+		// mapULDatabaseObjects(usageLogObjects);
 
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
+		// supabase = createClient(
+		// 	'https://yfhwfzwacdlqmyunladz.supabase.co',
+		// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+		// );
+
+        if (!$UsageLogTable.length) {
+            handleSelect($UsageLogFilterStore);
+        }
 
 		channel = supabase
 			.channel('student-db-changes')
@@ -76,7 +80,7 @@
 
 	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
 		if (usageLogObjects !== null && usageLogObjects !== undefined) {
-			usageLogs = usageLogObjects.map((usageLog: any) => {
+			$UsageLogTable = usageLogObjects.map((usageLog: any) => {
 				return {
 					usageLogID: usageLog.ul_id,
 					serviceID: usageLog.service_id,
@@ -88,12 +92,15 @@
 				};
 			});
 		} else {
-			usageLogs = [];
+			$UsageLogTable = [];
 		}
+        console.log($UsageLogTable)
 	}
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
+	import { supabase } from '$lib/utils/utils';
+	import { UsageLogTable } from '$lib/stores/AdminTables';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
@@ -206,7 +213,7 @@
 		on:update={handleUpdate}
 		bind:this={table}
 		{headers}
-		info={usageLogs}
+		info={$UsageLogTable}
 		primaryKey="usageLogID"
 		{hide}
 		{disableEdit}

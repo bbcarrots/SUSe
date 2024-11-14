@@ -8,7 +8,7 @@
 	import Pagination from './Pagination.svelte';
 
 	export let info: Array<Object>;
-	export let headers: Array<String>;
+	export let headers: Array<string>;
 	export let primaryKey: string;
 	export let hide: Array<string>;
 	export let disableEdit: Array<string>;
