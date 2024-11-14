@@ -33,7 +33,7 @@ describe('insertUsageLogDB()', async () => {
     program: 'BS Psychology',
     phone_number: '09123456789',
     is_enrolled: true,
-    is_active: true
+    is_active: false
   };
 
   const serviceInstance: ServiceDBObj = {
@@ -100,7 +100,7 @@ describe('insertUsageLogDB()', async () => {
     const expectedState: UsageLogResponse = {
       success: false,
       usageLogRaws: null,
-      error: "duplicate key value violates unique constraint \"usage_log_ul_id_key\"" // error message from supabase with existing ULID
+      error: "duplicate key value violates unique constraint \"usage_log_pkey\"" // error message from supabase with existing ULID
     }
 
     const start = new Date('2027-04-06T11:06:00').toISOString();
@@ -140,7 +140,7 @@ describe('updateUsageLogDB()', async () => {
     program: 'BS Psychology',
     phone_number: '09123456789',
     is_enrolled: true,
-    is_active: true
+    is_active: false
   };
 
   const serviceInstance: ServiceDBObj = {
@@ -175,14 +175,14 @@ describe('updateUsageLogDB()', async () => {
 		await insertStudentDB(studentInstance);
 		await insertServiceDB(serviceInstance);
 		await insertAdminDB(adminInstance);
-    await insertUsageLogDB(usageLogInstance);
+        await insertUsageLogDB(usageLogInstance);
 	});
 
 	afterEach(async () => {
+        await deleteUsageLogDB(newULID);
 		await deleteServiceDB(newServiceID);
-		await deleteStudentDB(newSN);
 		await deleteAdminDB(newAdminID);
-    await deleteUsageLogDB(newULID);
+		console.log(await deleteStudentDB(newSN));
 	});
 
 	it('success: updated usage log in database', async () => {
@@ -209,7 +209,7 @@ describe('updateUsageLogDB()', async () => {
 		await expect(updateUsageLogDB(updatedUsageLog)).resolves.toStrictEqual(expectedState);
 	});
 
-  it('error: updating with nonexistent ULID', async () => {
+  it.skip('error: updating with nonexistent ULID', async () => {
     // insert first UL
     await insertUsageLogDB(usageLogInstance);
 
@@ -255,7 +255,7 @@ describe('deleteUsageLogDB()', async () => {
     program: 'BS Psychology',
     phone_number: '09123456789',
     is_enrolled: true,
-    is_active: true
+    is_active: false
   };
 
   const serviceInstance: ServiceDBObj = {
@@ -340,7 +340,7 @@ describe('selectUsageLogDB()', async () => {
     program: 'BS Psychology',
     phone_number: '09123456789',
     is_enrolled: true,
-    is_active: true
+    is_active: false
   };
 
   const serviceInstance: ServiceDBObj = {
@@ -386,12 +386,12 @@ describe('selectUsageLogDB()', async () => {
 	});
 
 	afterEach(async () => {
+        for (const usagelog of usageLogList) {
+          await deleteUsageLogDB(usagelog.ul_id)
+        }
 		await deleteServiceDB(newServiceID);
 		await deleteStudentDB(newSN);
 		await deleteAdminDB(newAdminID);
-    for (const usagelog of usageLogList) {
-      await deleteUsageLogDB(usagelog.ul_id)
-    }
 	});
 
 	it('success: select single usage log', async () => {

@@ -71,7 +71,7 @@ describe('fail: Student.insertStudent with same SN or same username', () => {
 		const expectedState: StudentResponse = {
 			success: false,
 			studentRaws: null,
-			error: 'duplicate key value violates unique constraint "student_sn_id_key"' // error message from supabase with existing SN
+			error: 'duplicate key value violates unique constraint "student_pkey"' // error message from supabase with existing SN
 		};
 
 		// create 2nd dummy studentSameSN with same SN
