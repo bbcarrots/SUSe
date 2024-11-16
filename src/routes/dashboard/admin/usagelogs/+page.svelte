@@ -41,24 +41,16 @@
 	// let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     // let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		// let usageLogObjects = data.usageLogRaws;
-		// mapULDatabaseObjects(usageLogObjects);
-
-		// supabase = createClient(
-		// 	'https://yfhwfzwacdlqmyunladz.supabase.co',
-		// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		// );
-
         if (!$UsageLogTable.length) {
             handleSelect($UsageLogFilterStore);
         }
 
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -75,7 +67,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
@@ -99,7 +91,7 @@
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
-	import { supabase } from '$lib/utils/utils';
+	import { supabaseFront } from '$lib/utils/utils';
 	import { UsageLogTable } from '$lib/stores/AdminTables';
 
 	let selectResponse: UsageLogResponse;

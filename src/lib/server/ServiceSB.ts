@@ -1,13 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-// import { env } from '$env/dynamic/public';
 import { type ServiceDBObj, type ServiceResponse } from '$lib/classes/Service';
 import { type ServiceFilter } from '$lib/utils/types';
-
-// creates the connection to SUSe supabase
-export const supabase = createClient(
-	'https://yfhwfzwacdlqmyunladz.supabase.co',
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-);
+import { supabase } from './SupabaseClient';
 
 const success: ServiceResponse = {
 	success: true,

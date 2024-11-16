@@ -1,7 +1,7 @@
 import { writable, type Writable } from 'svelte/store';
 import { type ServiceFilter, type StudentFilter, type AdminFilter, type UsageLogFilter } from '$lib/utils/types';
 
-export let ServiceFilterStore: Writable<ServiceFilter> = writable({
+export const ServiceFilterStore: Writable<ServiceFilter> = writable({
 	serviceID: 0,
 	serviceName: "",
 	serviceType: [],
@@ -10,7 +10,7 @@ export let ServiceFilterStore: Writable<ServiceFilter> = writable({
 });
 
 // filters for selecting student records
-export let StudentFilterStore: Writable<StudentFilter> = writable({
+export const StudentFilterStore: Writable<StudentFilter> = writable({
 	minStudentNumber: 0,
 	maxStudentNumber: 0,
 	username: "",
@@ -22,7 +22,7 @@ export let StudentFilterStore: Writable<StudentFilter> = writable({
 });
 
 // filters for selecting admin records
-export let AdminFilterStore: Writable<AdminFilter> = writable({
+export const AdminFilterStore: Writable<AdminFilter> = writable({
 	adminID: 0,
     rfid: 0,
 	nickname: "",
@@ -30,7 +30,7 @@ export let AdminFilterStore: Writable<AdminFilter> = writable({
 });
 
 // filters for selecting usage log records
-export let UsageLogFilterStore: Writable<UsageLogFilter> = writable({
+export const UsageLogFilterStore: Writable<UsageLogFilter> = writable({
 	usageLogID: 0,
 	studentNumber: 0,
     serviceType: [],
