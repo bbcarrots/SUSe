@@ -41,19 +41,11 @@
 	// let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     // let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		// let usageLogObjects = data.usageLogRaws;
-		// mapULDatabaseObjects(usageLogObjects);
-
-		// supabase = createClient(
-		// 	'https://yfhwfzwacdlqmyunladz.supabase.co',
-		// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		// );
-
         if (!$UsageLogTable.length) {
             handleSelect($UsageLogFilterStore);
         }
