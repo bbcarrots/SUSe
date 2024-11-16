@@ -35,7 +35,7 @@
             handleSelect($ServiceFilterStore);
         }
 
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -52,7 +52,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
@@ -74,7 +74,7 @@
 
 	// ----------------------------------------------------------------------------------
 	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
-	import { supabase } from '$lib/utils/utils.js';
+	import { supabaseFront } from '$lib/utils/utils.js';
 	import { ServiceTable } from '$lib/stores/AdminTables.js';
 
 	let deleteResponse: ServiceResponse;

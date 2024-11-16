@@ -40,7 +40,7 @@
             handleSelect($StudentFilterStore);
         }
 
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -57,7 +57,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
@@ -87,7 +87,7 @@
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
 	import { StudentTable } from '$lib/stores/AdminTables';
-	import { supabase } from '$lib/utils/utils';
+	import { supabaseFront } from '$lib/utils/utils';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;

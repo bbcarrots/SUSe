@@ -50,7 +50,7 @@
             handleSelect($UsageLogFilterStore);
         }
 
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -67,7 +67,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
@@ -91,7 +91,7 @@
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
-	import { supabase } from '$lib/utils/utils';
+	import { supabaseFront } from '$lib/utils/utils';
 	import { UsageLogTable } from '$lib/stores/AdminTables';
 
 	let selectResponse: UsageLogResponse;

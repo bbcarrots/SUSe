@@ -33,7 +33,7 @@
             handleSelect($AdminFilterStore);
         }
 
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -50,7 +50,7 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
@@ -72,7 +72,7 @@
 	// ----------------------------------------------------------------------------------
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
 	import { AdminTable } from '$lib/stores/AdminTables';
-	import { supabase } from '$lib/utils/utils';
+	import { supabaseFront } from '$lib/utils/utils';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;

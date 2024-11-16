@@ -1,9 +1,10 @@
-// import type { NumberInputSlots } from 'flowbite-svelte/NumberInput.svelte';
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_KEY } from '$env/static/public';
 
-export const supabase = createClient(
-    'https://yfhwfzwacdlqmyunladz.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
+// creates the connection to SUSe supabase
+export const supabaseFront = createClient(
+	PUBLIC_SUPABASE_URL ? PUBLIC_SUPABASE_URL: "",
+    PUBLIC_SUPABASE_KEY ? PUBLIC_SUPABASE_KEY: ""
 );
 
 export function camelize(str: string) {
