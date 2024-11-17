@@ -27,7 +27,8 @@
 		'Student Number',
 		'Admin ID',
 		'Date Time Start',
-		'Date Time End'
+		'Date Time End',
+        'Location'
 	];
 	let hide: string[] = [];
 	let disableEdit: string[] = [
@@ -35,7 +36,8 @@
 		'serviceID',
 		'studentNumber',
 		'serviceType',
-		'adminID'
+		'adminID',
+        'location'
 	];
 
 	// let usageLogs: UsageLogProcessed[] = [];
@@ -80,13 +82,13 @@
 					studentNumber: usageLog.sn_id,
 					adminID: usageLog.admin_id,
 					dateTimeStart: usageLog.datetime_start,
-					dateTimeEnd: usageLog.datetime_end
+					dateTimeEnd: usageLog.datetime_end,
+                    location: usageLog.location
 				};
 			});
 		} else {
 			$UsageLogTable = [];
 		}
-        console.log($UsageLogTable)
 	}
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';

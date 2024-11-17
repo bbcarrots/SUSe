@@ -32,9 +32,6 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 
 	const { data, error } = await query;
 
-    console.log(data)
-    console.log(error)
-
 	if (error) {
 		return {
 			success: false,

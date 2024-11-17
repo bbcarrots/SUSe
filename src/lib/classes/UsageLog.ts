@@ -15,6 +15,7 @@ export type UsageLogDBObj = {
 	service_type: string;
 	datetime_start: string;
 	datetime_end: string | null;
+    location: string;
 };
 
 // return value of usage log DB functions
@@ -36,7 +37,8 @@ export class UsageLog {
 			service_id: 'serviceID' in log ? log.serviceID : 0,
 			service_type: 'serviceType' in log ? log.serviceType : '',
 			datetime_start: 'dateTimeStart' in log ? new Date(log.dateTimeStart).toISOString() : '',
-			datetime_end: 'dateTimeEnd' in log && log.dateTimeEnd != null ? new Date(log.dateTimeEnd).toISOString() : ''
+			datetime_end: 'dateTimeEnd' in log && log.dateTimeEnd != null ? new Date(log.dateTimeEnd).toISOString() : '',
+            location: 'location' in log ? log.location : ''
 		};
 	}
 

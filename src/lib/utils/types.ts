@@ -19,6 +19,7 @@ export type UsageLogProcessed = {
 	serviceType: string;
 	dateTimeStart: string;
 	dateTimeEnd: string | null;
+    location: string;
 };
 
 export type ServiceProcessed = {
