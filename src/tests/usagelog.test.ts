@@ -21,6 +21,7 @@ describe('insertUsageLogDB()', async () => {
 	const newSN = 205100001;
 	const newAdminID = 212300001;
 	const newServiceID = 40001;
+    const newLocation = 'ENGG2';
 
   const studentInstance: StudentDBObj = {
     sn_id: newSN,
@@ -60,7 +61,8 @@ describe('insertUsageLogDB()', async () => {
     service_id: newServiceID,
     service_type: 'Laptop',
     datetime_start: start,
-    datetime_end: end
+    datetime_end: end,
+    location: newLocation
   };
 
 	beforeEach(async () => {
@@ -113,7 +115,8 @@ describe('insertUsageLogDB()', async () => {
       service_id: newServiceID,
       service_type: 'Laptop',
       datetime_start: start,
-      datetime_end: end
+      datetime_end: end,
+      location: newLocation
     };
 
     // insert sameULID, should error
@@ -128,6 +131,7 @@ describe('updateUsageLogDB()', async () => {
 	const newSN = 205100001;
 	const newAdminID = 212300001;
 	const newServiceID = 40001;
+    const newLocation = "ENGG2";
 
   const studentInstance: StudentDBObj = {
     sn_id: newSN,
@@ -167,7 +171,8 @@ describe('updateUsageLogDB()', async () => {
     service_id: newServiceID,
     service_type: 'Laptop',
     datetime_start: start,
-    datetime_end: end
+    datetime_end: end,
+    location: newLocation
   };
 
 	beforeEach(async () => {
@@ -182,7 +187,6 @@ describe('updateUsageLogDB()', async () => {
         await deleteUsageLogDB(newULID);
 		await deleteServiceDB(newServiceID);
 		await deleteAdminDB(newAdminID);
-		console.log(await deleteStudentDB(newSN));
 	});
 
 	it('success: updated usage log in database', async () => {
@@ -203,7 +207,8 @@ describe('updateUsageLogDB()', async () => {
       service_id: newServiceID,
       service_type: 'Laptop',
       datetime_start: start,
-      datetime_end: end
+      datetime_end: end,
+      location: newLocation
     };
 
 		await expect(updateUsageLogDB(updatedUsageLog)).resolves.toStrictEqual(expectedState);
@@ -230,7 +235,8 @@ describe('updateUsageLogDB()', async () => {
       service_id: newServiceID,
       service_type: 'Laptop',
       datetime_start: start,
-      datetime_end: end
+      datetime_end: end,
+      location: newLocation
     };
 
     // insert sameULID, should error
@@ -243,6 +249,7 @@ describe('deleteUsageLogDB()', async () => {
 	const newSN = 205100001;
 	const newAdminID = 212300001;
 	const newServiceID = 40001;
+    const newLocation = "ENGG2";
 
   const studentInstance: StudentDBObj = {
     sn_id: newSN,
@@ -281,7 +288,8 @@ describe('deleteUsageLogDB()', async () => {
     service_id: newServiceID,
     service_type: 'Laptop',
     datetime_start: start,
-    datetime_end: end
+    datetime_end: end,
+    location: newLocation
   };
 
 	beforeEach(async () => {
@@ -328,6 +336,7 @@ describe('selectUsageLogDB()', async () => {
 	const newSN = 205100001;
 	const newAdminID = 212300001;
 	const newServiceID = 40001;
+    const newLocation = "ENGG2";
 
   const studentInstance: StudentDBObj = {
     sn_id: newSN,
@@ -377,7 +386,8 @@ describe('selectUsageLogDB()', async () => {
         service_id: newServiceID,
         service_type: 'Laptop',
         datetime_start: start,
-        datetime_end: end
+        datetime_end: end,
+        location: newLocation
       };
 
 			usageLogList.push(usageLogInstance);

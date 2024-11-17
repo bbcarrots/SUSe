@@ -15,7 +15,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	let query = supabase
 		.from('usage_log')
 		.select(
-			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )'
+			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) ), location'
 		);
 	// .select() joins the usage_log, service, and service_type tables to get the `service_type` property
 
@@ -63,7 +63,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
                 service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
                 service_type: row.service.service_type.service_type, // we assume each service only has one service_type
                 datetime_start: row.datetime_start,
-                datetime_end: row.datetime_end != null ? row.datetime_end : null
+                datetime_end: row.datetime_end != null ? row.datetime_end : null,
+                location: row.location
             });
         } else if (filter.serviceType.length == 0) {
             formattedData.push({
@@ -73,7 +74,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
                 service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
                 service_type: row.service.service_type.service_type, // we assume each service only has one service_type
                 datetime_start: row.datetime_start,
-                datetime_end: row.datetime_end != null ? row.datetime_end : null
+                datetime_end: row.datetime_end != null ? row.datetime_end : null,
+                location: row.location
             });
         }
 	}

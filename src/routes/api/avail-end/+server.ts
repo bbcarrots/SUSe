@@ -1,3 +1,4 @@
+import { ENGG2_LOCATION } from '$env/static/private';
 import { Admin } from '$lib/classes/Admin.js';
 import { Service } from '$lib/classes/Service.js';
 import { Student } from '$lib/classes/Student.js';
@@ -93,7 +94,8 @@ export async function POST({ request }) {
 		service_id: service!.service_id,
 		service_type: service!.service_type,
 		datetime_start: dateToday,
-		datetime_end: ''
+		datetime_end: '',
+        location: ENGG2_LOCATION
 	};
 
 	delete (usageLog as { ul_id?: number }).ul_id;
@@ -204,7 +206,8 @@ export async function PATCH({ request }) {
 		service_id: 0,
 		service_type: '',
 		datetime_start: '',
-		datetime_end: dateToday
+		datetime_end: dateToday,
+        location: ''
 	};
 
 	delete (usageLog as { sn_id?: number }).sn_id;
