@@ -19,7 +19,7 @@
 	// }
 
 	//for table
-	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
+	let headers: string[] = adminHeaders;
 	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
 	// let admins: AdminProcessed[] = [];
@@ -72,6 +72,7 @@
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
 	import { AdminTable } from '$lib/stores/AdminTables';
 	import { supabaseFront } from '$lib/utils/utils';
+	import { adminHeaders } from '$lib/utils/filterOptions';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;

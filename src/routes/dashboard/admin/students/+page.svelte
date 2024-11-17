@@ -2,7 +2,7 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
-	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
+	import { collegePrograms, colleges, studentHeaders, studentNumberYear } from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
@@ -17,17 +17,7 @@
 	// }
 
 	//for table
-	let headers: string[] = [
-		'Student Number',
-		'First Name',
-		'Middle Initial',
-		'Last Name',
-		'Email',
-		'Phone Number',
-		'College',
-		'Program',
-		'Is Enrolled'
-	];
+	let headers: string[] = studentHeaders;
 	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
 

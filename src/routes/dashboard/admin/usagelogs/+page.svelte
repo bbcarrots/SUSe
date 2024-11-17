@@ -4,7 +4,7 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
-	import { serviceTypes } from '$lib/utils/filterOptions.js';
+	import { serviceTypes, usageLogHeaders } from '$lib/utils/filterOptions.js';
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 	import { browser } from '$app/environment';
@@ -20,16 +20,7 @@
 	// }
 
 	//for table
-	let headers: string[] = [
-		'Usage Log ID',
-		'Service ID',
-		'Service Type',
-		'Student Number',
-		'Admin ID',
-		'Date Time Start',
-		'Date Time End',
-        'Location'
-	];
+	let headers: string[] = usageLogHeaders;
 	let hide: string[] = [];
 	let disableEdit: string[] = [
 		'usageLogID',

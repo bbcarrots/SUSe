@@ -1,4 +1,4 @@
-import { ENGG2_LOCATION } from '$env/static/private';
+import { LOCATION } from '$env/static/private';
 import { Admin } from '$lib/classes/Admin.js';
 import { Service } from '$lib/classes/Service.js';
 import { Student } from '$lib/classes/Student.js';
@@ -95,7 +95,7 @@ export async function POST({ request }) {
 		service_type: service!.service_type,
 		datetime_start: dateToday,
 		datetime_end: '',
-        location: ENGG2_LOCATION
+        location: LOCATION
 	};
 
 	delete (usageLog as { ul_id?: number }).ul_id;

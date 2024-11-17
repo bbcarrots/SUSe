@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
-	import { serviceTypes, serviceStatus } from '$lib/utils/filterOptions.js';
+	import { serviceTypes, serviceStatus, serviceHeaders } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
 	import { type ServiceFilter } from '$lib/utils/types.js';
 	import { ServiceFilterStore } from '$lib/stores/Filters.js';
@@ -19,7 +19,7 @@
 	// }
 
 	//for table
-	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+	let headers: string[] = serviceHeaders;
 	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
 
