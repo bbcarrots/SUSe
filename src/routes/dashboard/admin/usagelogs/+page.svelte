@@ -7,19 +7,13 @@
 	import { serviceTypes, usageLogHeaders } from '$lib/utils/filterOptions.js';
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
-	import { browser } from '$app/environment';
 	import Toasts from '$lib/components/Toasts.svelte';
+    
+    // components
 	let toasts: SvelteComponent;
-
-	// export let data;
 	let table: SvelteComponent;
 
-	//select everytime the usage log filter store is updated
-	// $: {
-	// 	if (browser) handleSelect($UsageLogFilterStore);
-	// }
-
-	//for table
+	// for table
 	let headers: string[] = usageLogHeaders;
 	let hide: string[] = [];
 	let disableEdit: string[] = [
@@ -30,12 +24,10 @@
 		'adminID',
         'location'
 	];
-
-	// let usageLogs: UsageLogProcessed[] = [];
+	let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
 	import { type RealtimeChannel } from '@supabase/supabase-js';
-    // let supabase: SupabaseClient;
     let channel: RealtimeChannel;
 
 	onMount(() => {
@@ -80,7 +72,43 @@
 		} else {
 			$UsageLogTable = [];
 		}
+		filterUsageLogTable($UsageLogFilterStore);
 	}
+
+	function filterUsageLogTable(filter: UsageLogFilter) {
+        console.log(filter);
+		usageLogs = $UsageLogTable.filter((usageLog) => {
+			if (
+				filter.serviceType.length == 0 &&
+                filter.minDate == '' &&
+                filter.maxDate == ''
+			) {
+				return true;
+			}
+
+			if (filter.serviceType.length != 0) {
+				if (!(filter.serviceType.includes(usageLog.serviceType))) {
+                    return false;
+                }
+			} 
+
+			if (filter.minDate != '') {
+				if (new Date(usageLog.dateTimeStart) < new Date(filter.minDate)) {
+					return false;
+				}
+			}
+
+			if (filter.maxDate != '') {
+				if (filter.maxDate != null && usageLog.dateTimeEnd != null && new Date(usageLog.dateTimeEnd) > new Date(filter.maxDate)) {
+					return false;
+				}
+			}
+
+			return true;
+		});
+	}
+
+	$: filterUsageLogTable($UsageLogFilterStore);
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
@@ -198,7 +226,7 @@
 		on:update={handleUpdate}
 		bind:this={table}
 		{headers}
-		info={$UsageLogTable}
+		info={usageLogs}
 		primaryKey="usageLogID"
 		{hide}
 		{disableEdit}
