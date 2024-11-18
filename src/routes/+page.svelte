@@ -14,6 +14,7 @@
 	// ----------------------------------------------------------------------------------
 	import type { StudentResponse } from '$lib/classes/Student.js';
 	import type { AdminResponse } from '$lib/classes/Admin.js';
+	import Footer from '$lib/components/Footer.svelte';
 
 	let rfidResponse: StudentResponse | AdminResponse;
 
@@ -71,29 +72,33 @@
 </script>
 
 {#if !loading}
-	<section class="flex items-center justify-center lg:h-screen">
-		<div
-			class="content grid
-					gap-y-12 sm:grid-cols-4 sm:grid-rows-2
-					lg:grid-cols-12 lg:grid-rows-1 lg:gap-20"
-		>
-			<div
-				class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
-						lg:col-start-2 lg:col-end-7 lg:row-start-1"
-			>
-				<LoginForm bind:clicks on:inputRFID={handleRFID} />
-				{#if form != null && form.error != null}
-					<p class="text-red-600">{form.error}</p>
-				{/if}
-			</div>
-			<div
-				class="sm:col-span-2 sm:col-start-2 sm:row-start-2 lg:col-span-5
-						lg:col-start-7 lg:col-end-12 lg:row-start-1"
-			>
-				<Hero />
-			</div>
-		</div>
-	</section>
+	<div class="flex flex-col justify-center lg:h-screen">
+        <section class="flex grow items-center justify-center">
+            <div
+                class="content grid
+                        gap-y-12 sm:grid-cols-4 sm:grid-rows-2
+                        lg:grid-cols-12 lg:grid-rows-1 lg:gap-20"
+            >
+                <div
+                    class="sm:col-span-2 sm:col-start-2 sm:row-start-1 lg:col-span-5
+                            lg:col-start-2 lg:col-end-7 lg:row-start-1"
+                >
+                    <LoginForm bind:clicks on:inputRFID={handleRFID} />
+                    {#if form != null && form.error != null}
+                        <p class="text-red-600">{form.error}</p>
+                    {/if}
+                </div>
+                <div
+                    class="sm:col-span-2 sm:col-start-2 sm:row-start-2 lg:col-span-5
+                            lg:col-start-7 lg:col-end-12 lg:row-start-1"
+                >
+                    <Hero />
+                </div>
+            </div>
+        </section>
+        
+        <Footer/>
+    </div>
 
 	<style>
 		.content {
