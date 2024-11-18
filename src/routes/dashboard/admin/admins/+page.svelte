@@ -7,12 +7,12 @@
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
-	let toasts: SvelteComponent;
 
-	// export let data;
+    // components
+	let toasts: SvelteComponent;
 	let table: SvelteComponent;
 
-	//for table
+	// for table
 	let headers: string[] = adminHeaders;
 	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
