@@ -133,3 +133,28 @@ export const adminNicknames = [
 	{ name: 'Mark', value: 2 },
 	{ name: 'Tala', value: 3 }
 ];
+
+// table headers
+export const adminHeaders = ['Admin ID', 'Nickname', 'Is Active'];
+export const serviceHeaders = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+export const studentHeaders = [
+    'Student Number',
+    'First Name',
+    'Middle Initial',
+    'Last Name',
+    'Email',
+    'Phone Number',
+    'College',
+    'Program',
+    'Is Enrolled'
+];
+export const usageLogHeaders = [
+    'Usage Log ID',
+    'Service ID',
+    'Service Type',
+    'Student Number',
+    'Admin ID',
+    'Date Time Start',
+    'Date Time End',
+    'Location'
+];

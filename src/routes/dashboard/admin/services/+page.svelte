@@ -1,35 +1,28 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
-	import { serviceTypes, serviceStatus } from '$lib/utils/filterOptions.js';
+	import { serviceTypes, serviceStatus, serviceHeaders } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
 	import { type ServiceFilter } from '$lib/utils/types.js';
 	import { ServiceFilterStore } from '$lib/stores/Filters.js';
-	import { browser } from '$app/environment';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
-	let toasts: SvelteComponent;
 
-	// export let data;
+    // components
+	let toasts: SvelteComponent;
 	let table: SvelteComponent;
 
-	//for filters
-	// $: {
-	// 	if (browser) handleSelect($ServiceFilterStore);
-	// }
-
-	//for table
-	let headers: string[] = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+	// for table
+	let headers: string[] = serviceHeaders;
 	let hide: string[] = ['serviceTypeID'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
+    let services: ServiceProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
 	import { type RealtimeChannel } from '@supabase/supabase-js';
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		// let serviceObjects = data.serviceRaws;
-		// mapServiceDatabaseObjects(serviceObjects);
         
         if (!$ServiceTable.length) {
             handleSelect($ServiceFilterStore);
@@ -69,7 +62,32 @@
 		} else {
 			$ServiceTable = [];
 		}
+        filterServiceTable($ServiceFilterStore);
 	}
+
+    function filterServiceTable(filter: ServiceFilter) {
+		services = $ServiceTable.filter((service) => {    
+            if (filter.serviceType.length == 0 && filter.inUse == null) {
+				return true;
+			}
+
+			if (filter.serviceType.length != 0) {
+				if (!(filter.serviceType.includes(service.serviceType))) {
+                    return false;
+                }
+			} 
+
+			if (filter.inUse != null) {
+				if (filter.inUse != service.inUse) {
+                    return false;
+                }
+			} 
+
+            return true;
+		});
+	}
+
+	$: filterServiceTable($ServiceFilterStore);
 
 	// ----------------------------------------------------------------------------------
 	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
@@ -164,7 +182,7 @@
 		on:delete={handleDelete}
 		on:update={handleUpdate}
 		{headers}
-		info={$ServiceTable}
+		info={services}
 		primaryKey="serviceID"
 		bind:this={table}
 		{hide}
