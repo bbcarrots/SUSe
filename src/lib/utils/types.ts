@@ -7,8 +7,8 @@ export type StudentProcessed = {
 	college: string;
 	program: string;
 	phoneNumber: string;
-	isEnrolled: boolean;
-    isActive: boolean;
+	isEnrolled: boolean | null;
+    isActive: boolean | null;
 };
 
 export type UsageLogProcessed = {
@@ -19,6 +19,7 @@ export type UsageLogProcessed = {
 	serviceType: string;
 	dateTimeStart: string;
 	dateTimeEnd: string | null;
+    location: string;
 };
 
 export type ServiceProcessed = {

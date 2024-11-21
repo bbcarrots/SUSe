@@ -1,44 +1,33 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
-	import Multiselect from '$lib/components/Multiselect.svelte';
-	import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
+	// import Multiselect from '$lib/components/Multiselect.svelte';
+	// import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
 	import { type AdminProcessed } from '$lib/utils/types.js';
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
-	import { browser } from '$app/environment';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
-	let toasts: SvelteComponent;
 
-	export let data;
+    // components
+	let toasts: SvelteComponent;
 	let table: SvelteComponent;
 
-	//for filters
-	$: {
-		if (browser) handleSelect($AdminFilterStore);
-	}
-
-	//for table
-	let headers: string[] = ['Admin ID', 'Nickname', 'Is Active'];
+	// for table
+	let headers: string[] = adminHeaders;
 	let hide: string[] = ['rfid'];
 	let disableEdit: string[] = ['adminID'];
 	let admins: AdminProcessed[] = [];
 
-    // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
-    let channel: RealtimeChannel;
+	// ----------------------------------------------------------------------------------
+	import { type RealtimeChannel } from '@supabase/supabase-js';
+	let channel: RealtimeChannel;
 
 	onMount(() => {
-		let adminObjects = data.adminRaws;
-		mapAdminDatabaseObjects(adminObjects);
+		if (!$AdminTable.length) {
+			handleSelect($AdminFilterStore);
+		}
 
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
-
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -54,13 +43,13 @@
 			.subscribe();
 	});
 
-    onDestroy(() => {
-		supabase.removeChannel(channel)
-    })
+	onDestroy(() => {
+		supabaseFront.removeChannel(channel);
+	});
 
 	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
 		if (adminObjects !== null && adminObjects !== undefined) {
-			admins = adminObjects.map((admin) => {
+			$AdminTable = adminObjects.map((admin) => {
 				return {
 					adminID: admin.admin_id,
 					rfid: admin.rfid,
@@ -69,12 +58,28 @@
 				};
 			});
 		} else {
-			admins = [];
+			$AdminTable = [];
 		}
+		filterAdminTable($AdminFilterStore);
 	}
+
+	function filterAdminTable(filter: AdminFilter) {
+		admins = $AdminTable.filter((admin) => {
+			if (filter.isActive != null && filter.isActive == admin.isActive) {
+				return true;
+			} else if (filter.isActive == null) {
+				return true;
+			}
+		});
+	}
+
+	$: filterAdminTable($AdminFilterStore);
 
 	// ----------------------------------------------------------------------------------
 	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
+	import { AdminTable } from '$lib/stores/AdminTables';
+	import { supabaseFront } from '$lib/utils/utils';
+	import { adminHeaders } from '$lib/utils/filterOptions';
 
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
@@ -112,9 +117,19 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
-			toasts.addToast({ message: "Successfully deleted admin entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully deleted admin entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to delete admin entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to delete admin entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 
@@ -134,9 +149,19 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
-			toasts.addToast({ message: "Successfully updated admin entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully updated admin entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to update admin entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to update admin entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 
@@ -157,9 +182,19 @@
 		updateActiveResponse = await response.json();
 		if (updateActiveResponse.success) {
 			table.updateEntryActiveUI();
-			toasts.addToast({ message: "Successfully updated active status of admin entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully updated active status of admin entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to update active status of admin entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to update active status of admin entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 </script>

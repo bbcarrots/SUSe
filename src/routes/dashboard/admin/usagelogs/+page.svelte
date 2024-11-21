@@ -4,57 +4,38 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type UsageLogProcessed } from '$lib/utils/types.js';
-	import { serviceTypes } from '$lib/utils/filterOptions.js';
+	import { serviceTypes, usageLogHeaders } from '$lib/utils/filterOptions.js';
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
-	import { browser } from '$app/environment';
 	import Toasts from '$lib/components/Toasts.svelte';
+    
+    // components
 	let toasts: SvelteComponent;
-
-	export let data;
 	let table: SvelteComponent;
 
-	//select everytime the usage log filter store is updated
-	$: {
-		if (browser) handleSelect($UsageLogFilterStore);
-	}
-
-	//for table
-	let headers: string[] = [
-		'Usage Log ID',
-		'Service ID',
-		'Service Type',
-		'Student Number',
-		'Admin ID',
-		'Date Time Start',
-		'Date Time End'
-	];
+	// for table
+	let headers: string[] = usageLogHeaders;
 	let hide: string[] = [];
 	let disableEdit: string[] = [
 		'usageLogID',
 		'serviceID',
 		'studentNumber',
 		'serviceType',
-		'adminID'
+		'adminID',
+        'location'
 	];
-
 	let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
+	import { type RealtimeChannel } from '@supabase/supabase-js';
     let channel: RealtimeChannel;
 
 	onMount(() => {
-		let usageLogObjects = data.usageLogRaws;
-		mapULDatabaseObjects(usageLogObjects);
+        if (!$UsageLogTable.length) {
+            handleSelect($UsageLogFilterStore);
+        }
 
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
-
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -71,12 +52,12 @@
 	});
 
     onDestroy(() => {
-		supabase.removeChannel(channel)
+		supabaseFront.removeChannel(channel)
     })
 
 	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
 		if (usageLogObjects !== null && usageLogObjects !== undefined) {
-			usageLogs = usageLogObjects.map((usageLog: any) => {
+			$UsageLogTable = usageLogObjects.map((usageLog: any) => {
 				return {
 					usageLogID: usageLog.ul_id,
 					serviceID: usageLog.service_id,
@@ -84,16 +65,55 @@
 					studentNumber: usageLog.sn_id,
 					adminID: usageLog.admin_id,
 					dateTimeStart: usageLog.datetime_start,
-					dateTimeEnd: usageLog.datetime_end
+					dateTimeEnd: usageLog.datetime_end,
+                    location: usageLog.location
 				};
 			});
 		} else {
-			usageLogs = [];
+			$UsageLogTable = [];
 		}
+		filterUsageLogTable($UsageLogFilterStore);
 	}
+
+	function filterUsageLogTable(filter: UsageLogFilter) {
+        console.log(filter);
+		usageLogs = $UsageLogTable.filter((usageLog) => {
+			if (
+				filter.serviceType.length == 0 &&
+                filter.minDate == '' &&
+                filter.maxDate == ''
+			) {
+				return true;
+			}
+
+			if (filter.serviceType.length != 0) {
+				if (!(filter.serviceType.includes(usageLog.serviceType))) {
+                    return false;
+                }
+			} 
+
+			if (filter.minDate != '') {
+				if (new Date(usageLog.dateTimeStart) < new Date(filter.minDate)) {
+					return false;
+				}
+			}
+
+			if (filter.maxDate != '') {
+				if (filter.maxDate != null && usageLog.dateTimeEnd != null && new Date(usageLog.dateTimeEnd) > new Date(filter.maxDate)) {
+					return false;
+				}
+			}
+
+			return true;
+		});
+	}
+
+	$: filterUsageLogTable($UsageLogFilterStore);
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
 	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
+	import { supabaseFront } from '$lib/utils/utils';
+	import { UsageLogTable } from '$lib/stores/AdminTables';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;

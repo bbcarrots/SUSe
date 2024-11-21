@@ -167,14 +167,14 @@ describe('selectAdminDB()', async () => {
   const newAdminNumber = 202100004;
   const newRFID = 700004;
 
-  let adminInstanceOne: AdminDBObj = {
+  const adminInstanceOne: AdminDBObj = {
     admin_id: newAdminNumber,
     rfid: newRFID,
     nickname: 'Spongebob',
     is_active: true
   };
 
-  let adminInstanceTwo: AdminDBObj = {
+  const adminInstanceTwo: AdminDBObj = {
     admin_id: newAdminNumber + 1,
     rfid: newRFID + 1,
     nickname: 'Squidward',
@@ -195,14 +195,14 @@ describe('selectAdminDB()', async () => {
   });
 
   afterEach(async () => {
-    let adminInstanceOne: AdminDBObj = {
+    const adminInstanceOne: AdminDBObj = {
       admin_id: newAdminNumber,
       rfid: newRFID,
       nickname: 'Spongebob',
       is_active: false
     };
   
-    let adminInstanceTwo: AdminDBObj = {
+    const adminInstanceTwo: AdminDBObj = {
       admin_id: newAdminNumber + 1,
       rfid: newRFID + 1,
       nickname: 'Squidward',
@@ -256,7 +256,6 @@ describe('selectAdminDB()', async () => {
 		};
 
     const selectOutput = await selectAdminDB(activeAdminFilter);
-    const expectedAdmins = ['Spongebob', 'Squidward'];
 
 		if (selectOutput.adminRaws !== null) {
       const selectOutputNames = selectOutput.adminRaws.map(admin => admin.nickname)

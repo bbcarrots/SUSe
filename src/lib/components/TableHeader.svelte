@@ -2,12 +2,24 @@
 	import { TableHead, TableHeadCell, Checkbox } from 'flowbite-svelte';
 	import { Icon, ChevronUp, ChevronDown } from 'svelte-hero-icons';
 	import { camelize } from '../utils/utils';
+	import { adminHeaders, serviceHeaders, usageLogHeaders } from '$lib/utils/filterOptions';
 
-	export let headers: Array<String>;
-	export let sortKey: string = 'isEnrolled';
+	export let headers: Array<string>;
+	export let sortKey: string;
 	export let sortDirection: number = 1;
 	export let isEditing: boolean;
 	export let hide: Array<string>;
+
+    if (headers == adminHeaders) {
+        sortKey = 'adminID';
+    } else if (headers == serviceHeaders) {
+        sortKey = 'inUse';
+    } else if (headers == usageLogHeaders) {
+        sortKey = 'usageLogID';
+        sortDirection = -sortDirection;
+    } else {
+        sortKey = 'isEnrolled'
+    }
 
     export const sortTable = (key: string): void => {
         /* If the user is not editing, set the appropriate sortKey and sortDirection based on the key. */
@@ -34,7 +46,7 @@
 				class="{index === 0 ? 'sticky left-0' : ''} bg-white py-4 hover:cursor-pointer"
 				on:click={() => sortTable(camelize(header))}
 			>
-				<div class="flex gap-2" style="width: 180px;">
+				<div class="flex gap-2 min-w-min">
 					<!-- header name -->
 					<p class="font-bold">{header}</p>
 

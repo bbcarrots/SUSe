@@ -2,51 +2,35 @@
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
 	import { type StudentProcessed } from '$lib/utils/types.js';
-	import { collegePrograms, colleges, studentNumberYear } from '$lib/utils/filterOptions.js';
+	import {
+		collegePrograms,
+		colleges,
+		studentHeaders,
+		studentNumberYear
+	} from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
-	import { browser } from '$app/environment';
-	let toasts: SvelteComponent;
 
-	export let data;
+    // components
+	let toasts: SvelteComponent;
 	let table: SvelteComponent;
 
-	//for filters
-	$: {
-		if (browser) handleSelect($StudentFilterStore);
-	}
-
-	//for table
-	let headers: string[] = [
-		'Student Number',
-		'First Name',
-		'Middle Initial',
-		'Last Name',
-		'Email',
-		'Phone Number',
-		'College',
-		'Program',
-		'Is Enrolled'
-	];
+	// for table
+	let headers: string[] = studentHeaders;
 	let hide: string[] = ['isEnrolled', 'isActive'];
 	let disableEdit: string[] = ['email', 'studentNumber'];
 	let students: StudentProcessed[] = [];
 
 	// ----------------------------------------------------------------------------------
-	import { type RealtimeChannel, type SupabaseClient, createClient } from '@supabase/supabase-js';
-    let supabase: SupabaseClient;
-    let channel: RealtimeChannel;
+	import { type RealtimeChannel } from '@supabase/supabase-js';
+	let channel: RealtimeChannel;
 
 	onMount(() => {
-		let studentObjects = data.studentRaws;
-		mapStudentDatabaseObjects(studentObjects);
+		if (!$StudentTable.length) {
+			handleSelect($StudentFilterStore);
+		}
 
-		supabase = createClient(
-			'https://yfhwfzwacdlqmyunladz.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-		);
-
-		channel = supabase
+		channel = supabaseFront
 			.channel('student-db-changes')
 			.on(
 				'postgres_changes',
@@ -55,20 +39,21 @@
 					schema: 'public',
 					table: 'student'
 				},
-				() => { // has payload arg if you want to print
+				() => {
+					// has payload arg if you want to print
 					handleSelect($StudentFilterStore);
 				}
 			)
 			.subscribe();
 	});
 
-    onDestroy(() => {
-		supabase.removeChannel(channel)
-    })
+	onDestroy(() => {
+		supabaseFront.removeChannel(channel);
+	});
 
 	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
-			students = studentObjects.map((student) => {
+			$StudentTable = studentObjects.map((student) => {
 				return {
 					studentNumber: student.sn_id,
 					firstName: student.first_name,
@@ -83,14 +68,74 @@
 				};
 			});
 		} else {
-			students = [];
+			$StudentTable = [];
 		}
+		filterStudentTable($StudentFilterStore);
 	}
+
+	function filterStudentTable(filter: StudentFilter) {
+        console.log(filter);
+		students = $StudentTable.filter((student) => {
+            // console.log(student)
+			if (
+				filter.minStudentNumber == null &&
+				filter.maxStudentNumber == null &&
+				filter.college.length == 0 &&
+				filter.program.length == 0 &&
+                filter.isActive == null &&
+                filter.isEnrolled == null
+			) {
+				return true;
+			}
+
+			if (filter.minStudentNumber != 0) {
+				if (student.studentNumber < filter.minStudentNumber * 100000) {
+					return false;
+				}
+			}
+
+			if (filter.maxStudentNumber != 0) {
+				if (student.studentNumber > (filter.maxStudentNumber + 1) * 100000) {
+					return false;
+				}
+			}
+
+            if (filter.college.length != 0) {
+				if (!(filter.college.includes(student.college))) {
+					return false;
+				}
+			}
+
+            if (filter.program.length != 0) {
+				if (!(filter.program.includes(student.program))) {
+					return false;
+				}
+			}
+
+			if (filter.isActive != null) {
+				if (filter.isActive != student.isActive) {
+					return false;
+				}
+			}
+
+			if (filter.isEnrolled != null) {
+				if (filter.isEnrolled != student.isEnrolled) {
+					return false;
+				}
+			}
+
+			return true;
+		});
+	}
+
+	$: filterStudentTable($StudentFilterStore);
 
 	// ----------------------------------------------------------------------------------
 	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
 	import { SvelteComponent, onDestroy, onMount } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
+	import { StudentTable } from '$lib/stores/AdminTables';
+	import { supabaseFront } from '$lib/utils/utils';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;
@@ -130,9 +175,19 @@
 		approveResponse = await response.json();
 		if (approveResponse.success == true) {
 			table.approveEntryUI();
-			toasts.addToast({ message: "Successfully approved student entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully approved student entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to approve student entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to approve student entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 
@@ -151,9 +206,19 @@
 		deleteResponse = await response.json();
 		if (deleteResponse.success == true) {
 			table.deleteEntryUI();
-			toasts.addToast({ message: "Successfully deleted student entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully deleted student entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to delete student entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to delete student entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 
@@ -173,9 +238,19 @@
 		updateResponse = await response.json();
 		if (updateResponse.success == true) {
 			table.updateEntryUI();
-			toasts.addToast({ message: "Successfully updated student entry", timeout: 3, type: 'success', open: true })
+			toasts.addToast({
+				message: 'Successfully updated student entry',
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
 		} else {
-			toasts.addToast({ message: "Failed to update student entry", timeout: 3, type: 'error', open: true })
+			toasts.addToast({
+				message: 'Failed to update student entry',
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
 		}
 	}
 </script>
@@ -226,7 +301,7 @@
 				bind:value={$StudentFilterStore.minStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
-				<option class="text-grey-200" value={null}></option>
+				<option class="text-grey-200" value={0}></option>
 				{#each studentNumberYear as year}
 					<option value={year.value}>{year.name}</option>
 				{/each}
@@ -241,9 +316,11 @@
 				bind:value={$StudentFilterStore.maxStudentNumber}
 				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
 			>
-				<option class="text-grey-200" value={null}></option>
+				<option class="text-grey-200" value={0}></option>
 				{#each studentNumberYear as year}
-					<option value={year.value} disabled={year.value < $StudentFilterStore.minStudentNumber}>{year.name}</option>
+					<option value={year.value} disabled={year.value < $StudentFilterStore.minStudentNumber}
+						>{year.name}</option
+					>
 				{/each}
 			</select>
 		</div>

@@ -86,7 +86,7 @@
 		<div class="grid gap-6 text-center">
 			<div class="grid gap-4">
 				<h1>Tap your UP ID to log in or register</h1>
-				<h4>Avail Engglib services using SUSê by tapping your RFID!</h4>
+				<h4>Avail EnggLib services using SUSê by tapping your RFID!</h4>
 			</div>
 
 			<input type="password" id="rfidInput" bind:value={rfidValue} autofocus />

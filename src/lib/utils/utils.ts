@@ -1,6 +1,13 @@
-import type { NumberInputSlots } from 'flowbite-svelte/NumberInput.svelte';
+import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_KEY } from '$env/static/public';
 
-export function camelize(str: String) {
+// creates the connection to SUSe supabase
+export const supabaseFront = createClient(
+	PUBLIC_SUPABASE_URL ? PUBLIC_SUPABASE_URL: "",
+    PUBLIC_SUPABASE_KEY ? PUBLIC_SUPABASE_KEY: ""
+);
+
+export function camelize(str: string) {
 	return str
 		.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
 			return index === 0 ? word.toLowerCase() : word.toUpperCase();

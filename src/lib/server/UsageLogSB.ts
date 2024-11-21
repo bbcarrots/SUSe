@@ -1,13 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-// import { env } from '$env/dynamic/public';
 import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog';
 import type { UsageLogFilter } from '$lib/utils/types';
-
-// creates the connection to SUSe supabase
-export const supabase = createClient(
-	'https://yfhwfzwacdlqmyunladz.supabase.co',
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlmaHdmendhY2RscW15dW5sYWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MDIyNjEsImV4cCI6MjAyNTQ3ODI2MX0.gzr5edDIVJXS1YYsQSyuZhc3oHGQYuVDtVfH4_2d30A'
-);
+import { supabase } from './SupabaseClient';
 
 const success = {
 	success: true,
@@ -22,7 +15,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
 	let query = supabase
 		.from('usage_log')
 		.select(
-			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) )'
+			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) ), location'
 		);
 	// .select() joins the usage_log, service, and service_type tables to get the `service_type` property
 
@@ -70,7 +63,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
                 service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
                 service_type: row.service.service_type.service_type, // we assume each service only has one service_type
                 datetime_start: row.datetime_start,
-                datetime_end: row.datetime_end != null ? row.datetime_end : null
+                datetime_end: row.datetime_end != null ? row.datetime_end : null,
+                location: row.location
             });
         } else if (filter.serviceType.length == 0) {
             formattedData.push({
@@ -80,7 +74,8 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
                 service_id: row.service.service_id, // will fix later after tinkering with supabase type returns
                 service_type: row.service.service_type.service_type, // we assume each service only has one service_type
                 datetime_start: row.datetime_start,
-                datetime_end: row.datetime_end != null ? row.datetime_end : null
+                datetime_end: row.datetime_end != null ? row.datetime_end : null,
+                location: row.location
             });
         }
 	}
