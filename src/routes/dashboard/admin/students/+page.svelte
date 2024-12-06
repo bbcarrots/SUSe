@@ -74,9 +74,7 @@
 	}
 
 	function filterStudentTable(filter: StudentFilter) {
-        console.log(filter);
 		students = $StudentTable.filter((student) => {
-            // console.log(student)
 			if (
 				filter.minStudentNumber == null &&
 				filter.maxStudentNumber == null &&
