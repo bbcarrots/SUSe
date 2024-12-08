@@ -48,6 +48,7 @@
 		"flowbite": "^2.3.0",
 		"flowbite-svelte": "^0.44.23",
 		"playwright": "^1.41.2",
+		"supabase": "^2.0.0",
 		"tailwind-merge": "^2.2.1"
 	}
 }
