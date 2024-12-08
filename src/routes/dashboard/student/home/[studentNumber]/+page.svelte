@@ -17,53 +17,6 @@
 	let activeUsageLogs: { [key: string]: UsageLogDBObj } =
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
 
-    // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel } from '@supabase/supabase-js';
-	import { onMount, onDestroy } from 'svelte';
-    let channel: RealtimeChannel;
-
-	onMount(() => {
-		channel = supabaseFront
-			.channel('student-db-changes')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'service',
-                    filter: 'in_use=eq.true'
-				},
-				(payload) => {
-                    for (const serviceType of serviceTypes) {
-                        if (serviceType.value == payload.new.service_type_id) {
-                             availableServices[serviceType.name] -= 1;
-                        }
-                    }
-				}
-			)
-            .on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'service',
-                    filter: 'in_use=eq.false'
-				},
-				(payload) => {
-                    for (const serviceType of serviceTypes) {
-                        if (serviceType.value == payload.new.service_type_id) {
-                             availableServices[serviceType.name] += 1;
-                        }
-                    }
-				}
-			)
-			.subscribe();
-	});
-
-    onDestroy(() => {
-		supabaseFront.removeChannel(channel)
-    })
-
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
 	import { serviceTypes } from '$lib/utils/filterOptions.js';
