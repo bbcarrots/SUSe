@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
 	// import Multiselect from '$lib/components/Multiselect.svelte';
-	// import { userStatus, adminNicknames } from '$lib/utils/filterOptions.js';
+	// import { userStatus } from '$lib/utils/filterOptions.js';
 	import { type AdminProcessed } from '$lib/utils/types.js';
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';

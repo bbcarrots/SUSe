@@ -128,12 +128,6 @@ export const serviceStatus = [
 	{ name: 'In Use', value: 2 }
 ];
 
-export const adminNicknames = [
-	{ name: 'Eloi', value: 1 },
-	{ name: 'Mark', value: 2 },
-	{ name: 'Tala', value: 3 }
-];
-
 // table headers
 export const adminHeaders = ['Admin ID', 'Nickname', 'Is Active'];
 export const serviceHeaders = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
