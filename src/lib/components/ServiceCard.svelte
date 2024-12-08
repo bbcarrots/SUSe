@@ -11,9 +11,9 @@
 	export let available: number;
 	export let src: string;
 
-	let formData: any = {
+	let formData: {consented: Boolean, serviceID: Number} = {
 		consented: false,
-		data: null
+		serviceID: 0
 	};
 
 	export let timeStarted: Date;
@@ -27,18 +27,17 @@
 
 	const dispatch = createEventDispatcher(); // for forwarding events
 
+	// ----------------------------------------------------------------------------------
+
 	function startService() {
-		started = true;
 		timeStarted = timeNow;
 		countdown = formatTime(0);
 		popupModalStart = false;
 
-		dispatch('availService', { serviceType: serviceName });
+		dispatch('availService', { serviceID: formData.serviceID, serviceType: serviceName });
 	}
 
 	function endService() {
-		started = false;
-		timeEnded = timeNow;
 		popupModalEnd = false;
 
         dispatch('endService', { serviceType: serviceName })
