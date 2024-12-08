@@ -2,7 +2,8 @@
 	import ServiceCard from '$lib/components/ServiceCard.svelte';
 	import { userID } from '$lib/stores/User';
 	import { page } from '$app/stores';
-	import { camelize, supabaseFront } from '$lib/utils/utils.js';
+	import { camelize } from '$lib/utils/utils.js';
+	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
 
 	export let data;
 
@@ -18,55 +19,6 @@
 		data.activeUsageLogs != undefined ? data.activeUsageLogs : {};
 
     // ----------------------------------------------------------------------------------
-	// import { type RealtimeChannel } from '@supabase/supabase-js';
-	// import { onMount, onDestroy } from 'svelte';
-	// import { serviceTypes } from '$lib/utils/filterOptions.js';
-    // let channel: RealtimeChannel;
-
-	// onMount(() => {
-	// 	channel = supabaseFront
-	// 		.channel('student-db-changes')
-	// 		.on(
-	// 			'postgres_changes',
-	// 			{
-	// 				event: '*',
-	// 				schema: 'public',
-	// 				table: 'service',
-    //                 filter: 'in_use=eq.true'
-	// 			},
-	// 			(payload) => {
-    //                 for (const serviceType of serviceTypes) {
-    //                     if (serviceType.value == payload.new.service_type_id) {
-    //                          availableServices[serviceType.name] -= 1;
-    //                     }
-    //                 }
-	// 			}
-	// 		)
-    //         .on(
-	// 			'postgres_changes',
-	// 			{
-	// 				event: '*',
-	// 				schema: 'public',
-	// 				table: 'service',
-    //                 filter: 'in_use=eq.false'
-	// 			},
-	// 			(payload) => {
-    //                 for (const serviceType of serviceTypes) {
-    //                     if (serviceType.value == payload.new.service_type_id) {
-    //                          availableServices[serviceType.name] += 1;
-    //                     }
-    //                 }
-	// 			}
-	// 		)
-	// 		.subscribe();
-	// });
-
-    // onDestroy(() => {
-	// 	supabaseFront.removeChannel(channel)
-    // })
-
-	// ----------------------------------------------------------------------------------
-	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
 
 	type StudentServicesResponse = {
 		success: boolean;
@@ -125,7 +77,8 @@
 		endServiceResponse = await response.json();
 
         if (endServiceResponse.success) {
-            delete activeUsageLogs[serviceType]
+            delete activeUsageLogs[serviceType];
+			availableServices[serviceType] += 1;
         }
 	}
 </script>
