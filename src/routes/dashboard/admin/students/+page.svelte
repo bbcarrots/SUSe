@@ -10,6 +10,11 @@
 	} from '$lib/utils/filterOptions.js';
 	import { type StudentFilter } from '$lib/utils/types.js';
 	import { StudentFilterStore } from '$lib/stores/Filters.js';
+	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
+	import { SvelteComponent } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
+	import { StudentTable } from '$lib/stores/AdminTables';
+	import { browser } from '$app/environment';
 
     // components
 	let toasts: SvelteComponent;
@@ -22,34 +27,6 @@
 	let students: StudentProcessed[] = [];
 
 	// ----------------------------------------------------------------------------------
-	import { type RealtimeChannel } from '@supabase/supabase-js';
-	let channel: RealtimeChannel;
-
-	onMount(() => {
-		if (!$StudentTable.length) {
-			handleSelect($StudentFilterStore);
-		}
-
-		channel = supabaseFront
-			.channel('student-db-changes')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'student'
-				},
-				() => {
-					// has payload arg if you want to print
-					handleSelect($StudentFilterStore);
-				}
-			)
-			.subscribe();
-	});
-
-	onDestroy(() => {
-		supabaseFront.removeChannel(channel);
-	});
 
 	function mapStudentDatabaseObjects(studentObjects: StudentDBObj[] | null) {
 		if (studentObjects !== null && studentObjects !== undefined) {
@@ -128,12 +105,14 @@
 
 	$: filterStudentTable($StudentFilterStore);
 
+	$: {
+		// refreshes the table if there are changes in the db
+		if (!$StudentTable.length && browser) {
+			handleSelect($StudentFilterStore);
+		}
+	}
+
 	// ----------------------------------------------------------------------------------
-	import type { StudentDBObj, StudentResponse } from '$lib/classes/Student.js';
-	import { SvelteComponent, onDestroy, onMount } from 'svelte';
-	import Toasts from '$lib/components/Toasts.svelte';
-	import { StudentTable } from '$lib/stores/AdminTables';
-	import { supabaseFront } from '$lib/utils/utils';
 
 	let approveResponse: StudentResponse;
 	let deleteResponse: StudentResponse;

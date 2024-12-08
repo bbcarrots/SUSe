@@ -8,6 +8,10 @@
 	import { type UsageLogFilter } from '$lib/utils/types.js';
 	import { UsageLogFilterStore } from '$lib/stores/Filters.js';
 	import Toasts from '$lib/components/Toasts.svelte';
+	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
+	import { SvelteComponent } from 'svelte';
+	import { UsageLogTable } from '$lib/stores/AdminTables';
+	import { browser } from '$app/environment';
     
     // components
 	let toasts: SvelteComponent;
@@ -27,33 +31,6 @@
 	let usageLogs: UsageLogProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel } from '@supabase/supabase-js';
-    let channel: RealtimeChannel;
-
-	onMount(() => {
-        if (!$UsageLogTable.length) {
-            handleSelect($UsageLogFilterStore);
-        }
-
-		channel = supabaseFront
-			.channel('student-db-changes')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'usage_log'
-				},
-				() => {
-					handleSelect($UsageLogFilterStore);
-				}
-			)
-			.subscribe();
-	});
-
-    onDestroy(() => {
-		supabaseFront.removeChannel(channel)
-    })
 
 	function mapULDatabaseObjects(usageLogObjects: UsageLogDBObj[] | null) {
 		if (usageLogObjects !== null && usageLogObjects !== undefined) {
@@ -108,11 +85,14 @@
 	}
 
 	$: filterUsageLogTable($UsageLogFilterStore);
+
+	$: {
+		// refreshes the table if there are changes in the db
+		if (!$UsageLogTable.length && browser) {
+			handleSelect($UsageLogFilterStore);
+		}
+	}
 	// ----------------------------------------------------------------------------------
-	import type { UsageLogDBObj, UsageLogResponse } from '$lib/classes/UsageLog.js';
-	import { SvelteComponent, onDestroy, onMount, type ComponentType } from 'svelte';
-	import { supabaseFront } from '$lib/utils/utils';
-	import { UsageLogTable } from '$lib/stores/AdminTables';
 
 	let selectResponse: UsageLogResponse;
 	let deleteResponse: UsageLogResponse;
