@@ -23,7 +23,7 @@
         with payload requirement: rfid. */
 
 		loading = true;
-		const payload = { isAdmin: false, rfid: event.detail };
+		const payload = { isAdmin: false, rfid: parseInt(event.detail) };
 
 		if (clicks == 5) {
 			payload.isAdmin = true;
