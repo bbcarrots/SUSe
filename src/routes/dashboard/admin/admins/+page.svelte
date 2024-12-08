@@ -5,10 +5,14 @@
 	import { type AdminProcessed } from '$lib/utils/types.js';
 	import { type AdminFilter } from '$lib/utils/types.js';
 	import { AdminFilterStore } from '$lib/stores/Filters.js';
-	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import { SvelteComponent } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
+	import { AdminTable } from '$lib/stores/AdminTables';
+	import { adminHeaders } from '$lib/utils/filterOptions';
+	import { browser } from '$app/environment';
+	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
 
-    // components
+	// components
 	let toasts: SvelteComponent;
 	let table: SvelteComponent;
 
@@ -19,33 +23,6 @@
 	let admins: AdminProcessed[] = [];
 
 	// ----------------------------------------------------------------------------------
-	import { type RealtimeChannel } from '@supabase/supabase-js';
-	let channel: RealtimeChannel;
-
-	onMount(() => {
-		if (!$AdminTable.length) {
-			handleSelect($AdminFilterStore);
-		}
-
-		channel = supabaseFront
-			.channel('student-db-changes')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'admin'
-				},
-				() => {
-					handleSelect($AdminFilterStore);
-				}
-			)
-			.subscribe();
-	});
-
-	onDestroy(() => {
-		supabaseFront.removeChannel(channel);
-	});
 
 	function mapAdminDatabaseObjects(adminObjects: AdminDBObj[] | null) {
 		if (adminObjects !== null && adminObjects !== undefined) {
@@ -75,12 +52,15 @@
 
 	$: filterAdminTable($AdminFilterStore);
 
-	// ----------------------------------------------------------------------------------
-	import type { AdminDBObj, AdminResponse } from '$lib/classes/Admin.js';
-	import { AdminTable } from '$lib/stores/AdminTables';
-	import { supabaseFront } from '$lib/utils/utils';
-	import { adminHeaders } from '$lib/utils/filterOptions';
+	$: {
+		// refreshes the table if there are changes in the db
+		if (!$AdminTable.length && browser) {
+			handleSelect($AdminFilterStore);
+		}
+	}
 
+	// ----------------------------------------------------------------------------------
+	
 	let deleteResponse: AdminResponse;
 	let updateResponse: AdminResponse;
 	let selectResponse: AdminResponse;
