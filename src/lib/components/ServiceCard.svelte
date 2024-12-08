@@ -30,7 +30,6 @@
 	// ----------------------------------------------------------------------------------
 
 	function startService() {
-		started = true;
 		timeStarted = timeNow;
 		countdown = formatTime(0);
 		popupModalStart = false;
@@ -39,8 +38,6 @@
 	}
 
 	function endService() {
-		started = false;
-		timeEnded = timeNow;
 		popupModalEnd = false;
 
         dispatch('endService', { serviceType: serviceName })

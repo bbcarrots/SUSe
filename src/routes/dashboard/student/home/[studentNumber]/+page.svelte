@@ -4,8 +4,11 @@
 	import { page } from '$app/stores';
 	import { camelize } from '$lib/utils/utils.js';
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
+	import type { SvelteComponent } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
 
 	export let data;
+	let toasts: SvelteComponent;
 
 	userID.set(Number($page.params.studentNumber));
 
@@ -51,9 +54,25 @@
 			}
 		});
 		
-		availServiceResponse = await response.json(); 
-		console.log(availServiceResponse)
-		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
+		availServiceResponse = await response.json();
+		
+		if (availServiceResponse.success) {
+			activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
+			toasts.addToast({
+				message: `${serviceType} availed successfully!`,
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
+		} else {
+			toasts.addToast({
+				message: availServiceResponse.error,
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
+		}
+		
 	}
 
 	async function handleEndService(event: CustomEvent) {
@@ -79,12 +98,25 @@
 		});
 
 		endServiceResponse = await response.json();
-		console.log(endServiceResponse)
 
         if (endServiceResponse.success) {
             delete activeUsageLogs[serviceType];
 			availableServices = endServiceResponse.availableServices
-        }
+
+			toasts.addToast({
+				message: `${serviceType} ended successfully!`,
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
+        } else {
+			toasts.addToast({
+				message: `${serviceType} availed unsuccessfully.`,
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
+		}
 	}
 </script>
 
@@ -117,3 +149,4 @@
 		<p>No available services</p>
 	{/if}
 </div>
+<Toasts bind:this={toasts}></Toasts>

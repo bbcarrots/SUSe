@@ -207,8 +207,6 @@ export async function PATCH({ request }) {
 	let studentUpdateResponse: StudentResponse
 
 	for (let usageLog of usageLogSelectResponse.usageLogRaws!) {
-		console.log(usageLog)
-
 		const newUsageLog = {
 			ul_id: usageLog.ul_id,
 			sn_id: 0,
