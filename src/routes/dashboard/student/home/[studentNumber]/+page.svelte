@@ -19,7 +19,6 @@
 
 	// ----------------------------------------------------------------------------------
 	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
-	import { serviceTypes } from '$lib/utils/filterOptions.js';
 
 	type StudentServicesResponse = {
 		success: boolean;
