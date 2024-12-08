@@ -1,12 +1,15 @@
 <script lang="ts">
 	import Table from '$lib/components/Table.svelte';
 	import Multiselect from '$lib/components/Multiselect.svelte';
-	import { serviceTypes, serviceStatus, serviceHeaders } from '$lib/utils/filterOptions.js';
+	import { serviceTypes, serviceHeaders } from '$lib/utils/filterOptions.js';
 	import { type ServiceProcessed } from '$lib/utils/types.js';
 	import { type ServiceFilter } from '$lib/utils/types.js';
 	import { ServiceFilterStore } from '$lib/stores/Filters.js';
-	import { SvelteComponent, onDestroy, onMount } from 'svelte';
+	import { SvelteComponent } from 'svelte';
 	import Toasts from '$lib/components/Toasts.svelte';
+	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
+	import { ServiceTable } from '$lib/stores/AdminTables.js';
+	import { browser } from '$app/environment';
 
     // components
 	let toasts: SvelteComponent;
@@ -19,35 +22,7 @@
     let services: ServiceProcessed[] = [];
 
     // ----------------------------------------------------------------------------------
-	import { type RealtimeChannel } from '@supabase/supabase-js';
-    let channel: RealtimeChannel;
-
-	onMount(() => {
-        
-        if (!$ServiceTable.length) {
-            handleSelect($ServiceFilterStore);
-        }
-
-		channel = supabaseFront
-			.channel('student-db-changes')
-			.on(
-				'postgres_changes',
-				{
-					event: '*',
-					schema: 'public',
-					table: 'service'
-				},
-				() => {
-					handleSelect($ServiceFilterStore);
-				}
-			)
-			.subscribe();
-	});
-
-    onDestroy(() => {
-		supabaseFront.removeChannel(channel)
-    })
-
+	
 	function mapServiceDatabaseObjects(serviceObjects: ServiceDBObj[] | null) {
 		if (serviceObjects !== null && serviceObjects !== undefined) {
 			$ServiceTable = serviceObjects.map((service) => {
@@ -89,10 +64,14 @@
 
 	$: filterServiceTable($ServiceFilterStore);
 
+	$: {
+		// refreshes the table if there are changes in the db
+		if (!$ServiceTable.length && browser) {
+			handleSelect($ServiceFilterStore);
+		}
+	}
+
 	// ----------------------------------------------------------------------------------
-	import type { ServiceDBObj, ServiceResponse } from '$lib/classes/Service.js';
-	import { supabaseFront } from '$lib/utils/utils.js';
-	import { ServiceTable } from '$lib/stores/AdminTables.js';
 
 	let deleteResponse: ServiceResponse;
 	let updateResponse: ServiceResponse;

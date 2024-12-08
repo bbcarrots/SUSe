@@ -1,21 +1,22 @@
 import { LOCATION } from '$env/static/private';
 import { Admin } from '$lib/classes/Admin.js';
 import { Service } from '$lib/classes/Service.js';
-import { Student } from '$lib/classes/Student.js';
-import { UsageLog, type UsageLogDBObj } from '$lib/classes/UsageLog.js';
+import { Student, type StudentResponse } from '$lib/classes/Student.js';
+import { UsageLog, type UsageLogDBObj, type UsageLogResponse } from '$lib/classes/UsageLog.js';
+import type { UsageLogFilter } from '$lib/utils/types.js';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
 	/* Handles Avail Service requests for service and usage log records. */
-	const { studentNumber, serviceType, updateStudent } = await request.json();
+	const { studentNumber, serviceID, serviceType, updateStudent } = await request.json();
 
 	//----------------------------------------------------SELECTS
 
 	const serviceSelectResponse = await Service.selectServices({
-		serviceID: 0,
+		serviceID: serviceID,
 		serviceName: '',
 		serviceType: serviceType,
-		inUse: false,
+		inUse: null,
 		isAdmin: true
 	});
 
@@ -26,7 +27,7 @@ export async function POST({ request }) {
 			success: false,
 			serviceRaws: null,
 			availableServices: null,
-			error: `Error: No available service of type ${serviceType}`
+			error: `Error: No available service with ID ${serviceID} of type ${serviceType}`
 		});
 	}
 
@@ -34,7 +35,7 @@ export async function POST({ request }) {
 
 	const adminSelectResponse = await Admin.selectAdmins({
 		adminID: 0,
-        rfid: 0,
+		rfid: 0,
 		nickname: '',
 		isActive: true
 	});
@@ -95,7 +96,7 @@ export async function POST({ request }) {
 		service_type: service!.service_type,
 		datetime_start: dateToday,
 		datetime_end: '',
-        location: LOCATION
+		location: LOCATION
 	};
 
 	delete (usageLog as { ul_id?: number }).ul_id;
@@ -110,7 +111,7 @@ export async function POST({ request }) {
 	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
 		usageLogID: 0,
 		studentNumber: studentNumber,
-        serviceType: [serviceType],
+		serviceType: [serviceType],
 		minDate: dateToday,
 		maxDate: null
 	});
@@ -130,19 +131,45 @@ export async function POST({ request }) {
 	});
 }
 
+async function updateStudent(sn: number) {
+	const studentUpdateResponse = await Student.updateStudent({
+		sn_id: sn,
+		rfid: 0,
+		username: '',
+		first_name: '',
+		middle_initial: '',
+		last_name: '',
+		college: '',
+		program: '',
+		phone_number: '',
+		is_enrolled: true,
+		is_active: false
+	});
+
+	return studentUpdateResponse
+}
+
 export async function PATCH({ request }) {
 	/* Handles End Service requests for service and usage log records. */
-	const { studentNumber, usageLogID, updateStudent } = await request.json();
+	const { studentNumber, usageLogID, serviceType, serviceID, isStudentUpdate } = await request.json();
 
 	//----------------------------------------------------SELECTS
 
-	const usageLogSelectResponse = await UsageLog.selectUsageLogs({
+	let usageLogFilter: UsageLogFilter = serviceType == "Discussion Room" ? {
+		usageLogID: 0,
+		studentNumber: 0,
+		serviceType: ["Discussion Room"],
+		minDate: '',
+		maxDate: null
+	} : {
 		usageLogID: usageLogID,
 		studentNumber: 0,
-        serviceType: [],
+		serviceType: [],
 		minDate: '',
 		maxDate: ''
-	});
+	}
+
+	const usageLogSelectResponse = await UsageLog.selectUsageLogs(usageLogFilter);
 
 	if (!usageLogSelectResponse.success) {
 		return json(usageLogSelectResponse);
@@ -150,11 +177,9 @@ export async function PATCH({ request }) {
 		return json({
 			success: false,
 			usageLogRaws: null,
-			error: 'Error: Usage Log does not exist.'
+			error: 'Error: Usage Log/s does not exist.'
 		});
 	}
-
-	const serviceID = usageLogSelectResponse.usageLogRaws?.[0].service_id;
 
 	const serviceSelectServiceResponse = await Service.selectServices({
 		serviceID: serviceID != undefined ? serviceID : 0,
@@ -177,49 +202,52 @@ export async function PATCH({ request }) {
 
 	//----------------------------------------------------UPDATES
 
-	if (updateStudent) {
-		const studentUpdateResponse = await Student.updateStudent({
-			sn_id: studentNumber,
-			rfid: 0,
-			username: '',
-			first_name: '',
-			middle_initial: '',
-			last_name: '',
-			college: '',
-			program: '',
-			phone_number: '',
-			is_enrolled: true,
-			is_active: false
-		});
-
-		if (!studentUpdateResponse.success) {
-			return json(studentUpdateResponse);
-		}
-	}
-
 	const dateToday = new Date().toISOString();
+	let usageLogUpdateResponse: UsageLogResponse;
+	let studentUpdateResponse: StudentResponse
 
-	const usageLog = {
-		ul_id: usageLogID,
-		sn_id: 0,
-		admin_id: 0,
-		service_id: 0,
-		service_type: '',
-		datetime_start: '',
-		datetime_end: dateToday,
-        location: ''
-	};
+	for (let usageLog of usageLogSelectResponse.usageLogRaws!) {
+		const newUsageLog = {
+			ul_id: usageLog.ul_id,
+			sn_id: 0,
+			admin_id: 0,
+			service_id: 0,
+			service_type: '',
+			datetime_start: '',
+			datetime_end: dateToday,
+			location: ''
+		};
 
-	delete (usageLog as { sn_id?: number }).sn_id;
-	delete (usageLog as { admin_id?: number }).admin_id;
-	delete (usageLog as { service_id?: number }).service_id;
-	delete (usageLog as { service_type?: string }).service_type;
-	delete (usageLog as { datetime_start?: string }).datetime_start;
+		usageLogUpdateResponse = await UsageLog.updateUsageLog(newUsageLog)
 
-	const usageLogUpdateResponse = await UsageLog.updateUsageLog(usageLog);
+		if (!usageLogUpdateResponse.success) {
+			return json(usageLogUpdateResponse);
+		}
 
-	if (!usageLogUpdateResponse.success) {
-		return json(usageLogUpdateResponse);
+		// if not discussion room, update sole student
+		if (isStudentUpdate && serviceType != "Discussion Room") {
+			studentUpdateResponse = await updateStudent(studentNumber);
+
+			if (!studentUpdateResponse.success) {
+				return json(studentUpdateResponse);
+			}
+		} else if (serviceType == "Discussion Room") { // discussion end service must check if other students should also be inactive
+			const studentActiveResponse = await (UsageLog.selectUsageLogs({
+				usageLogID: 0,
+				studentNumber: usageLog.sn_id,
+				serviceType: [],
+				minDate: "",
+				maxDate: null
+			}))
+
+			if (!studentActiveResponse.usageLogRaws?.length) {
+				studentUpdateResponse = await updateStudent(usageLog.sn_id);
+	
+				if (!studentUpdateResponse.success) {
+					return json(studentUpdateResponse);
+				}
+			}
+		}
 	}
 
 	const serviceUpdateResponse = await Service.updateService({

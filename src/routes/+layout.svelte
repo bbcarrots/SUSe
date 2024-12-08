@@ -1,10 +1,10 @@
 <script>
 	import '../app.pcss';
-	import { browser } from '$app/environment';
 	import Loader from '$lib/components/Loader.svelte';
+	import { navigating } from '$app/stores';
 </script>
 
-{#if !browser}
+{#if $navigating}
 	<Loader></Loader>
 {:else}
 	<slot />

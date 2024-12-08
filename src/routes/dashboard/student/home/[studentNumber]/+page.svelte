@@ -2,9 +2,13 @@
 	import ServiceCard from '$lib/components/ServiceCard.svelte';
 	import { userID } from '$lib/stores/User';
 	import { page } from '$app/stores';
-	import { camelize, supabaseFront } from '$lib/utils/utils.js';
+	import { camelize } from '$lib/utils/utils.js';
+	import type { UsageLogDBObj } from '$lib/classes/UsageLog.js';
+	import type { SvelteComponent } from 'svelte';
+	import Toasts from '$lib/components/Toasts.svelte';
 
 	export let data;
+	let toasts: SvelteComponent;
 
 	userID.set(Number($page.params.studentNumber));
 
@@ -34,14 +38,15 @@
 		/* Handles Avail Service event from ServiceCardForm by sending a POST request 
         with payload requirements: studentNumber, serviceType. */
 
-		const { serviceType } = event.detail;
+		const { serviceID, serviceType } = event.detail;
 
 		const payload = {
 			studentNumber: $page.params.studentNumber,
+			serviceID: serviceID,
 			serviceType: serviceType,
 			updateStudent: Object.keys(activeUsageLogs).length == 0 ? true : false
 		};
-
+		
 		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
 			body: JSON.stringify(payload),
@@ -49,9 +54,26 @@
 				'content-type': 'application/json'
 			}
 		});
-
+		
 		availServiceResponse = await response.json();
-		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
+		
+		if (availServiceResponse.success) {
+			activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
+			toasts.addToast({
+				message: `${serviceType} availed successfully!`,
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
+		} else {
+			toasts.addToast({
+				message: availServiceResponse.error,
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
+		}
+		
 	}
 
 	async function handleEndService(event: CustomEvent) {
@@ -63,9 +85,11 @@
 		const payload = {
 			studentNumber: $page.params.studentNumber,
 			usageLogID: activeUsageLogs[serviceType].ul_id,
+			serviceType: serviceType,
+			serviceID: activeUsageLogs[serviceType].service_id, 
 			updateStudent: Object.keys(activeUsageLogs).length == 1 ? true : false
 		};
-
+		
 		const response = await fetch('../../../api/avail-end', {
 			method: 'PATCH',
 			body: JSON.stringify(payload),
@@ -77,8 +101,23 @@
 		endServiceResponse = await response.json();
 
         if (endServiceResponse.success) {
-            delete activeUsageLogs[serviceType]
-        }
+            delete activeUsageLogs[serviceType];
+			availableServices = endServiceResponse.availableServices
+
+			toasts.addToast({
+				message: `${serviceType} ended successfully!`,
+				timeout: 3,
+				type: 'success',
+				open: true
+			});
+        } else {
+			toasts.addToast({
+				message: `${serviceType} availed unsuccessfully.`,
+				timeout: 3,
+				type: 'error',
+				open: true
+			});
+		}
 	}
 </script>
 
@@ -111,3 +150,4 @@
 		<p>No available services</p>
 	{/if}
 </div>
+<Toasts bind:this={toasts}></Toasts>

@@ -2,7 +2,7 @@
 	import { TableHead, TableHeadCell, Checkbox } from 'flowbite-svelte';
 	import { Icon, ChevronUp, ChevronDown } from 'svelte-hero-icons';
 	import { camelize } from '../utils/utils';
-	import { adminHeaders, serviceHeaders, usageLogHeaders } from '$lib/utils/filterOptions';
+	import { adminHeaders, serviceHeaders, studentHeaders, usageLogHeaders } from '$lib/utils/filterOptions';
 
 	export let headers: Array<string>;
 	export let sortKey: string;
@@ -11,13 +11,14 @@
 	export let hide: Array<string>;
 
     if (headers == adminHeaders) {
-        sortKey = 'adminID';
+        sortKey = 'isActive';
+		sortDirection = -sortDirection
     } else if (headers == serviceHeaders) {
         sortKey = 'inUse';
     } else if (headers == usageLogHeaders) {
-        sortKey = 'usageLogID';
+        sortKey = 'dateTimeEnd';
         sortDirection = -sortDirection;
-    } else {
+    } else if (headers == studentHeaders) { // student
         sortKey = 'isEnrolled'
     }
 

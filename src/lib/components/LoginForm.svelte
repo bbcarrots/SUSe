@@ -10,6 +10,11 @@
 
 	const dispatch = createEventDispatcher(); // for forwarding events
 
+    function convertRfidInt(hex: string) {
+        const reverseHex = hex.match(/.{1,2}/g)?.reverse().join("")
+        return reverseHex ? parseInt(reverseHex, 16).toString() : "0"
+    }
+
 	onMount(() => {
 		const handleClickOutside = (e: any) => {
 			const rfidInput = document.getElementById('rfidInput'); //take the rfid input
@@ -51,8 +56,10 @@
 
 			if (rfidInput === focusedElement) {
 				if (e.key == 'Enter') {
-					let payload = rfidValue;
-					dispatch('inputRFID', payload);
+                    if (rfidValue.match(/[a-fA-F]+/i)) { // Input is in hex, convert to number
+                        rfidValue = convertRfidInt(rfidValue)
+                    } 
+					dispatch('inputRFID', rfidValue);
 				}
 			}
 		};
