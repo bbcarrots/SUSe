@@ -34,14 +34,15 @@
 		/* Handles Avail Service event from ServiceCardForm by sending a POST request 
         with payload requirements: studentNumber, serviceType. */
 
-		const { serviceType } = event.detail;
+		const { serviceID, serviceType } = event.detail;
 
 		const payload = {
 			studentNumber: $page.params.studentNumber,
+			serviceID: serviceID,
 			serviceType: serviceType,
 			updateStudent: Object.keys(activeUsageLogs).length == 0 ? true : false
 		};
-
+		
 		const response = await fetch('../../../api/avail-end', {
 			method: 'POST',
 			body: JSON.stringify(payload),
@@ -49,8 +50,9 @@
 				'content-type': 'application/json'
 			}
 		});
-
-		availServiceResponse = await response.json();
+		
+		availServiceResponse = await response.json(); 
+		console.log(availServiceResponse)
 		activeUsageLogs = Object.assign(activeUsageLogs, availServiceResponse.activeUsageLogs);
 	}
 
@@ -63,6 +65,8 @@
 		const payload = {
 			studentNumber: $page.params.studentNumber,
 			usageLogID: activeUsageLogs[serviceType].ul_id,
+			serviceType: serviceType,
+			serviceID: activeUsageLogs[serviceType].service_id, 
 			updateStudent: Object.keys(activeUsageLogs).length == 1 ? true : false
 		};
 		
@@ -75,10 +79,11 @@
 		});
 
 		endServiceResponse = await response.json();
+		console.log(endServiceResponse)
 
         if (endServiceResponse.success) {
             delete activeUsageLogs[serviceType];
-			availableServices[serviceType] += 1;
+			availableServices = endServiceResponse.availableServices
         }
 	}
 </script>
