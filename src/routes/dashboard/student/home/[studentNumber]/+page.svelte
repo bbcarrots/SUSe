@@ -9,6 +9,7 @@
 
 	export let data;
 	let toasts: SvelteComponent;
+	let availedServiceID: number;
 
 	userID.set(Number($page.params.studentNumber));
 
@@ -128,6 +129,7 @@
 				<ServiceCard
 					on:availService={handleAvailService}
 					on:endService={handleEndService}
+					serviceID={activeUsageLogs[service].service_id}
 					serviceName={service}
 					available={count}
 					started={true}
@@ -138,6 +140,7 @@
 				<ServiceCard
 					on:availService={handleAvailService}
 					on:endService={handleEndService}
+					serviceID={0}
 					serviceName={service}
 					available={count}
 					timeStarted={new Date(0)}
