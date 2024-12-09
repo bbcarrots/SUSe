@@ -8,6 +8,7 @@
 	import type { serviceTypes } from '$lib/utils/filterOptions';
 
 	export let serviceName: string;
+	export let serviceID: number;
 	export let available: number;
 	export let src: string;
 
@@ -17,7 +18,6 @@
 	};
 
 	export let timeStarted: Date;
-	let timeEnded: Date;
 	let timeNow: Date;
 	export let started = false;
 	let countdown: string = formatTime(0);
@@ -63,7 +63,7 @@
 <div
 	class="relative m-4 h-[250px] max-w-full overflow-hidden rounded-[20px] bg-white p-6 drop-shadow-[4px_4px_10px_rgba(17,51,17,0.05)]"
 >
-	<h4 class="relative left-0 top-0 z-10">{serviceName}</h4>
+	<h4 class="relative left-0 top-0 z-10">{serviceName} {serviceID ? serviceID : ""}</h4>
 	{#if started == false}
 		<p>Available: {available}</p>
 	{:else}
