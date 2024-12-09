@@ -4,7 +4,7 @@
     export let serviceName: string;
     export let formData: {consented: Boolean, serviceID: Number} = {
         consented: false,
-        serviceID: 16
+        serviceID: 0
     };
 
     let inactiveClasses = "inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300"
@@ -43,10 +43,10 @@
                 <select
                     bind:value={formData.serviceID} 
                     class="mb-4 border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value=16>Frequency</option>
-                    <option value=17>Signal</option>
-                    <option value=18>Transistor</option>
-                    <option value=19>Programming</option>
+                    <option value=1>Frequency DR 1</option>
+                    <option value=2>Signal DR 2</option>
+                    <option value=3>Transistor DR 3</option>
+                    <option value=4>Programming DR 4</option>
                 </select>
                 <p>
                     I agree that I will not damage any property in the Discussion Room, refrain from obstructive behaviour and I understand that I will be charged with corresponding fees or replacement if the room is left in disorder.
