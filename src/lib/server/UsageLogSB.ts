@@ -13,7 +13,7 @@ export async function selectUsageLogDB(filter: UsageLogFilter): Promise<UsageLog
     Filter only contains option for date start and end for now. */
 
 	let query = supabase
-		.from('engglib1_usage_log')
+		.from('usage_log')
 		.select(
 			'ul_id, sn_id, admin_id, datetime_start, datetime_end, service ( service_id, service_type ( service_type ) ), location'
 		);
@@ -91,7 +91,7 @@ export async function insertUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 	/* Inserts a non-existing usage log record into the database. */
 	delete (log as { service_type?: string }).service_type; // deletes the service_type property to properly insert a usage log
 
-	const { error } = await supabase.from('engglib1_usage_log').insert(log);
+	const { error } = await supabase.from('usage_log').insert(log);
 
 	if (error) {
 		return {
@@ -150,7 +150,7 @@ export async function updateUsageLogDB(log: UsageLogDBObj): Promise<UsageLogResp
 		}
 	}
 
-	const { error } = await supabase.from('engglib1_usage_log').update(updateObj).eq('ul_id', log.ul_id);
+	const { error } = await supabase.from('usage_log').update(updateObj).eq('ul_id', log.ul_id);
 
 	if (error) {
 		return {
@@ -183,7 +183,7 @@ export async function deleteUsageLogDB(usageLogID: number): Promise<UsageLogResp
         };
     }
 
-	const { error } = await supabase.from('engglib1_usage_log').delete().eq('ul_id', usageLogID);
+	const { error } = await supabase.from('usage_log').delete().eq('ul_id', usageLogID);
 
 	if (error) {
 		return {

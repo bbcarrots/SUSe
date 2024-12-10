@@ -12,7 +12,7 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 	/* Selects the admin record/s from the database using a filter.
     Filter contains option for admin ID, nickname, and is active. */
 
-	let query = supabase.from('engglib1_admin').select('*');
+	let query = supabase.from('admin').select('*');
 
 	if (filter.adminID) {
 		query = query.eq('admin_id', filter.adminID);
@@ -49,7 +49,7 @@ export async function selectAdminDB(filter: AdminFilter): Promise<AdminResponse>
 
 export async function insertAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 	/* Inserts a non-existing admin record into the database. */
-	const { error } = await supabase.from('engglib1_admin').insert(admin);
+	const { error } = await supabase.from('admin').insert(admin);
 
 	if (error) {
 		return {
@@ -108,7 +108,7 @@ export async function updateAdminDB(admin: AdminDBObj): Promise<AdminResponse> {
 		}
 	}
 
-	const { error } = await supabase.from('engglib1_admin').update(updateObj).eq('admin_id', admin.admin_id);
+	const { error } = await supabase.from('admin').update(updateObj).eq('admin_id', admin.admin_id);
 
 	if (error) {
 		return {
@@ -140,7 +140,7 @@ export async function deleteAdminDB(adminID: number): Promise<AdminResponse> {
         };
     }
 
-	const { error } = await supabase.from('engglib1_admin').delete().eq('admin_id', adminID);
+	const { error } = await supabase.from('admin').delete().eq('admin_id', adminID);
 
 	if (error) {
 		return {

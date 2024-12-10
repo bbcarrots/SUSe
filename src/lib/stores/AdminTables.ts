@@ -20,16 +20,16 @@ channel = supabaseFront
 		},
 		(payload) => {
 			switch(payload.table) {
-                case "engglib1_admin":
+                case "admin":
                     AdminTable.set([]);
                     break;
-                case "engglib1_service":
+                case "service":
                     ServiceTable.set([]);
                     break;
                 case "student":
                     StudentTable.set([]);
                     break;
-                case "engglib1_usage_log":
+                case "usage_log":
                     UsageLogTable.set([]);
                     break;
             }

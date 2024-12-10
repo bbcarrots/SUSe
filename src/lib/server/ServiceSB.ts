@@ -13,7 +13,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	/* Selects the service record/s from the database using a filter.
     Filter contains option for service ID, type, name, if in use, and if is admin. */
 	let query = supabase
-		.from('engglib1_service')
+		.from('service')
 		.select('service_id, service_type_id, service_name, in_use, service_type (service_type)');
 
 	// if user is an admin, selects service_id, service_name, service_type, in_use
@@ -37,7 +37,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	}
 
 	const { data, error } = await query;
-	
+
 	if (error) {
 		return {
 			success: false,
@@ -110,7 +110,7 @@ export async function insertServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	/* Inserts a non-existing service record into the database. */
 	delete (service as { service_type?: string }).service_type; // deletes the service_type property to properly insert a service
 
-	const { error } = await supabase.from('engglib1_service').insert(service);
+	const { error } = await supabase.from('service').insert(service);
 
 	if (error) {
 		return {
@@ -178,7 +178,7 @@ export async function updateServiceDB(service: ServiceDBObj): Promise<ServiceRes
 	}
 
 	const { error } = await supabase
-		.from('engglib1_service')
+		.from('service')
 		.update(updateObj)
 		.eq('service_id', service.service_id);
 
@@ -215,7 +215,7 @@ export async function deleteServiceDB(serviceID: number): Promise<ServiceRespons
 		};
     }
 
-	const { error } = await supabase.from('engglib1_service').delete().eq('service_id', serviceID);
+	const { error } = await supabase.from('service').delete().eq('service_id', serviceID);
 
 	if (error) {
 		return {
