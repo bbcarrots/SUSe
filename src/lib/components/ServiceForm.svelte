@@ -43,10 +43,10 @@
                 <select
                     bind:value={formData.serviceID} 
                     class="mb-4 border text-[14px] rounded-[5px] px-[16px] py-[12px] border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    <option value=1>Frequency DR 1</option>
-                    <option value=2>Signal DR 2</option>
-                    <option value=3>Transistor DR 3</option>
-                    <option value=4>Programming DR 4</option>
+                    <option value=1>Geodesy DR 1</option>
+                    <option value=2>Satellite DR 2</option>
+                    <option value=3>Simulations DR 3</option>
+                    <option value=4>Thermodynamics DR 4</option>
                 </select>
                 <p>
                     I agree that I will not damage any property in the Discussion Room, refrain from obstructive behaviour and I understand that I will be charged with corresponding fees or replacement if the room is left in disorder.
