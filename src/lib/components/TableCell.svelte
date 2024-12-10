@@ -43,6 +43,19 @@
 			</span>
 			<p>{value}</p>
 		</span>
+	{:else if field === 'serviceID' && Object.hasOwn(info, 'inUse')}
+		<span class="flex items-center">
+			<span class="pr-2">
+				{#if info.inUse}
+				<Indicator size="sm" color="green" class="mr-[2px]" />
+				<Tooltip>Student is using a service.</Tooltip>
+				{:else}
+				<Indicator size="sm" color="gray" class="mr-[2px]" />
+				<Tooltip>Student is not using a service.</Tooltip>
+				{/if}
+			</span>
+			<p>{value}</p>
+		</span>
 	{:else if field == 'dateTimeStart' || field == 'dateTimeEnd'}
 		<time datetime={value}>{value != null ? formatDateTime(value) : "unfinished"}</time>
 	{:else}

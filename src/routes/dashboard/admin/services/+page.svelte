@@ -17,7 +17,7 @@
 
 	// for table
 	let headers: string[] = serviceHeaders;
-	let hide: string[] = ['serviceTypeID'];
+	let hide: string[] = ['serviceTypeID', 'inUse'];
 	let disableEdit: string[] = ['serviceID', 'serviceType'];
     let services: ServiceProcessed[] = [];
 
