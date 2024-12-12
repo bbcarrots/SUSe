@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TableHead, TableHeadCell, Checkbox } from 'flowbite-svelte';
+	import { TableHead, TableHeadCell } from 'flowbite-svelte';
 	import { Icon, ChevronUp, ChevronDown } from 'svelte-hero-icons';
 	import { camelize } from '../utils/utils';
 	import { adminHeaders, serviceHeaders, studentHeaders, usageLogHeaders } from '$lib/utils/filterOptions';
@@ -15,6 +15,7 @@
 		sortDirection = -sortDirection
     } else if (headers == serviceHeaders) {
         sortKey = 'inUse';
+        sortDirection = -sortDirection;
     } else if (headers == usageLogHeaders) {
         sortKey = 'dateTimeEnd';
         sortDirection = -sortDirection;

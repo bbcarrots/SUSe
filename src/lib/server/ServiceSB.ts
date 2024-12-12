@@ -37,7 +37,7 @@ export async function selectServiceDB(filter: ServiceFilter): Promise<ServiceRes
 	}
 
 	const { data, error } = await query;
-	
+
 	if (error) {
 		return {
 			success: false,

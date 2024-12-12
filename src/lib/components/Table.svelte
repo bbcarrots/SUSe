@@ -15,7 +15,7 @@
 
 	/* activePage is binded to the value from Pagination.svelte */
 	let activePage = 1;
-	const rowsPerPage = 10;
+	const rowsPerPage = 100;
 	let totalRows = info.length;
 	let totalPages = Math.ceil(totalRows / rowsPerPage);
 
