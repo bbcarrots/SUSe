@@ -18,7 +18,7 @@
 
 	// for table
 	let headers: string[] = adminHeaders;
-	let hide: string[] = ['rfid'];
+	let hide: string[] = ['rfid', 'isActive'];
 	let disableEdit: string[] = ['adminID'];
 	let admins: AdminProcessed[] = [];
 

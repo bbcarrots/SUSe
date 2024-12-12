@@ -129,8 +129,8 @@ export const serviceStatus = [
 ];
 
 // table headers
-export const adminHeaders = ['Admin ID', 'Nickname', 'Is Active'];
-export const serviceHeaders = ['Service ID', 'Service Name', 'Service Type', 'In Use'];
+export const adminHeaders = ['Admin ID', 'Nickname'];
+export const serviceHeaders = ['Service ID', 'Service Name', 'Service Type'];
 export const studentHeaders = [
     'Student Number',
     'First Name',
