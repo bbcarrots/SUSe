@@ -53,7 +53,7 @@
 	}
 
 	function filterUsageLogTable(filter: UsageLogFilter) {
-		console.log(filter)
+		// filters the usage logs based on the usage log store
 		usageLogs = $UsageLogTable.filter((usageLog) => {
 			if (
 				filter.serviceType.length == 0 &&
