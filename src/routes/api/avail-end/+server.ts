@@ -96,7 +96,7 @@ export async function POST({ request }) {
 		service_type: service!.service_type,
 		datetime_start: dateToday,
 		datetime_end: '',
-		location: LOCATION
+		location: 'ENGG1'
 	};
 
 	delete (usageLog as { ul_id?: number }).ul_id;
