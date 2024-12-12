@@ -53,6 +53,7 @@
 	}
 
 	function filterUsageLogTable(filter: UsageLogFilter) {
+		// filters the usage logs based on the usage log store
 		usageLogs = $UsageLogTable.filter((usageLog) => {
 			if (
 				filter.serviceType.length == 0 &&
@@ -74,7 +75,11 @@
 				}
 			}
 
-			if (filter.maxDate != '') {
+			if (filter.maxDate == null) {
+				if (usageLog.dateTimeEnd != null) {
+					return false
+				}
+			} else if (filter.maxDate != '') {
 				if (filter.maxDate != null && usageLog.dateTimeEnd != null && new Date(usageLog.dateTimeEnd) > new Date(filter.maxDate)) {
 					return false;
 				}
@@ -198,6 +203,20 @@
 				min={$UsageLogFilterStore.minDate}
 				type="datetime-local"
 			/>
+		</div>
+
+		<div class="relative">
+			<h6 class="absolute top-0 -m-[10px] ml-[12px] flex bg-white p-[5px] text-gray-400">
+				Usage Log Status
+			</h6>
+			<select
+				bind:value={$UsageLogFilterStore.maxDate}
+				class="block w-full rounded-[5px] border border-gray-200 p-2.5 px-[16px] py-[12px] text-[14px] text-gray-900"
+			>
+				<option class="text-grey-200" value={""}>All</option>
+				<option value={null}>Unfinished</option>
+				<!-- <option value={""}>Finished</option> -->
+			</select>
 		</div>
 	</div>
 	<Table
